@@ -6,27 +6,6 @@ import "../index.css"
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
-
-// const GridItemWrapper = styled.div`
-//   background: #f5f5f5;
-//   border-radius: 10px;
-// `
-// const GridItemContent = styled.div`
-//   // padding: 80px;
-//   border-radius: 10px;
-// `
-// const GridItemTitle = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   padding: 5px ;
-//   background: lightBlue;
-//   border-radius: 10px;
-// `
-// const Root = styled.div`
-//   margin: 0 auto;
-//   max-width: 1500px;
-// `
-
 const ResponsiveGrid = () => {
   const [transparentSelection, setTransparentSelection] = useState(true)
   
@@ -37,14 +16,10 @@ const ResponsiveGrid = () => {
     { i: "key4", x: 3, y: 0, w: 1, h: 4 },
     { i: "key5", x: 4, y: 0, w: 1, h: 3 }
   ]
-  // for (let i = 6; i < 11; i++) {
-  //   layout.push(
-  //     { i: `key${i}`, w: 1, h: 3 }
-  //   )
-    
-  // }
+
   return (
       <ResponsiveGridLayout
+      className={`${transparentSelection && 'react-draggable-transparent-selection'} max-w-screen-xl mx-auto`}
         layouts={{ lg: layout }}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
@@ -55,7 +30,6 @@ const ResponsiveGrid = () => {
         onDragStop={() => {setTransparentSelection(false)}}
         onResizeStart={() => {setTransparentSelection(true)}}
         onResizeStop={() => {setTransparentSelection(false)}}
-        className={`App ${transparentSelection && 'react-draggable-transparent-selection'}`}
       >
         {Array(15).fill().map((item, i) =>
           <div key={`key${i}`} className='bg-[#f5f5f5] border rounded-md'>
@@ -67,20 +41,6 @@ const ResponsiveGrid = () => {
             </div>
           </div>
         )}
-        {/* <GridItemWrapper key="key2">
-          <GridItemContent>
-            Not You Gee Oh
-          </GridItemContent>
-        </GridItemWrapper>
-        <GridItemWrapper key="key3">
-          <GridItemContent>Not You Gee Oh</GridItemContent>
-        </GridItemWrapper>
-        <GridItemWrapper key="key4">
-          <GridItemContent>Not You Gee Oh</GridItemContent>
-        </GridItemWrapper>
-        <GridItemWrapper key="key5">
-          <GridItemContent>Not You Gee Oh</GridItemContent>
-        </GridItemWrapper> */}
       </ResponsiveGridLayout>
   )
 }
