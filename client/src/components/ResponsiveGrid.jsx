@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import { Responsive, WidthProvider } from "react-grid-layout"
 // import styled from "styled-components"
 import "/node_modules/react-grid-layout/css/styles.css";
@@ -27,7 +27,9 @@ const ResponsiveGridLayout = WidthProvider(Responsive)
 //   max-width: 1500px;
 // `
 
-const ResponsiveGrid = ({ setTransparentSelection }) => {
+const ResponsiveGrid = () => {
+  const [transparentSelection, setTransparentSelection] = useState(true)
+  
   const layout = [
     { i: "key1", x: 0, y: 0, w: 1, h: 4 },
     { i: "key2", x: 1, y: 0, w: 1, h: 4 },
@@ -53,6 +55,7 @@ const ResponsiveGrid = ({ setTransparentSelection }) => {
         onDragStop={() => {setTransparentSelection(false)}}
         onResizeStart={() => {setTransparentSelection(true)}}
         onResizeStop={() => {setTransparentSelection(false)}}
+        className={`App ${transparentSelection && 'react-draggable-transparent-selection'}`}
       >
         {Array(15).fill().map((item, i) =>
           <div key={`key${i}`} className='bg-[#f5f5f5] border rounded-md'>
