@@ -84,7 +84,7 @@ const LoginRegForm = ({ appState }) => {
       </Tabs.List>
       <Tabs.Content
         value="tab1"
-        className="grow p-5 bg-white rounded-b-md outline-none"
+        className="grow pt-5 bg-white rounded-b-md outline-none"
       >
         { user.username ? <>
             <div className='mb-4 text-center text-mauve11 text-[15px] leading-normal'>Hello, {user.username}.<br/>You are logged in.</div>

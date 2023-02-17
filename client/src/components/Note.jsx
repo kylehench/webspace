@@ -1,8 +1,10 @@
 import React from 'react'
 
-const Note = () => {
+const Note = ({ widget }) => {
+  
+  
   return (
-    <div>Note</div>
+    <div>Note How is that going to work? {widget.id}</div>
   )
 }
 

@@ -9,7 +9,6 @@ const TAGS = Array.from({ length: 1 }).map((_, i, a) => `v1.2.0-beta.${a.length 
 
 const NotepadButton = () => {
   
-  
   return (
     <ButtonPopover
       icon={<FaRegStickyNote />}
@@ -21,7 +20,7 @@ const NotepadButton = () => {
         <div className="py-[15px] px-5">
           <button className="flex items-center text-cyan11 text-[15px] leading-[18px] font-medium">
             <BsPlusCircle />
-            <span className='ml-1'>Create new note</span>
+            <span className='ml-2'>Create new note</span>
           </button>
           <div className="text-mauve11 text-[13px] leading-[18px] mt-2.5 pt-2.5 border-t border-t-mauve8">
             Open note
