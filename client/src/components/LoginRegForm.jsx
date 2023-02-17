@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import * as Tabs from '@radix-ui/react-tabs'
 
-const LoginRegForm = ({ appState, setOpen }) => {
+const LoginRegForm = ({ appState }) => {
   const { user, setUser } = appState
   
     const [ registerUsername, setRegisterUsername ] = useState()
@@ -15,16 +15,20 @@ const LoginRegForm = ({ appState, setOpen }) => {
   const [ loginPassword, setLoginPassword ] = useState()
   const [ loginErrors, setLoginErrors ] = useState({})
 
+  const [ activeTab, setActiveTab ] = useState('tab1')
+
   const register = e => {
     axios.post(`${process.env.REACT_APP_AUTH_URI}/api/register`,
       {username: registerUsername, email: registerEmail, password: registerPassword, password_confirm: registerPasswordConfirm}
     ).then(res => {
       const data = res.data.data
+      console.log(res)
       if (res.data.status==='success') {
         setRegisterErrors({})
         localStorage.setItem('username', data.username)
         localStorage.setItem('username', data.email)
         setUser({...user, username: data.username, email: data.email})
+        setActiveTab('tab1')
       } else {
         console.log(data.errors)
         setRegisterErrors(data.errors)
@@ -60,8 +64,9 @@ const LoginRegForm = ({ appState, setOpen }) => {
   
   return (
     <Tabs.Root
-    className="flex flex-col"
-    defaultValue="tab1"
+      className="flex flex-col p-4 w-96"
+      value={activeTab}
+      onValueChange={setActiveTab}
     >
       <Tabs.List className="shrink-0 flex border-b border-mauve6" aria-label="Manage your account">
         <Tabs.Trigger
@@ -82,7 +87,7 @@ const LoginRegForm = ({ appState, setOpen }) => {
         className="grow p-5 bg-white rounded-b-md outline-none"
       >
         { user.username ? <>
-            <div className='mb-4 text-center text-mauve11 text-[15px] leading-normal'>Hello, {user.username}</div>
+            <div className='mb-4 text-center text-mauve11 text-[15px] leading-normal'>Hello, {user.username}.<br/>You are logged in.</div>
             <button className="px-[15px] mb-4 block items-center text-center mx-auto justify-center rounded text-[15px] leading-none font-medium h-[35px] bg-red4 text-red11 hover:bg-red5 focus:shadow-[0_0_0_2px] focus:shadow-red7 outline-none cursor-default" onClick={() => logout()}>
               Logout
             </button>
