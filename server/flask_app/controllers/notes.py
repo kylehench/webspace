@@ -1,11 +1,18 @@
 from flask_app import app, db
-from flask_app.models.note import Note
+from flask_app.models.note import Note, NoteSchema
+# from login_required_dec import login_required_dec
 
-@app.route('/api/notes', methods=['PUT'])
+@app.route('/api/notes', methods=['GET'])
+# @login_required_dec
 def create_note():
 
-  # u = User(name='john', email='john@example.com')
-  # db.session.add(u)
-  # db.session.commit()
+  note = Note(title='To Do', content='Go to the grocery store')
+  db.session.add(note)
+  db.session.commit()
+
+  note = Note.query.first()
+  note_schema = NoteSchema()
+  output = note_schema.dump(note)
+  print(output)
   
-  return 'hello'
+  return {'note': output}

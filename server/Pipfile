@@ -12,6 +12,8 @@ cryptography = "*"
 flask-migrate = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
+pyjwt = "*"
+flask-restful = "*"
 
 [dev-packages]
 
