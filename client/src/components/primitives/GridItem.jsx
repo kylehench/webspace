@@ -13,7 +13,7 @@ const GridItem = ({ widget, appState, key }) => {
       >
         <div className='w-10'>{widget.titleLeft}</div>
         <div className='flex-1 min-h-[20px]'>
-          <input type="text" class="bg-transparent text-sm focus:border-blue outline-0 text-ellipsis block text-center w-full p-2.5" placeholder="Title" />
+          <input type="text" className="bg-transparent text-sm focus:border-blue outline-0 text-ellipsis block text-center w-full p-2.5" placeholder="Title" />
         </div>
         <div className='w-10 flex justify-end'>
           <div>{widget.titleRight}</div>
