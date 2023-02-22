@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import Note from '../Note'
 
-const GridItem = ({ widget }) => {
+const GridItem = ({ widget, appState, key }) => {
   const widgetTypeMap = {
-    'note': <Note widget={widget} />,
+    'note': <Note widget={widget} appState={appState} />,
   }
   
   return (
@@ -11,15 +11,16 @@ const GridItem = ({ widget }) => {
       <div className="grid-item__title flex justify-between p-1 rounded-t-md"
         style={{backgroundColor: widget.titleBgColor}}
       >
-        <div className='flex-1'>{widget.titleLeft}</div>
-        <div className='flex-2 min-h-[20px]'>{widget.title}</div>
-        <div className='flex-1 flex justify-end'>
-          <div>{widget.titleRight}</div>
+        <div className='w-10'>{widget.titleLeft}</div>
+        <div className='flex-1 min-h-[20px]'>
+          <input type="text" class="bg-transparent text-sm focus:border-blue outline-0 text-ellipsis block text-center w-full p-2.5" placeholder="Title" />
+        </div>
+        <div className='w-10 flex justify-end'>
           <div>{widget.titleRight}</div>
         </div>
       </div>
       <div
-        className='text'
+        className='text flex-1 overflow-hidden rounded-md'
         style={{backgroundColor: widget.contentBgColor}}
       >
         {widgetTypeMap[widget.type]}

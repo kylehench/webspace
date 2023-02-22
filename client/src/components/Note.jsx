@@ -4,7 +4,9 @@ const Note = ({ widget }) => {
   
   
   return (
-    <div className='p-2'>Note How is that going to work? {widget.id}</div>
+    <div className='h-full overflow-hidden rounded-md'>
+      <textarea name="" id="" className='p-3 bg-transparent text-sm outline-0 block h-full w-full resize-none rounded-md'></textarea>
+    </div>
   )
 }
 

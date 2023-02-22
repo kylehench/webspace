@@ -2,10 +2,13 @@ import React, { useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { Cross2Icon } from '@radix-ui/react-icons'
 
-const ButtonPopover = ({ icon, children, side, closeButton }) => {
+const ButtonPopover = ({ icon, children, side, closeButton, open, setOpen }) => {
   
   return (
-    <Popover.Root>
+    <Popover.Root
+      open={open}
+      onOpenChange={setOpen}
+    >
       <Popover.Trigger asChild>
         <button
           className="my-2 rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-cyan11 bg-white shadow-[0_2px_10px] shadow-blackA7 hover:bg-cyan3 cursor-default outline-none"
