@@ -4,7 +4,7 @@ const Note = ({ widget }) => {
   
   
   return (
-    <div>Note How is that going to work? {widget.id}</div>
+    <div className='p-2'>Note How is that going to work? {widget.id}</div>
   )
 }
 
