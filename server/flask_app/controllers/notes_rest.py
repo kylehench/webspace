@@ -32,7 +32,7 @@ class NoteResource(Resource):
     user_id = get_user_id()
     new_note_dict = parser.parse_args()
     print(new_note_dict)
-    note = db.session.scalars(db.select(Note).where(Note.id == note_id)).one()
+    note = db.session.scalar(db.select(Note).where(Note.id == note_id))
     # check permission to update note
     if user_id != note.user_id:
       abort(401, message="You do not have authorization to edit this resource.")
