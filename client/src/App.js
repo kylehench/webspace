@@ -5,6 +5,7 @@ import NoteButton from './components/NoteButton';
 
 function App() {
   const [ user, setUser ] = useState({
+    id: localStorage.getItem('user_id'),
     username: localStorage.getItem('username'),
     email: localStorage.getItem('email'),
   })

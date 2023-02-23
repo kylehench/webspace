@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Responsive, WidthProvider } from "react-grid-layout"
 import "/node_modules/react-grid-layout/css/styles.css";
 import "../index.css"
-import GridItem from './primitives/GridItem';
+import Note from './Note'
 import widgetDefaults from '../config/widgetDefaults';
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
@@ -17,6 +17,10 @@ const Grid = ({ appState }) => {
     // { i: "key4", x: 3, y: 0, w: 1, h: 4 },
     // { i: "key5", x: 4, y: 0, w: 1, h: 3 }
   ]
+
+  const widgetMap = {
+    'note': (widgetProps) => <Note widgetProps={widgetProps} appState={appState} />,
+  }
 
   return (
       <ResponsiveGridLayout
@@ -42,7 +46,7 @@ const Grid = ({ appState }) => {
               className='grid-cell flex flex-col h-full rounded-md bg-slate-100 '
               style={{backgroundColor: widgetProps.contentBgColor}}
             >
-              <GridItem widget={widgetProps} appState={appState} />
+              {widgetMap[widget.type](widgetProps)}
             </div>
           )
         })}

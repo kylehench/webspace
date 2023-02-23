@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as Tabs from '@radix-ui/react-tabs'
 
 const LoginRegForm = ({ appState }) => {
-  const { user, setUser } = appState
+  const { user, setUser, setWidgets } = appState
   
     const [ registerUsername, setRegisterUsername ] = useState()
     const [ registerEmail, setRegisterEmail ] = useState()
@@ -25,9 +25,10 @@ const LoginRegForm = ({ appState }) => {
       console.log(res)
       if (res.data.status==='success') {
         setRegisterErrors({})
+        localStorage.setItem('user_id', data.user_id)
         localStorage.setItem('username', data.username)
         localStorage.setItem('username', data.email)
-        setUser({...user, username: data.username, email: data.email})
+        setUser({...user, id: data.user_id, username: data.username, email: data.email})
         setActiveTab('tab1')
       } else {
         console.log(data.errors)
@@ -43,9 +44,10 @@ const LoginRegForm = ({ appState }) => {
       const data = res.data.data
       if (res.data.status==='success') {
         setLoginErrors({})
+        localStorage.setItem('user_id', data.user_id)
         localStorage.setItem('username', data.username)
         localStorage.setItem('username', data.email)
-        setUser({...user, username: data.username, email: data.email})
+        setUser({...user, id: data.user_id, username: data.username, email: data.email})
       } else {
         setLoginErrors(data.errors)
       }
@@ -58,6 +60,7 @@ const LoginRegForm = ({ appState }) => {
       if (res.data.status==='success') {
         localStorage.clear()
         setUser({})
+        setWidgets([])
       }
     }).catch(err => console.log(err))
   }

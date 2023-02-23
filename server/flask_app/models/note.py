@@ -13,3 +13,5 @@ class NoteSchema(ma.SQLAlchemyAutoSchema):
   class Meta:
     model = Note
     load_instance = True
+
+note_schema = NoteSchema()

@@ -24,10 +24,12 @@ const NoteButton = ({ appState }) => {
     }
   }, [user])
 
-  const addNewNote = () => {
+  const addNote = (id) => {
     setWidgets([...widgets, {
+      id,
+      user_id: user.user_id,
       type: 'note',
-      react_id: Math.random()  // note: temporary value until an id is obtained from the server
+      react_id: Math.random()
     }])
   }
   
@@ -48,7 +50,7 @@ const NoteButton = ({ appState }) => {
             className="flex items-center text-cyan11 text-[15px] leading-[18px] font-medium"
             onClick={() => {
                 setOpen(false)
-                addNewNote()
+                addNote()
               }
             }
           >
@@ -64,7 +66,11 @@ const NoteButton = ({ appState }) => {
               className="text-cyan11 text-[15px] leading-[18px] font-medium mt-1.5 pt-2.5 border-t border-t-mauve5"
               key={note.id}
             >
-              <button>{note.title}</button>
+              <button
+                onClick={() => addNote(note.id)}
+              >
+                {note.title}
+              </button>
               
             </div>
           ))}
