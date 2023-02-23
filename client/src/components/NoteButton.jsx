@@ -41,7 +41,7 @@ const NoteButton = ({ appState }) => {
       setOpen={setOpen}
     >
       <ScrollArea
-        height={TAGS.length < 8 ? 'auto' : '360px'}
+        height={notes.length < 8 ? 'auto' : '360px'}
       >
         <div className="py-[15px] px-5">
           
@@ -67,9 +67,13 @@ const NoteButton = ({ appState }) => {
               key={note.id}
             >
               <button
-                onClick={() => addNote(note.id)}
+                className='h-6 w-full text-left'
+                onClick={() => {
+                  addNote(note.id)
+                  setOpen(false)
+                }}
               >
-                {note.title}
+                {note.title ? note.title : '(untitled)'}
               </button>
               
             </div>

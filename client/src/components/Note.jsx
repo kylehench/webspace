@@ -7,10 +7,8 @@ const Note = ({ widgetProps, appState }) => {
   const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
   const [ title, setTitle ] = useState('')
   const [ content, setContent ] = useState('')
-  const titleRef = useRef(title)
-  const contentRef = useRef(content)
 
-  const thisState = { title, content }
+  const noteRef = useRef({title: '', content: ''})
 
   // load note if id present, otherwise post new note
   useEffect(() => {
@@ -18,8 +16,10 @@ const Note = ({ widgetProps, appState }) => {
       // load note
       axios.get(`/api/notes/${widgetProps.id}`)
         .then(res => {
-          setTitle(res.data.note.title)
-          setContent(res.data.note.content)
+          const note = res.data.note
+          setTitle(note.title)
+          setContent(note.content)
+          noteRef.current = note
         })
     } else {
       // post new note, save note id
@@ -29,11 +29,13 @@ const Note = ({ widgetProps, appState }) => {
   }, [])
 
   const titleChange = (value) => {
-    setTitle(t => value)
+    setTitle(value)
+    noteRef.current.title = value
     syncHandler()
   }
   const contentChange = (value) => {
-    setContent(c => value)
+    setContent(value)
+    noteRef.current.content = value
     syncHandler()
   }
   
@@ -45,8 +47,8 @@ const Note = ({ widgetProps, appState }) => {
         console.log(title)
         console.log(content)
         axios.put(`/api/notes/${widgetProps.id}`, {
-          title: title,
-          content: content
+          title: noteRef.current.title,
+          content: noteRef.current.content
         })
       }
     }, 1500))
@@ -55,7 +57,11 @@ const Note = ({ widgetProps, appState }) => {
   
   return (
 
-    <GridItem widgetProps={{...widgetProps}} title={title} titleChange={titleChange}>
+    <GridItem
+      widgetProps={{...widgetProps}}
+      title={title}
+      titleChange={titleChange}
+    >
       <div className='h-full overflow-hidden rounded-md'>
         <textarea
           className='p-3 bg-transparent text-sm outline-0 block h-full w-full resize-none'
