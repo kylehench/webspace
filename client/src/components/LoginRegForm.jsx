@@ -5,11 +5,11 @@ import * as Tabs from '@radix-ui/react-tabs'
 const LoginRegForm = ({ appState }) => {
   const { user, setUser, setWidgets } = appState
   
-    const [ registerUsername, setRegisterUsername ] = useState()
-    const [ registerEmail, setRegisterEmail ] = useState()
-    const [ registerPassword, setRegisterPassword ] = useState()
-    const [ registerPasswordConfirm, setRegisterPasswordConfirm ] = useState()
-    const [ registerErrors, setRegisterErrors ] = useState({})
+  const [ registerUsername, setRegisterUsername ] = useState()
+  const [ registerEmail, setRegisterEmail ] = useState()
+  const [ registerPassword, setRegisterPassword ] = useState()
+  const [ registerPasswordConfirm, setRegisterPasswordConfirm ] = useState()
+  const [ registerErrors, setRegisterErrors ] = useState({})
 
   const [ loginEmail, setLoginEmail ] = useState()
   const [ loginPassword, setLoginPassword ] = useState()

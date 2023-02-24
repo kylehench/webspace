@@ -3,9 +3,12 @@ import * as RTooltip from '@radix-ui/react-tooltip'
 
 // note: Tooltip.Provider (global functionality) wraps App in index.js
 
-const Tooltip = ({ text, side, children }) => {
+const Tooltip = ({ text, side, children, toolTipOpen, setToolTipOpen }) => {
   return (
-    <RTooltip.Root>
+    <RTooltip.Root
+      open={toolTipOpen}
+      onOpenChange={setToolTipOpen}
+    >
       <RTooltip.Trigger asChild>
         <span>
           {children}

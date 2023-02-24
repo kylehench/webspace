@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FiUser } from 'react-icons/fi'
 import LoginRegForm from './LoginRegForm'
 import ButtonPopover from './primitives/ButtonPopover'
-import Tooltip from './primitives/Tooltip'
 
 const LoginRegButton = ({ appState }) => {
+  const [open, setOpen] = useState(false)
+  
   return (
-    <Tooltip text={'Login/Registration'} side={'right'}>
-      <ButtonPopover icon={<FiUser />}>
+      <ButtonPopover 
+        icon={<FiUser />}
+        open={open}
+        setOpen={setOpen}
+        hoverText='Sign In'
+      >
         <LoginRegForm appState={appState} />
       </ButtonPopover>
-    </Tooltip>
-
-
   )
 }
 

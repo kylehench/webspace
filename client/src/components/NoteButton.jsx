@@ -35,6 +35,7 @@ const NoteButton = ({ appState }) => {
       closeButton={false}
       open={open}
       setOpen={setOpen}
+      hoverText='Note'
     >
       <ScrollArea
         height={noteList.length < 8 ? 'auto' : '360px'}
