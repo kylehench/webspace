@@ -13,7 +13,8 @@ function App() {
   const [widgets, setWidgets] = useState([])
   const [noteList, setNoteList] = useState([])
 
-  const appState = { user, setUser,
+  const appState = {
+    user, setUser,
     widgets, setWidgets,
     noteList, setNoteList,
   }

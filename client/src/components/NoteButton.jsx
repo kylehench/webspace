@@ -17,7 +17,7 @@ const NoteButton = ({ appState }) => {
         .then(res => setNoteList(res.data))
         .catch(err => console.log(err))
     }
-  }, [])
+  }, [user])
 
   const addNote = (id, noteListIdx) => {
     setWidgets([...widgets, {
@@ -33,9 +33,9 @@ const NoteButton = ({ appState }) => {
     <ButtonPopover
       icon={<FaRegStickyNote />}
       closeButton={false}
+      hoverText='Note'
       open={open}
       setOpen={setOpen}
-      hoverText='Note'
     >
       <ScrollArea
         height={noteList.length < 8 ? 'auto' : '360px'}

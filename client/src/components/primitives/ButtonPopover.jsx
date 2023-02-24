@@ -3,17 +3,23 @@ import * as Popover from '@radix-ui/react-popover'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import Tooltip from './Tooltip'
 
-const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, open, setOpen }) => {
-  // note: open and setOpen refer to Popover status
-  
+const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, open, setOpen, }) => {
+
   const [toolTipOpen, setToolTipOpen ] = useState(false)
+  const [ tooltipDisabled, setTooltipDisabled ] = useState(false)
+  
+  // note: open and setOpen refer to Popover status
+  useEffect(() => {
+    if (open) setTooltipDisabled(true)
+    else setTimeout(() => setTooltipDisabled(false), 500)
+  }, [open])
 
   return (
     <Tooltip 
       text={hoverText} 
       side={side}
-      toolTipOpen={open ? false : toolTipOpen}
-      setToolTipOpen={open ? () => {} : setToolTipOpen}
+      toolTipOpen={open || tooltipDisabled ? false : toolTipOpen}
+      setToolTipOpen={open || tooltipDisabled ? () => {} : setToolTipOpen}
     >
       <Popover.Root
         open={open}
