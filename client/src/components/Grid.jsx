@@ -39,7 +39,7 @@ const Grid = ({ appState }) => {
         onResizeStop={() => {setTransparentSelection(false)}}
       >
         {appState.widgets.map((widget, i) => {
-          const widgetProps = {...widgetDefaults[widget.type], ...widget}
+          const widgetProps = {...widgetDefaults[widget.type], ...widget, widgetIdx: i}
           return (
             <div 
               key={`${widget.type}_${widget.react_id}`}

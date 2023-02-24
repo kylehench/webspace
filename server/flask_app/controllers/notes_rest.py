@@ -31,7 +31,6 @@ class NoteResource(Resource):
   def put(self, note_id):
     user_id = get_user_id()
     new_note_dict = parser.parse_args()
-    print(new_note_dict)
     note = db.session.scalar(db.select(Note).where(Note.id == note_id))
     # check permission to update note
     if user_id != note.user_id:
@@ -44,7 +43,7 @@ class NoteResource(Resource):
 
 class NoteListResource(Resource):
   def get(self):
-    notes = db.session.execute(db.select(Note.id, Note.title).order_by(Note.updated_at))
+    notes = db.session.execute(db.select(Note.id, Note.title).order_by(Note.updated_at.desc()))
     notes = [{"id": id, "title": title} for id, title in notes]
     return notes
   

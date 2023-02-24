@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Grid from './components/Grid';
 import LoginRegButton from './components/LoginRegButton';
 import NoteButton from './components/NoteButton';
+import Tooltip from './components/primitives/Tooltip';
 
 function App() {
   const [ user, setUser ] = useState({
@@ -9,9 +10,14 @@ function App() {
     username: localStorage.getItem('username'),
     email: localStorage.getItem('email'),
   })
-  const [ widgets, setWidgets ] = useState([])
+  const [widgets, setWidgets] = useState([])
+  const [noteList, setNoteList] = useState([])
 
-  const appState = { user, setUser, widgets, setWidgets }
+  const appState = { user, setUser,
+    widgets, setWidgets,
+    noteList, setNoteList,
+  }
+  
   
   return (
     <div className={`flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/img/ocean.jpg")`}}>

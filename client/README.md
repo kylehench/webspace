@@ -1,3 +1,6 @@
+## Development
+In VS Code, ```Ctrl + P``` + "```task start app```" will run React scripts and Flask API server in 2 terminals.
+
 ## Deployment
 
 ## Attributions

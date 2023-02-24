@@ -5,28 +5,24 @@ import { FaRegStickyNote } from 'react-icons/fa'
 import { BsPlusCircle } from 'react-icons/bs'
 import ScrollArea from './primitives/ScrollArea'
 
-// const TAGS = []
-const TAGS = Array.from({ length: 1 }).map((_, i, a) => `v1.2.0-beta.${a.length - i}`);
-
 const NoteButton = ({ appState }) => {
-  const { user, widgets, setWidgets } = appState
+  const { noteList, setNoteList, user, widgets, setWidgets } = appState
 
   const [open, setOpen] = useState(false)
-
-  const [notes, setNotes] = useState([])
   
   useEffect(() => {
     // if user is signed in, get ids and titles of their notes
     if (user.username) {
       axios.get('/api/notes')
-        .then(res => setNotes(res.data))
+        .then(res => setNoteList(res.data))
         .catch(err => console.log(err))
     }
-  }, [user])
+  }, [])
 
-  const addNote = (id) => {
+  const addNote = (id, noteListIdx) => {
     setWidgets([...widgets, {
       id,
+      noteListIdx,
       user_id: user.user_id,
       type: 'note',
       react_id: Math.random()
@@ -41,7 +37,7 @@ const NoteButton = ({ appState }) => {
       setOpen={setOpen}
     >
       <ScrollArea
-        height={notes.length < 8 ? 'auto' : '360px'}
+        height={noteList.length < 8 ? 'auto' : '360px'}
       >
         <div className="py-[15px] px-5">
           
@@ -61,15 +57,15 @@ const NoteButton = ({ appState }) => {
           <div className="text-mauve11 text-[13px] leading-[18px] mt-2.5 pt-2.5 border-t border-t-mauve8">
             Open note
           </div>
-          {notes.map((note) => (
+          {noteList.map((note, i) => (
             <div
               className="text-cyan11 text-[15px] leading-[18px] font-medium mt-1.5 pt-2.5 border-t border-t-mauve5"
               key={note.id}
             >
               <button
-                className='h-6 w-full text-left'
+                className='h-6 w-[160px] text-left truncate overflow-hidden'
                 onClick={() => {
-                  addNote(note.id)
+                  addNote(note.id, i)
                   setOpen(false)
                 }}
               >

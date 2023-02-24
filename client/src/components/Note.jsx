@@ -44,36 +44,39 @@ const Note = ({ widgetProps, appState }) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
     setSyncTimeoutId(setTimeout(() => {
       if (widgetProps.id) {
-        console.log(title)
-        console.log(content)
         axios.put(`/api/notes/${widgetProps.id}`, {
           title: noteRef.current.title,
           content: noteRef.current.content
         })
+
+        // update title in NoteList
+        appState.setNoteList(appState.noteList.map((note, i) => {
+          if (i===widgetProps.noteListIdx) {
+            note.title = noteRef.current.title
+          }
+          return note
+        }))
       }
     }, 1500))
   }
   
   
   return (
-
     <GridItem
       widgetProps={{...widgetProps}}
       title={title}
       titleChange={titleChange}
+      appState={appState}
     >
       <div className='h-full overflow-hidden rounded-md'>
         <textarea
-          className='p-3 bg-transparent text-sm outline-0 block h-full w-full resize-none'
+          className='p-3 bg-transparent text-slate-800 text-sm outline-0 block h-full w-full resize-none'
           onChange={(e) => contentChange(e.target.value)}
           value={content}
+          maxLength={1e4}
         ></textarea>
       </div>
     </GridItem>
-    
-
-
-
   )
 }
 

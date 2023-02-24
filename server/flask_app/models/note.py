@@ -4,8 +4,8 @@ from datetime import datetime
 class Note(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer)
-  title = db.Column(db.String(50))
-  content = db.Column(db.String(50))
+  title = db.Column(db.String(100))
+  content = db.Column(db.String(int(1e4)))
   created_at = db.Column(db.String(255), default=datetime.now)
   updated_at = db.Column(db.String(255), default=datetime.now, onupdate=datetime.now)
 
