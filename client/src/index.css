@@ -5,3 +5,7 @@
 div > .react-grid-item.react-grid-placeholder {
   background: orange;
 }
+
+.react-grid-item:hover{
+  z-index: 10;
+}

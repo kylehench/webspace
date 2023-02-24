@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import GridItem from './primitives/GridItem'
 import axios from 'axios'
+import { IoTrashOutline } from "react-icons/io5"
 
 const Note = ({ widgetProps, appState }) => {
 
@@ -50,12 +51,12 @@ const Note = ({ widgetProps, appState }) => {
         })
 
         // update title in NoteList
-        appState.setNoteList(appState.noteList.map((note, i) => {
-          if (i===widgetProps.noteListIdx) {
-            note.title = noteRef.current.title
-          }
-          return note
-        }))
+        appState.setNoteList(noteList => {
+          const note = noteList.splice(noteList, 1)[0]
+          note.title = noteRef.current.title
+          noteList.splice(0, 0, note)
+          return noteList
+        })
       }
     }, 1500))
   }
@@ -67,6 +68,14 @@ const Note = ({ widgetProps, appState }) => {
       title={title}
       titleChange={titleChange}
       appState={appState}
+      optionsPane={
+        <div className='p-4'>
+          Customize Color
+          <button className="px-[15px] mt-3 block items-center text-center mx-auto justify-center rounded text-[15px] leading-none font-medium h-[35px] bg-red4 text-red11 hover:bg-red6  outline-none cursor-default" onClick={() => {}}>
+            <IoTrashOutline />
+          </button>
+        </div>
+      }
     >
       <div className='h-full overflow-hidden rounded-md'>
         <textarea

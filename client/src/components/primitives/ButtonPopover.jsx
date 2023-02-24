@@ -3,7 +3,7 @@ import * as Popover from '@radix-ui/react-popover'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import Tooltip from './Tooltip'
 
-const ButtonPopover = ({ hoverText, icon, children, side, closeButton, open, setOpen }) => {
+const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, open, setOpen }) => {
   // note: open and setOpen refer to Popover status
   
   const [toolTipOpen, setToolTipOpen ] = useState(false)
@@ -11,7 +11,7 @@ const ButtonPopover = ({ hoverText, icon, children, side, closeButton, open, set
   return (
     <Tooltip 
       text={hoverText} 
-      side={'right'}
+      side={side}
       toolTipOpen={open ? false : toolTipOpen}
       setToolTipOpen={open ? () => {} : setToolTipOpen}
     >
@@ -21,7 +21,7 @@ const ButtonPopover = ({ hoverText, icon, children, side, closeButton, open, set
       >
         <Popover.Trigger asChild>
           <button
-            className="my-2 rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-cyan11 bg-white shadow-[0_2px_10px] shadow-blackA7 hover:bg-cyan3 cursor-default outline-none"
+            className={styled===false ? '' : 'my-2 rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-cyan11 bg-white shadow-[0_2px_10px] shadow-blackA7 hover:bg-cyan3 cursor-default outline-none'}
             aria-label="Update dimensions"
           >
             {icon}

@@ -24,13 +24,14 @@ const Grid = ({ appState }) => {
 
   return (
       <ResponsiveGridLayout
-      className={`${transparentSelection && 'react-draggable-transparent-selection'} max-w-[1600px] mx-auto`}
+        className={`${transparentSelection && 'react-draggable-transparent-selection'} max-w-[1600px] mx-auto`}
         layouts={{ lg: layout }}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
         rowHeight={100}
         // width={100}
         draggableHandle=".grid-item__title"
+        style={{zIndex:'0'}}
         margin={[15,15]}
         containerPadding={[15,15]}
         onDragStart={() => {setTransparentSelection(true)}}

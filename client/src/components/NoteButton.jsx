@@ -72,7 +72,6 @@ const NoteButton = ({ appState }) => {
               >
                 {note.title ? note.title : '(untitled)'}
               </button>
-              
             </div>
           ))}
         </div>
