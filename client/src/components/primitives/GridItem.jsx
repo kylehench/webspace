@@ -46,6 +46,7 @@ const GridItem = ({ widgetProps, title, titleChange, optionsPane, appState, chil
                 setOpen={setOptionsOpen}
                 side='bottom'
                 closeButton={false}
+                arrow={false}
               >
                 {optionsPane}
               </ButtonPopover>

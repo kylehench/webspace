@@ -3,7 +3,7 @@ import * as Popover from '@radix-ui/react-popover'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import Tooltip from './Tooltip'
 
-const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, open, setOpen, }) => {
+const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, open, setOpen, arrow}) => {
 
   const [toolTipOpen, setToolTipOpen ] = useState(false)
   const [ tooltipDisabled, setTooltipDisabled ] = useState(false)
@@ -48,7 +48,9 @@ const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, o
                 <Cross2Icon />
               </Popover.Close>
             }
-            <Popover.Arrow className="fill-white" />
+            { arrow !== false &&
+              <Popover.Arrow className="fill-white" />
+            }
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>

@@ -1,7 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
 import GridItem from './primitives/GridItem'
 import axios from 'axios'
+import colors from 'tailwindcss/colors'
 import { IoTrashOutline } from "react-icons/io5"
+
+const colorsList = [
+  [colors.yellow[200], colors.yellow[300]],
+  [colors.green[200], colors.green[300]],
+  [colors.pink[200], colors.pink[300]],
+  [colors.purple[200], colors.purple[300]],
+]
+
 
 const Note = ({ widgetProps, appState }) => {
 
@@ -84,12 +93,22 @@ const Note = ({ widgetProps, appState }) => {
       titleChange={titleChange}
       appState={appState}
       optionsPane={
-        <div className='p-4'>
-          Customize Color
+        <div className=''>
+
+          {/* customize color */}
+          <div className='flex w-full'>
+            {colorsList.map(([contentBgColor, titleBgColor], i) => {
+              const buttonStyle = {}
+              if (i===0) buttonStyle.borderTopLeftRadius = '4px'
+              if (i===colorsList.length-1) buttonStyle.borderTopRightRadius = '4px'
+              return <button className='py-4 flex-1' style={{...buttonStyle, backgroundColor: titleBgColor}} key={i}></button>
+            }
+            )}
+          </div>
 
           {/* delete note */}
-          <button className="px-[15px] mt-3 block items-center text-center mx-auto justify-center rounded text-[15px] leading-none font-medium h-[35px] bg-red4 text-red11 hover:bg-red6  outline-none cursor-default" onClick={() => deleteNote()}>
-            <IoTrashOutline />
+          <button className="flex px-6 block items-center text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] bg-red4 text-red11 hover:bg-red6  outline-none cursor-default" onClick={() => deleteNote()}>
+            <IoTrashOutline /><div className='pl-2'>Delete</div>
           </button>
 
         </div>
