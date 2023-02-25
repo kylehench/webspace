@@ -6,7 +6,7 @@ import { BsPlusCircle } from 'react-icons/bs'
 import ScrollArea from './primitives/ScrollArea'
 
 const NoteButton = ({ appState }) => {
-  const { noteList, setNoteList, user, widgets, setWidgets } = appState
+  const { noteList, noteListDispatch, user, widgets, setWidgets } = appState
 
   const [open, setOpen] = useState(false)
   
@@ -14,15 +14,19 @@ const NoteButton = ({ appState }) => {
     // if user is signed in, get ids and titles of their notes
     if (user.username) {
       axios.get('/api/notes')
-        .then(res => setNoteList(res.data))
+        .then(res => noteListDispatch({
+          type: "SET",
+          payload: res.data
+        }))
         .catch(err => console.log(err))
+    } else {
+      noteListDispatch({type: "CLEAR"})
     }
   }, [user])
 
-  const addNote = (id, noteListIdx) => {
+  const addNote = (id) => {
     setWidgets([...widgets, {
       id,
-      noteListIdx,
       user_id: user.user_id,
       type: 'note',
       react_id: Math.random()
@@ -58,7 +62,7 @@ const NoteButton = ({ appState }) => {
           <div className="text-mauve11 text-[13px] leading-[18px] mt-2.5 pt-2.5 border-t border-t-mauve8">
             Open note
           </div>
-          {noteList.map((note, i) => (
+          {noteList.map((note) => (
             <div
               className="text-cyan11 text-[15px] leading-[18px] font-medium mt-1.5 pt-2.5 border-t border-t-mauve5"
               key={note.id}
@@ -66,7 +70,7 @@ const NoteButton = ({ appState }) => {
               <button
                 className='h-6 w-[160px] text-left truncate overflow-hidden'
                 onClick={() => {
-                  addNote(note.id, i)
+                  addNote(note.id)
                   setOpen(false)
                 }}
               >

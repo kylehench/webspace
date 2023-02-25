@@ -39,6 +39,16 @@ class NoteResource(Resource):
     note.content = new_note_dict['content']
     db.session.commit()
     return '', 204
+  
+  def delete(self, note_id):
+    user_id = get_user_id()
+    note = db.session.get(Note, note_id)
+    if not note or note.user_id != user_id:
+      abort(401, message="Invalid request.")
+    db.session.delete(note)
+    db.session.commit()
+    return '', '204'
+
 
 
 class NoteListResource(Resource):

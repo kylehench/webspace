@@ -50,17 +50,32 @@ const Note = ({ widgetProps, appState }) => {
           content: noteRef.current.content
         })
 
-        // update title in NoteList
-        appState.setNoteList(noteList => {
-          const note = noteList.splice(noteList, 1)[0]
-          note.title = noteRef.current.title
-          noteList.splice(0, 0, note)
-          return noteList
+        appState.noteListDispatch({
+          type: "UPDATE_ONE",
+          id: widgetProps.id,
+          payload: {
+            title: noteRef.current.title,
+            content: noteRef.current.content
+          }
         })
       }
     }, 1500))
   }
   
+  // delete note
+  const deleteNote = () => {
+    axios.delete(`/api/notes/${widgetProps.id}`)
+      .then(res => {
+        appState.noteListDispatch({
+          type: "DELETE_ONE",
+          id: widgetProps.id,
+        })
+        appState.setWidgets(widgets => {
+          widgets = widgets.filter(widget => !(widget.type==='note' && widget.id===widgetProps.id))
+          return widgets
+        })
+      }).catch(err => console.log(err))
+  }
   
   return (
     <GridItem
@@ -71,9 +86,12 @@ const Note = ({ widgetProps, appState }) => {
       optionsPane={
         <div className='p-4'>
           Customize Color
-          <button className="px-[15px] mt-3 block items-center text-center mx-auto justify-center rounded text-[15px] leading-none font-medium h-[35px] bg-red4 text-red11 hover:bg-red6  outline-none cursor-default" onClick={() => {}}>
+
+          {/* delete note */}
+          <button className="px-[15px] mt-3 block items-center text-center mx-auto justify-center rounded text-[15px] leading-none font-medium h-[35px] bg-red4 text-red11 hover:bg-red6  outline-none cursor-default" onClick={() => deleteNote()}>
             <IoTrashOutline />
           </button>
+
         </div>
       }
     >

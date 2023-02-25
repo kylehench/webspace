@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
+import noteListReducer from './components/reducers/NoteListReducer';
 import Grid from './components/Grid';
 import LoginRegButton from './components/LoginRegButton';
 import NoteButton from './components/NoteButton';
-import Tooltip from './components/primitives/Tooltip';
 
 function App() {
   const [ user, setUser ] = useState({
@@ -11,12 +11,12 @@ function App() {
     email: localStorage.getItem('email'),
   })
   const [widgets, setWidgets] = useState([])
-  const [noteList, setNoteList] = useState([])
+  const [noteList, noteListDispatch] = useReducer(noteListReducer, [])
 
   const appState = {
     user, setUser,
     widgets, setWidgets,
-    noteList, setNoteList,
+    noteList, noteListDispatch,
   }
   
   
