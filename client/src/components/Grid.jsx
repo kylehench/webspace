@@ -43,7 +43,7 @@ const Grid = ({ appState }) => {
           const widgetProps = {...widgetDefaults[widget.type], ...widget, widgetIdx: i}
           return (
             <div 
-              key={`${widget.type}_${widget.react_id}`}
+              key={`${widget.type}_${widget.reactId}`}
               className='grid-cell flex flex-col h-full rounded-md bg-slate-100 '
               style={{backgroundColor: widgetProps.contentBgColor}}
             >

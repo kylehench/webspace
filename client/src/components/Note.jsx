@@ -5,10 +5,12 @@ import colors from 'tailwindcss/colors'
 import { IoTrashOutline } from "react-icons/io5"
 
 const colorsList = [
-  [colors.yellow[200], colors.yellow[300]],
-  [colors.green[200], colors.green[300]],
-  [colors.pink[200], colors.pink[300]],
-  [colors.purple[200], colors.purple[300]],
+  [colors.yellow[100], colors.yellow[300]],
+  [colors.green[100], colors.green[300]],
+  [colors.blue[100], colors.blue[300]],
+  [colors.purple[100], colors.purple[300]],
+  [colors.pink[100], colors.pink[300]],
+  [colors.gray[100], colors.gray[300]],
 ]
 
 
@@ -70,6 +72,16 @@ const Note = ({ widgetProps, appState }) => {
       }
     }, 1500))
   }
+
+  // set note color
+  const setColor = (contentBgColor, titleBgColor) => {
+    appState.setWidgets(widgets => widgets.map(widget => {
+      if (widget.reactId===widgetProps.reactId) {
+        widget = {...widget, contentBgColor, titleBgColor}
+      }
+      return widget
+    }))
+  }
   
   // delete note
   const deleteNote = () => {
@@ -95,19 +107,24 @@ const Note = ({ widgetProps, appState }) => {
       optionsPane={
         <div className=''>
 
-          {/* customize color */}
-          <div className='flex w-full'>
+          {/* background color selector */}
+          <div className='flex'>
             {colorsList.map(([contentBgColor, titleBgColor], i) => {
               const buttonStyle = {}
               if (i===0) buttonStyle.borderTopLeftRadius = '4px'
               if (i===colorsList.length-1) buttonStyle.borderTopRightRadius = '4px'
-              return <button className='py-4 flex-1' style={{...buttonStyle, backgroundColor: titleBgColor}} key={i}></button>
+              return <button 
+                  className='py-4 flex-1'
+                  style={{...buttonStyle, backgroundColor: titleBgColor}}
+                  key={i}
+                  onClick={() => setColor(contentBgColor, titleBgColor)}
+                ></button>
             }
             )}
           </div>
 
           {/* delete note */}
-          <button className="flex px-6 block items-center text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] bg-red4 text-red11 hover:bg-red6  outline-none cursor-default" onClick={() => deleteNote()}>
+          <button className="flex items-center px-12 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] bg-red5 text-red11 hover:bg-red7 outline-none cursor-default" onClick={() => deleteNote()}>
             <IoTrashOutline /><div className='pl-2'>Delete</div>
           </button>
 

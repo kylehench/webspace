@@ -15,7 +15,7 @@ const GridItem = ({ widgetProps, title, titleChange, optionsPane, appState, chil
   
   return (
     <>
-      <div className="grid-item__title flex justify-between items-center h-7 rounded-t-md"
+      <div className="grid-item__title flex justify-between items-center h-7 rounded-t-md slideUpAndFade"
         style={{backgroundColor: widgetProps.titleBgColor}}
       >
         <div className='w-14'>{widgetProps.titleLeft}</div>

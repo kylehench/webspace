@@ -29,7 +29,7 @@ const NoteButton = ({ appState }) => {
       id,
       user_id: user.user_id,
       type: 'note',
-      react_id: Math.random()
+      reactId: Math.random()
     }])
   }
   

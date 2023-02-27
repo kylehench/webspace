@@ -5,7 +5,7 @@ const widgetDefaults = {
     title: '',
     titleBgColor: colors.yellow[300],
     content: '',
-    contentBgColor: colors.yellow[200],
+    contentBgColor: colors.yellow[100],
   }
 }
 
