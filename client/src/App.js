@@ -1,5 +1,6 @@
 import { useReducer, useState } from 'react';
 import noteListReducer from './components/reducers/NoteListReducer';
+import widgetsReducer from './components/reducers/WidgetsReducer';
 import Grid from './components/Grid';
 import LoginRegButton from './components/LoginRegButton';
 import NoteButton from './components/NoteButton';
@@ -10,12 +11,12 @@ function App() {
     username: localStorage.getItem('username'),
     email: localStorage.getItem('email'),
   })
-  const [widgets, setWidgets] = useState([])
+  const [widgets, widgetsDispatch] = useReducer(widgetsReducer, [])
   const [noteList, noteListDispatch] = useReducer(noteListReducer, [])
 
   const appState = {
     user, setUser,
-    widgets, setWidgets,
+    widgets, widgetsDispatch,
     noteList, noteListDispatch,
   }
   

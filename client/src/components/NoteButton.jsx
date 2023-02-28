@@ -6,10 +6,10 @@ import { BsPlusCircle } from 'react-icons/bs'
 import ScrollArea from './primitives/ScrollArea'
 
 const NoteButton = ({ appState }) => {
-  const { noteList, noteListDispatch, user, widgets, setWidgets } = appState
+  const { noteList, noteListDispatch, user, widgetsDispatch } = appState
 
   const [open, setOpen] = useState(false)
-  
+
   useEffect(() => {
     // if user is signed in, get ids and titles of their notes
     if (user.username) {
@@ -25,12 +25,11 @@ const NoteButton = ({ appState }) => {
   }, [user])
 
   const addNote = (id) => {
-    setWidgets([...widgets, {
-      id,
+    widgetsDispatch({type: "CREATE", payload: {
+      noteId: id,
       user_id: user.user_id,
       type: 'note',
-      reactId: Math.random()
-    }])
+    }})
   }
   
   return (

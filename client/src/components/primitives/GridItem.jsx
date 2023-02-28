@@ -5,12 +5,16 @@ import Tooltip from './Tooltip';
 import ButtonPopover from './ButtonPopover';
 
 const GridItem = ({ widgetProps, title, titleChange, optionsPane, appState, children }) => {
-  const { widgets, setWidgets } = appState
+  const { widgets, widgetsDispatch } = appState
 
   const [ optionsOpen, setOptionsOpen ] = useState()
 
+  const updateWidgetProps = newData => {
+    widgetsDispatch({action: "UPDATE", index: widgetProps.index, payload: newData})
+  }
+  
   const closeWidget = () => {
-    setWidgets(widgets.filter((widget, i) => i !== widgetProps.widgetIdx))
+    widgetsDispatch({type: "DELETE", index: widgetProps.index})
   }
   
   return (

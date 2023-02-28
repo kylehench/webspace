@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as Tabs from '@radix-ui/react-tabs'
 
 const LoginRegForm = ({ appState }) => {
-  const { user, setUser, setWidgets } = appState
+  const { user, setUser, widgetsDispatch } = appState
   
   const [ registerUsername, setRegisterUsername ] = useState()
   const [ registerEmail, setRegisterEmail ] = useState()
@@ -60,7 +60,7 @@ const LoginRegForm = ({ appState }) => {
       if (res.data.status==='success') {
         localStorage.clear()
         setUser({})
-        setWidgets([])
+        widgetsDispatch({type: "CLEAR"})
       }
     }).catch(err => console.log(err))
   }

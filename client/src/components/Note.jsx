@@ -20,81 +20,65 @@ const Note = ({ widgetProps, appState }) => {
   const [ title, setTitle ] = useState('')
   const [ content, setContent ] = useState('')
 
-  const noteRef = useRef({title: '', content: ''})
-
   // load note if id present, otherwise post new note
   useEffect(() => {
-    if (widgetProps.id) {
+    if (widgetProps.noteId) {
       // load note
-      axios.get(`/api/notes/${widgetProps.id}`)
+      axios.get(`/api/notes/${widgetProps.noteId}`)
         .then(res => {
           const note = res.data.note
           setTitle(note.title)
           setContent(note.content)
-          noteRef.current = note
         })
     } else {
       // post new note, save note id
       axios.post('/api/notes', { title, content })
-        .then(res => widgetProps.id = res.data)
+        .then(res => {
+          appState.noteListDispatch({type: "CREATE", payload: {
+            id: res.data, title, content
+          }})
+          appState.widgetsDispatch({type: "UPDATE", payload: {noteId: res.data}})
+        })
     }
   }, [])
 
   const titleChange = (value) => {
     setTitle(value)
-    noteRef.current.title = value
-    syncHandler()
+    syncHandler({title: value})
   }
   const contentChange = (value) => {
     setContent(value)
-    noteRef.current.content = value
-    syncHandler()
+    syncHandler({content: value})
+  }
+  const colorChange = (newData) => {
+    syncHandler(newData)
   }
   
   // syncs note with server
-  const syncHandler = () => {
+  const syncHandler = (newData) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
     setSyncTimeoutId(setTimeout(() => {
-      if (widgetProps.id) {
-        axios.put(`/api/notes/${widgetProps.id}`, {
-          title: noteRef.current.title,
-          content: noteRef.current.content
-        })
-
+      if (widgetProps.noteId) {
+        const newProps = {title, content, ...newData}
+        axios.put(`/api/notes/${widgetProps.noteId}`, newProps)
         appState.noteListDispatch({
           type: "UPDATE_ONE",
-          id: widgetProps.id,
-          payload: {
-            title: noteRef.current.title,
-            content: noteRef.current.content
-          }
+          id: widgetProps.noteId,
+          payload: newProps
         })
       }
     }, 1500))
   }
-
-  // set note color
-  const setColor = (contentBgColor, titleBgColor) => {
-    appState.setWidgets(widgets => widgets.map(widget => {
-      if (widget.reactId===widgetProps.reactId) {
-        widget = {...widget, contentBgColor, titleBgColor}
-      }
-      return widget
-    }))
-  }
   
   // delete note
   const deleteNote = () => {
-    axios.delete(`/api/notes/${widgetProps.id}`)
+    axios.delete(`/api/notes/${widgetProps.noteId}`)
       .then(res => {
         appState.noteListDispatch({
           type: "DELETE_ONE",
-          id: widgetProps.id,
+          id: widgetProps.noteId,
         })
-        appState.setWidgets(widgets => {
-          widgets = widgets.filter(widget => !(widget.type==='note' && widget.id===widgetProps.id))
-          return widgets
-        })
+        appState.widgetsDispatch({type: "DELETE", index: widgetProps.index})
       }).catch(err => console.log(err))
   }
   
@@ -117,7 +101,7 @@ const Note = ({ widgetProps, appState }) => {
                   className='py-4 flex-1'
                   style={{...buttonStyle, backgroundColor: titleBgColor}}
                   key={i}
-                  onClick={() => setColor(contentBgColor, titleBgColor)}
+                  onClick={() => colorChange({contentBgColor, titleBgColor})}
                 ></button>
             }
             )}

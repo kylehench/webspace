@@ -1,6 +1,5 @@
 from flask_app import app, db
 from flask_restful import reqparse, abort, Api, Resource, request
-import flask_app.models.note
 from flask_app.models.note import Note, note_schema
 from flask_app.services.authorization import user_id_from_token
 
@@ -9,6 +8,8 @@ api = Api(app)
 parser = reqparse.RequestParser()
 parser.add_argument('title')
 parser.add_argument('content')
+parser.add_argument('titleBgColor')
+parser.add_argument('contentBgColor')
 
 def get_user_id():
   try:
@@ -35,8 +36,7 @@ class NoteResource(Resource):
     # check permission to update note
     if user_id != note.user_id:
       abort(401, message="You do not have authorization to edit this resource.")
-    note.title = new_note_dict['title']
-    note.content = new_note_dict['content']
+    note.update(new_note_dict)
     db.session.commit()
     return '', 204
   
@@ -53,6 +53,7 @@ class NoteResource(Resource):
 
 class NoteListResource(Resource):
   def get(self):
+    # note: returns id and titles of notes in updated order (descending)
     notes = db.session.execute(db.select(Note.id, Note.title).order_by(Note.updated_at.desc()))
     notes = [{"id": id, "title": title} for id, title in notes]
     return notes
