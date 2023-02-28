@@ -8,7 +8,7 @@ const noteListReducer = (noteList, action) => {
     case "CREATE":
       return [action.payload, ...noteList]
 
-    case "UPDATE_ONE":
+    case "UPDATE":
       // requires action.id (note id in database)
       // identifies index of note in noteList, updates value, and moves to top of list
       const newNoteList = noteList.slice()
@@ -19,7 +19,7 @@ const noteListReducer = (noteList, action) => {
       newNoteList.splice(0, 0, note)
       return newNoteList
       
-      case "DELETE_ONE":
+      case "DELETE":
         // requres action.id (note id in database)
         return noteList.filter(note => note.id !== action.id)
 

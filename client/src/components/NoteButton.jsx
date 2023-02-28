@@ -27,7 +27,6 @@ const NoteButton = ({ appState }) => {
   const addNote = (id) => {
     widgetsDispatch({type: "CREATE", payload: {
       noteId: id,
-      user_id: user.user_id,
       type: 'note',
     }})
   }

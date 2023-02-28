@@ -16,9 +16,12 @@ const colorsList = [
 
 const Note = ({ widgetProps, appState }) => {
 
-  const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
+  const { noteListDispatch, widgetsDispatch } = appState
+
   const [ title, setTitle ] = useState('')
   const [ content, setContent ] = useState('')
+  
+  const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
 
   // load note if id present, otherwise post new note
   useEffect(() => {
@@ -29,15 +32,19 @@ const Note = ({ widgetProps, appState }) => {
           const note = res.data.note
           setTitle(note.title)
           setContent(note.content)
+          widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {
+            titleBgColor: note.titleBgColor,
+            contentBgColor: note.contentBgColor
+          }})
         })
     } else {
       // post new note, save note id
       axios.post('/api/notes', { title, content })
         .then(res => {
-          appState.noteListDispatch({type: "CREATE", payload: {
+          noteListDispatch({type: "CREATE", payload: {
             id: res.data, title, content
           }})
-          appState.widgetsDispatch({type: "UPDATE", payload: {noteId: res.data}})
+          widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {noteId: res.data}})
         })
     }
   }, [])
@@ -52,6 +59,11 @@ const Note = ({ widgetProps, appState }) => {
   }
   const colorChange = (newData) => {
     syncHandler(newData)
+    widgetsDispatch({
+      type: "UPDATE",
+      reactId: widgetProps.reactId,
+      payload: newData
+    })
   }
   
   // syncs note with server
@@ -61,8 +73,8 @@ const Note = ({ widgetProps, appState }) => {
       if (widgetProps.noteId) {
         const newProps = {title, content, ...newData}
         axios.put(`/api/notes/${widgetProps.noteId}`, newProps)
-        appState.noteListDispatch({
-          type: "UPDATE_ONE",
+        noteListDispatch({
+          type: "UPDATE",
           id: widgetProps.noteId,
           payload: newProps
         })
@@ -74,11 +86,11 @@ const Note = ({ widgetProps, appState }) => {
   const deleteNote = () => {
     axios.delete(`/api/notes/${widgetProps.noteId}`)
       .then(res => {
-        appState.noteListDispatch({
-          type: "DELETE_ONE",
+        noteListDispatch({
+          type: "DELETE",
           id: widgetProps.noteId,
         })
-        appState.widgetsDispatch({type: "DELETE", index: widgetProps.index})
+        widgetsDispatch({type: "DELETE_BY_NOTE_ID", noteId: widgetProps.noteId})
       }).catch(err => console.log(err))
   }
   

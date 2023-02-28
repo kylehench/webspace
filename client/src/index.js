@@ -7,11 +7,11 @@ import * as RTooltip from '@radix-ui/react-tooltip'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <RTooltip.Provider>
       <App />
     </RTooltip.Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

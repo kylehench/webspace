@@ -6,17 +6,21 @@ const widgetsReducer = (widgetsList, action) => {
       return [...widgetsList, {...action.payload, reactId: Math.random()}]
     
     case "UPDATE":
-      // requires action.index to identify widget, and action.payload with updated values
+      // requires action.reactId to identify widget, and action.payload with updated values
       return widgetsList.map(widget => {
-        if (widget.index===action.index) {
+        if (widget.reactId===action.reactId) {
           widget = {...widget, ...action.payload}
         }
         return widget
       })
 
     case "DELETE":
-      // requres action.index
-      return widgetsList.filter((widget, i) => i !== action.index)
+      // requres action.reactId
+      return widgetsList.filter(widget => widget.reactId !== action.reactId)
+
+    case "DELETE_BY_NOTE_ID":
+      // note: will delete all widgets with same note ID
+      return widgetsList.filter(widget => widget.noteId !== action.noteId)
 
     case "CLEAR":
       return []
