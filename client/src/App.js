@@ -1,6 +1,6 @@
 import { useReducer, useState } from 'react';
-import noteListReducer from './components/reducers/NoteListReducer';
-import widgetsReducer from './components/reducers/WidgetsReducer';
+import noteListReducer from './reducers/NoteListReducer';
+import widgetsReducer from './reducers/WidgetsReducer';
 import Grid from './components/Grid';
 import LoginRegButton from './components/LoginRegButton';
 import NoteButton from './components/NoteButton';

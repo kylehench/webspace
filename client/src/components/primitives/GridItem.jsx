@@ -4,7 +4,7 @@ import { IoCloseOutline, IoEllipsisHorizontal } from "react-icons/io5";
 import Tooltip from './Tooltip';
 import ButtonPopover from './ButtonPopover';
 
-const GridItem = ({ widgetProps, title, titleChange, optionsPane, appState, children }) => {
+const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, optionsPane, appState, children }) => {
   const { widgetsDispatch } = appState
 
   const [ optionsOpen, setOptionsOpen ] = useState()
@@ -19,10 +19,10 @@ const GridItem = ({ widgetProps, title, titleChange, optionsPane, appState, chil
   
   return (
     <>
-      <div className="grid-item__title flex justify-between items-center h-7 rounded-t-md slideUpAndFade"
+      <div className="grid-item__title flex justify-between items-center h-7 rounded-t-md slideUpAndFade transition-colors"
         style={{backgroundColor: widgetProps.titleBgColor}}
       >
-        <div className='w-14'>{widgetProps.titleLeft}</div>
+        <div className='w-14'>{titleLeft}</div>
         <div className='flex-1 min-h-[20px]'>
           <input
             type="text"
@@ -34,6 +34,9 @@ const GridItem = ({ widgetProps, title, titleChange, optionsPane, appState, chil
           />
         </div>
         <div className='flex justify-end'>
+          {titleRight}
+
+          {/* options pane */}
           { optionsPane &&
             <div
               className='flex justify-center items-center h-7 w-7 hover:bg-gray-800/10'

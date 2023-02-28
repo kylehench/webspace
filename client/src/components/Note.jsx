@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GridItem from './primitives/GridItem'
 import axios from 'axios'
 import colors from 'tailwindcss/colors'
 import { IoTrashOutline } from "react-icons/io5"
+import { IoSync } from "react-icons/io5"
 
 const colorsList = [
   [colors.yellow[100], colors.yellow[300]],
@@ -21,6 +22,7 @@ const Note = ({ widgetProps, appState }) => {
   const [ title, setTitle ] = useState('')
   const [ content, setContent ] = useState('')
   
+  const [ loading, setLoading ] = useState(true)
   const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
 
   // load note if id present, otherwise post new note
@@ -36,15 +38,17 @@ const Note = ({ widgetProps, appState }) => {
             titleBgColor: note.titleBgColor,
             contentBgColor: note.contentBgColor
           }})
+          setLoading(false)
         })
-    } else {
-      // post new note, save note id
-      axios.post('/api/notes', { title, content })
+      } else {
+        // post new note, save note id
+        axios.post('/api/notes', { title, content })
         .then(res => {
           noteListDispatch({type: "CREATE", payload: {
             id: res.data, title, content
           }})
           widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {noteId: res.data}})
+          setLoading(false)
         })
     }
   }, [])
@@ -74,6 +78,9 @@ const Note = ({ widgetProps, appState }) => {
       if (widgetProps.noteId) {
         const newProps = {title, content, ...newData}
         axios.put(`/api/notes/${widgetProps.noteId}`, newProps)
+          .then(() => {
+            setSyncTimeoutId(0)
+          })
         noteListDispatch({
           type: "UPDATE",
           id: widgetProps.noteId,
@@ -99,7 +106,8 @@ const Note = ({ widgetProps, appState }) => {
     <GridItem
       widgetProps={{...widgetProps}}
       title={title}
-      titleChange={titleChange}
+      titleChange={loading ? ()=>{} : titleChange}
+      titleLeft={<IoSync className={`ml-2 text-slate-400 animate-spin transition-all duration-700 ${(!loading && syncTimeoutId===0) && 'text-transparent'}`} />}
       appState={appState}
       optionsPane={
         <div className=''>
@@ -129,12 +137,18 @@ const Note = ({ widgetProps, appState }) => {
       }
     >
       <div className='h-full overflow-hidden rounded-md'>
-        <textarea
-          className='p-3 bg-transparent text-slate-800 text-sm outline-0 block h-full w-full resize-none'
-          onChange={(e) => contentChange(e.target.value)}
-          value={content}
-          maxLength={1e4}
-        ></textarea>
+        { loading ?
+          <div
+            className='p-3 bg-transparent text-slate-800 text-sm outline-0'
+          ></div>
+        :
+          <textarea
+            className='p-3 bg-transparent text-slate-800 text-sm outline-0 block h-full w-full resize-none'
+            onChange={(e) => contentChange(e.target.value)}
+            value={content}
+            maxLength={1e4}
+          ></textarea>
+        }
       </div>
     </GridItem>
   )
