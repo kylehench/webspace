@@ -58,6 +58,7 @@ const Note = ({ widgetProps, appState }) => {
     syncHandler({content: value})
   }
   const colorChange = (newData) => {
+    console.log(newData);
     syncHandler(newData)
     widgetsDispatch({
       type: "UPDATE",

@@ -10,6 +10,7 @@ const widgetsReducer = (widgetsList, action) => {
       return widgetsList.map(widget => {
         if (widget.reactId===action.reactId) {
           widget = {...widget, ...action.payload}
+          console.log(widget);
         }
         return widget
       })

@@ -40,11 +40,14 @@ const Grid = ({ appState }) => {
         onResizeStop={() => {setTransparentSelection(false)}}
       >
         {appState.widgets.map((widget, i) => {
+          for (let key of ['titleBgColor', 'contentBgColor']) {
+            if (!widget[key]) delete widget[key]
+          }
           const widgetProps = {...widgetDefaults[widget.type], ...widget, index: i}
           return (
             <div 
               key={`${widget.reactId}`}
-              className='grid-cell flex flex-col h-full rounded-md bg-slate-100 '
+              className='grid-cell flex flex-col h-full rounded-md bg-slate-100'
               style={{backgroundColor: widgetProps.contentBgColor}}
             >
               {widgetMap[widget.type](widgetProps)}
