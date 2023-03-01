@@ -56,13 +56,12 @@ const LoginRegForm = ({ appState }) => {
   }
 
   const registerGuest = () => {
-    const randa = Math.floor(Math.random()*(1e7)).toString()
-    console.log(randa)
+    const rand = Math.floor(Math.random()*(1e7)).toString()
     register(
-      `guest_${randa}`,
-      `guest_${randa}@guest.guest`,
-      `guest_${randa}@guest.guest`,
-      `guest_${randa}@guest.guest`
+      `guest_${rand}`,
+      `guest_${rand}@guest.guest`,
+      `guest_${rand}@guest.guest`,
+      `guest_${rand}@guest.guest`
     )
   }
 
