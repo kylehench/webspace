@@ -17,12 +17,14 @@ const widgetsReducer = (widgetsList, action) => {
     
     case "UPDATE":
       // requires action.reactId to identify widget, and action.payload with updated values
-      return widgetsList.map(widget => {
+      widgetsList = widgetsList.map(widget => {
         if (widget.reactId===action.reactId) {
           widget = {...widget, ...action.payload}
         }
         return widget
       })
+      localStorage.setItem('webspaceWidgets', JSON.stringify(widgetsList))
+      return widgetsList
 
     case "DELETE":
       // requres action.reactId
