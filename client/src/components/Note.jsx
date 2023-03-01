@@ -29,7 +29,7 @@ const Note = ({ widgetProps, appState }) => {
   useEffect(() => {
     if (widgetProps.noteId) {
       // load note
-      axios.get(`/api/notes/${widgetProps.noteId}`)
+      axios.get(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`)
         .then(res => {
           const note = res.data.note
           setTitle(note.title)
@@ -42,7 +42,7 @@ const Note = ({ widgetProps, appState }) => {
         })
       } else {
         // post new note, save note id
-        axios.post('/api/notes', { title, content })
+        axios.post(`${process.env.REACT_APP_SERVER_URI}/api/notes`, { title, content })
         .then(res => {
           noteListDispatch({type: "CREATE", payload: {
             id: res.data, title, content
@@ -77,7 +77,7 @@ const Note = ({ widgetProps, appState }) => {
     setSyncTimeoutId(setTimeout(() => {
       if (widgetProps.noteId) {
         const newProps = {title, content, ...newData}
-        axios.put(`/api/notes/${widgetProps.noteId}`, newProps)
+        axios.put(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`, newProps)
           .then(() => {
             setSyncTimeoutId(0)
           })
@@ -92,7 +92,7 @@ const Note = ({ widgetProps, appState }) => {
   
   // delete note
   const deleteNote = () => {
-    axios.delete(`/api/notes/${widgetProps.noteId}`)
+    axios.delete(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`)
       .then(res => {
         noteListDispatch({
           type: "DELETE",
