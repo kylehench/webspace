@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Responsive, WidthProvider } from "react-grid-layout"
 import "/node_modules/react-grid-layout/css/styles.css";
 import "../index.css"
@@ -9,14 +9,21 @@ const ResponsiveGridLayout = WidthProvider(Responsive)
 
 const Grid = ({ appState }) => {
   const [transparentSelection, setTransparentSelection] = useState(true)
+  const [layout, setLayout] = useState([])
 
-  const layout = [
-    // { i: "key1", x: 0, y: 0, w: 1, h: 4 },
-    // { i: "key2", x: 1, y: 0, w: 1, h: 4 },
-    // { i: "key3", x: 2, y: 0, w: 1, h: 3 },
-    // { i: "key4", x: 3, y: 0, w: 1, h: 4 },
-    // { i: "key5", x: 4, y: 0, w: 1, h: 3 }
-  ]
+  // initial load layout
+  useEffect(() => {
+    setLayout(JSON.parse(localStorage.getItem('webspaceLayout')) || [])
+    appState.widgetsDispatch({type: 'LOCAL_STORAGE_GET'})
+  }, [])
+
+  // layout change handler
+  const handleLayoutChange = layout => {
+    setLayout(layout)
+    localStorage.setItem('webspaceLayout', JSON.stringify(layout))
+    appState.widgetsDispatch({type: 'LOCAL_STORAGE_SET'})
+  }
+  
 
   const widgetMap = {
     'note': (widgetProps) => <Note widgetProps={widgetProps} appState={appState} />,
@@ -26,6 +33,7 @@ const Grid = ({ appState }) => {
       <ResponsiveGridLayout
         className={`${transparentSelection && 'react-draggable-transparent-selection'} max-w-[1600px] mx-auto`}
         layouts={{ lg: layout }}
+        onLayoutChange={handleLayoutChange}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
         rowHeight={100}
@@ -45,7 +53,7 @@ const Grid = ({ appState }) => {
           }
           const widgetProps = {...widgetDefaults[widget.type], ...widget, index: i}
           return (
-            <div 
+            <div
               key={`${widget.reactId}`}
               className='grid-cell flex flex-col h-full rounded-md bg-slate-100'
               style={{backgroundColor: widgetProps.contentBgColor}}
