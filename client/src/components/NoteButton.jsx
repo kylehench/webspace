@@ -56,9 +56,12 @@ const NoteButton = ({ appState }) => {
             <BsPlusCircle />
             <span className='ml-2'>Create new note</span>
           </button>
-
           <div className="text-mauve11 text-[13px] leading-[18px] mt-2.5 pt-2.5 border-t border-t-mauve8">
-            Open note
+            { noteList.length>0 ?
+                'Open note'
+              :
+                'Future notes will appear here.'
+            }
           </div>
           {noteList.map((note) => (
             <div

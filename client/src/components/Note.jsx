@@ -17,7 +17,7 @@ const colorsList = [
 
 const Note = ({ widgetProps, appState }) => {
 
-  const { noteListDispatch, widgetsDispatch } = appState
+  const { noteListDispatch, widgetsDispatch, user } = appState
 
   const [ title, setTitle ] = useState('')
   const [ content, setContent ] = useState('')
@@ -40,16 +40,23 @@ const Note = ({ widgetProps, appState }) => {
           }})
           setLoading(false)
         })
+    } else if (user.id && !widgetProps.noSync) {
+      // post new note, save note id
+      axios.post(`${process.env.REACT_APP_SERVER_URI}/api/notes`, { title, content })
+      .then(res => {
+        noteListDispatch({type: "CREATE", payload: {
+          id: res.data, title, content
+        }})
+        widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {noteId: res.data}})
+        setLoading(false)
+      })
+    } else {
+      if (widgetProps.content) {
+        setTitle(widgetProps.title)
+        setContent(widgetProps.content)
       } else {
-        // post new note, save note id
-        axios.post(`${process.env.REACT_APP_SERVER_URI}/api/notes`, { title, content })
-        .then(res => {
-          noteListDispatch({type: "CREATE", payload: {
-            id: res.data, title, content
-          }})
-          widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {noteId: res.data}})
-          setLoading(false)
-        })
+        setContent('Please sign in or enter as guest to continue.')
+      }
     }
   }, [])
 
@@ -74,7 +81,7 @@ const Note = ({ widgetProps, appState }) => {
   const syncHandler = (newData) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
     setSyncTimeoutId(setTimeout(() => {
-      if (widgetProps.noteId) {
+      if (widgetProps.noteId && !widgetProps.noSync) {
         const newProps = {title, content, ...newData}
         axios.put(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`, newProps)
           .then(() => {
@@ -106,7 +113,7 @@ const Note = ({ widgetProps, appState }) => {
       widgetProps={{...widgetProps}}
       title={title}
       titleChange={loading ? ()=>{} : titleChange}
-      titleLeft={<IoSync className={`ml-2 text-slate-400 animate-spin transition-all duration-700 ${(!loading && syncTimeoutId===0) && 'text-transparent'}`} />}
+      titleLeft={<IoSync className={`ml-2 text-slate-400 animate-spin transition-all duration-700 ${((!loading && syncTimeoutId===0) || widgetProps.noSync) && 'text-transparent'}`} />}
       appState={appState}
       optionsPane={
         <div className=''>
@@ -136,16 +143,17 @@ const Note = ({ widgetProps, appState }) => {
       }
     >
       <div className='h-full overflow-hidden rounded-md'>
-        { loading ?
+        { loading && !widgetProps.noSync ?
           <div
             className='p-3 bg-transparent text-slate-800 text-sm outline-0'
-          ></div>
+          >{content}</div>
         :
           <textarea
             className='p-3 bg-transparent text-slate-800 text-sm outline-0 block h-full w-full resize-none'
             onChange={(e) => contentChange(e.target.value)}
             value={content}
             maxLength={1e4}
+            disabled={widgetProps.noSync}
           ></textarea>
         }
       </div>

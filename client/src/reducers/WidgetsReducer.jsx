@@ -3,17 +3,20 @@ const widgetsReducer = (widgetsList, action) => {
   switch (action.type) {
 
     case "SET":
-      return action.payload
+      return action.payload.map(widget => ({
+        ...widget,
+        reactId: widget.reactId || Math.random().toString()
+      }))
 
     case "LOCAL_STORAGE_GET":
-      return JSON.parse(localStorage.getItem('webspaceWidgets')) || []
+      return JSON.parse(localStorage.getItem('webspace_widgets')) || []
 
     case "LOCAL_STORAGE_SET":
-      localStorage.setItem('webspaceWidgets', JSON.stringify(widgetsList))
+      localStorage.setItem('webspace_widgets', JSON.stringify(widgetsList))
       return widgetsList
 
     case "CREATE":
-      return [...widgetsList, {...action.payload, reactId: Math.random()}]
+      return [...widgetsList, {...action.payload, reactId: action.payload.reactId || Math.random().toString()}]
     
     case "UPDATE":
       // requires action.reactId to identify widget, and action.payload with updated values
@@ -23,7 +26,7 @@ const widgetsReducer = (widgetsList, action) => {
         }
         return widget
       })
-      localStorage.setItem('webspaceWidgets', JSON.stringify(widgetsList))
+      localStorage.setItem('webspace_widgets', JSON.stringify(widgetsList))
       return widgetsList
 
     case "DELETE":

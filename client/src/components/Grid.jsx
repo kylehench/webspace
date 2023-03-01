@@ -4,24 +4,41 @@ import "/node_modules/react-grid-layout/css/styles.css";
 import "../index.css"
 import Note from './Note'
 import widgetDefaults from '../config/widgetDefaults';
+import welcomeNote from '../config/welcomeNote';
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
 const Grid = ({ appState }) => {
+  const { user, widgetsDispatch } = appState
+  
   const [transparentSelection, setTransparentSelection] = useState(true)
   const [layout, setLayout] = useState([])
 
   // initial load layout
   useEffect(() => {
-    setLayout(JSON.parse(localStorage.getItem('webspaceLayout')) || [])
-    appState.widgetsDispatch({type: 'LOCAL_STORAGE_GET'})
-  }, [])
+    if (user.id) {
+      // clear grid data in local storage if current user is not previous user
+      if (user.id.toString() !==localStorage.getItem('webspace_prev_user_id')) {
+        localStorage.removeItem('webspace_layout')
+        localStorage.removeItem('webspace_widgets')
+      }
+      
+      setLayout(JSON.parse(localStorage.getItem('webspace_layout')) || [])
+      widgetsDispatch({type: 'LOCAL_STORAGE_GET'})
+    } else {
+      const reactId = Math.random().toString()
+      widgetsDispatch({type: 'SET', payload: [{...welcomeNote, reactId}]})
+      handleLayoutChange([{"i":reactId,"w":2,"h":3,"x":0,"y":0}])
+    }
+  }, [user])
 
   // layout change handler
   const handleLayoutChange = layout => {
     setLayout(layout)
-    localStorage.setItem('webspaceLayout', JSON.stringify(layout))
-    appState.widgetsDispatch({type: 'LOCAL_STORAGE_SET'})
+    if (user.id) {
+      localStorage.setItem('webspace_layout', JSON.stringify(layout))
+      widgetsDispatch({type: 'LOCAL_STORAGE_SET'})
+    }
   }
   
 

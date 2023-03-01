@@ -11,7 +11,7 @@ const LoginRegButton = ({ appState }) => {
         icon={<FiUser />}
         open={open}
         setOpen={setOpen}
-        hoverText='Sign In'
+        hoverText='Account'
       >
         <LoginRegForm appState={appState} />
       </ButtonPopover>

@@ -8,10 +8,6 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
   const { widgetsDispatch } = appState
 
   const [ optionsOpen, setOptionsOpen ] = useState()
-
-  // const updateWidgetProps = newData => {
-  //   widgetsDispatch({action: "UPDATE", index: widgetProps.index, payload: newData})
-  // }
   
   const closeWidget = () => {
     widgetsDispatch({type: "DELETE", reactId: widgetProps.reactId})

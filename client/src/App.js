@@ -7,9 +7,9 @@ import NoteButton from './components/NoteButton';
 
 function App() {
   const [ user, setUser ] = useState({
-    id: localStorage.getItem('user_id'),
-    username: localStorage.getItem('username'),
-    email: localStorage.getItem('email'),
+    id: localStorage.getItem('webspace_user_id'),
+    username: localStorage.getItem('webspace_username'),
+    email: localStorage.getItem('webspace_email'),
   })
   const [widgets, widgetsDispatch] = useReducer(widgetsReducer, [])
   const [noteList, noteListDispatch] = useReducer(noteListReducer, [])

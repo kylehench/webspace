@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import * as Tabs from '@radix-ui/react-tabs'
+import Button from './primitives/Button'
 
 const LoginRegForm = ({ appState }) => {
   const { user, setUser, widgetsDispatch } = appState
@@ -17,17 +18,17 @@ const LoginRegForm = ({ appState }) => {
 
   const [ activeTab, setActiveTab ] = useState('tab1')
 
-  const register = e => {
+  const register = (username=registerUsername, email=registerEmail, password=registerPassword, password_confirm=registerPasswordConfirm) => {
     axios.post(`${process.env.REACT_APP_AUTH_URI}/api/register`,
-      {username: registerUsername, email: registerEmail, password: registerPassword, password_confirm: registerPasswordConfirm}
+      {username, email, password, password_confirm}
     ).then(res => {
       const data = res.data.data
       console.log(res)
       if (res.data.status==='success') {
         setRegisterErrors({})
-        localStorage.setItem('user_id', data.user_id)
-        localStorage.setItem('username', data.username)
-        localStorage.setItem('username', data.email)
+        localStorage.setItem('webspace_user_id', data.user_id)
+        localStorage.setItem('webspace_username', data.username)
+        localStorage.setItem('webspace_username', data.email)
         setUser({...user, id: data.user_id, username: data.username, email: data.email})
         setActiveTab('tab1')
       } else {
@@ -37,16 +38,16 @@ const LoginRegForm = ({ appState }) => {
     }).catch(err => console.log(err))
   }
 
-  const login = e => {
+  const login = () => {
     axios.post(`${process.env.REACT_APP_AUTH_URI}/api/login`,
       {email: loginEmail, password: loginPassword}
     ).then(res => {
       const data = res.data.data
       if (res.data.status==='success') {
         setLoginErrors({})
-        localStorage.setItem('user_id', data.user_id)
-        localStorage.setItem('username', data.username)
-        localStorage.setItem('username', data.email)
+        localStorage.setItem('webspace_user_id', data.user_id)
+        localStorage.setItem('webspace_username', data.username)
+        localStorage.setItem('webspace_email', data.email)
         setUser({...user, id: data.user_id, username: data.username, email: data.email})
       } else {
         setLoginErrors(data.errors)
@@ -54,11 +55,25 @@ const LoginRegForm = ({ appState }) => {
     }).catch(err => console.log(err))
   }
 
+  const registerGuest = () => {
+    const randa = Math.floor(Math.random()*(1e7)).toString()
+    console.log(randa)
+    register(
+      `guest_${randa}`,
+      `guest_${randa}@guest.guest`,
+      `guest_${randa}@guest.guest`,
+      `guest_${randa}@guest.guest`
+    )
+  }
+
   const logout = e => {
     axios.get(`${process.env.REACT_APP_AUTH_URI}/api/logout`, {withCredentials: true})
     .then(res => {
       if (res.data.status==='success') {
-        localStorage.clear()
+        localStorage.setItem('webspace_prev_user_id', user.id)
+        localStorage.removeItem('webspace_user_id')
+        localStorage.removeItem('webspace_username')
+        localStorage.removeItem('webspace_email')
         setUser({})
         widgetsDispatch({type: "CLEAR"})
       }
@@ -67,7 +82,7 @@ const LoginRegForm = ({ appState }) => {
   
   return (
     <Tabs.Root
-      className="flex flex-col p-4 w-96"
+      className="flex flex-col p-4 w-72 md:w-96"
       value={activeTab}
       onValueChange={setActiveTab}
     >
@@ -90,7 +105,7 @@ const LoginRegForm = ({ appState }) => {
         className="grow pt-5 bg-white rounded-b-md outline-none"
       >
         { user.username ? <>
-            <div className='mb-4 text-center text-mauve11 text-[15px] leading-normal'>Hello, {user.username}.<br/>You are logged in.</div>
+            <div className='mb-4 text-center text-mauve11 text-[15px] leading-normal'>Hello, {user.username.slice(0,5)==='guest' ? 'guest' : user.username}.<br/>You are logged in.</div>
             <button className="px-[15px] mb-4 block items-center text-center mx-auto justify-center rounded text-[15px] leading-none font-medium h-[35px] bg-red4 text-red11 hover:bg-red5 focus:shadow-[0_0_0_2px] focus:shadow-red7 outline-none cursor-default" onClick={() => logout()}>
               Logout
             </button>
@@ -119,11 +134,15 @@ const LoginRegForm = ({ appState }) => {
                 onChange={(e) => setLoginPassword(e.target.value)}
               />
             </fieldset>
+            <div className="text-red-600 font-medium text-[13px] leading-normal">{loginErrors.credentials && loginErrors.credentials}</div>
             <div className="mt-5 flex justify-between items-center">
-              <div className="text-red-600 font-medium text-[13px] leading-normal">{loginErrors.credentials && loginErrors.credentials}</div>
-              <button className="inline-flex items-center justify-center rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-green4 text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 outline-none cursor-default" onClick={() => login()}>
-                Login
-              </button>
+              <Button 
+                onClick={registerGuest}
+                color='gray'
+              >
+                Guest Login
+              </Button>
+              <Button onClick={login}>Login</Button>
             </div>
           </>
         }

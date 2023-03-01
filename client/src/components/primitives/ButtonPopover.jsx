@@ -37,7 +37,7 @@ const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, o
           <Popover.Content
             className={`m-2 rounded bg-white shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade`}
             side={side}
-            sideOffset={5}
+            sideOffset={2}
           >
             {children}
             {closeButton &&
