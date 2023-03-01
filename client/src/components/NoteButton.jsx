@@ -13,7 +13,8 @@ const NoteButton = ({ appState }) => {
   useEffect(() => {
     // if user is signed in, get ids and titles of their notes
     if (user.username) {
-      axios.get('/api/notes')
+      console.log(`${process.env.REACT_APP_SERVER_URI}/api/notes`);
+      axios.get(`${process.env.REACT_APP_SERVER_URI}/api/notes`)
         .then(res => noteListDispatch({
           type: "SET",
           payload: res.data
