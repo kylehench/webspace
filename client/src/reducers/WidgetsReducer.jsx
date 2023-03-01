@@ -10,7 +10,7 @@ const widgetsReducer = (widgetsList, action) => {
 
     case "LOCAL_STORAGE_SET":
       localStorage.setItem('webspaceWidgets', JSON.stringify(widgetsList))
-      break
+      return widgetsList
 
     case "CREATE":
       return [...widgetsList, {...action.payload, reactId: Math.random()}]
