@@ -1,8 +1,7 @@
 ## Development
 In VS Code, ```Ctrl + P``` + "```task start app```" will run React scripts and Flask API server in 2 terminals.
 
-## Deployment
-### Update Deployment
+## Client Deployment (initial or update)
 ```
 git pull
 ```
@@ -11,7 +10,6 @@ Navigate to client folder. Run:
 npm run build
 sudo rm -rf /var/www/webspace
 sudo mv build /var/www/webspace
-sudo service nginx restart
 ```
 
 ## Attributions
