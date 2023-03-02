@@ -98,14 +98,18 @@ const Note = ({ widgetProps, appState }) => {
   
   // delete note
   const deleteNote = () => {
-    axios.delete(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`)
-      .then(res => {
-        noteListDispatch({
-          type: "DELETE",
-          id: widgetProps.noteId,
-        })
-        widgetsDispatch({type: "DELETE_BY_NOTE_ID", noteId: widgetProps.noteId})
-      }).catch(err => console.log(err))
+    if (user.id) {
+      axios.delete(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`)
+        .then(res => {
+          noteListDispatch({
+            type: "DELETE",
+            id: widgetProps.noteId,
+          })
+          widgetsDispatch({type: "DELETE_BY_NOTE_ID", noteId: widgetProps.noteId})
+        }).catch(err => console.log(err))
+    } else {
+      widgetsDispatch({type: "DELETE", reactId: widgetProps.reactId})
+    }
   }
   
   return (
