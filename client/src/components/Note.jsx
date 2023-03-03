@@ -117,7 +117,7 @@ const Note = ({ widgetProps, appState }) => {
       widgetProps={{...widgetProps}}
       title={title}
       titleChange={loading ? ()=>{} : titleChange}
-      titleLeft={<IoSync className={`ml-2 text-slate-400 animate-spin transition-all duration-700 ${((!loading && syncTimeoutId===0) || widgetProps.noSync) && 'text-transparent'}`} />}
+      titleLeft={<IoSync className={`ml-2 text-slate-400 animate-spin transition-all duration-700 ${((!loading && syncTimeoutId===0) || widgetProps.noSync) && 'opacity-0'}`} />}
       appState={appState}
       optionsPane={
         <div className=''>
