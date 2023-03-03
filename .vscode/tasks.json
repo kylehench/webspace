@@ -18,7 +18,21 @@
       }
     },
     {
-      "label": "start server",
+      "label": "start auth server",
+      "type": "shell",
+      "options": {
+        "cwd": "auth"
+      },
+      "command": "pipenv run python server.py",
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "group": "groupA"
+      }
+    },
+    {
+      "label": "start webspace server",
       "type": "shell",
       "options": {
         "cwd": "server"
@@ -35,7 +49,8 @@
       "label": "start app",
       "dependsOn": [
         "start react",
-        "start server"
+        "start auth server",
+        "start webspace server"
       ],
       "problemMatcher": []
     }

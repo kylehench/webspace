@@ -1,5 +1,4 @@
-## Development
-In VS Code, ```Ctrl + P``` + "```task start app```" will run React scripts and Flask API server in 2 terminals.
+# authentication server
 
 ## Client Deployment (initial or update)
 ```
@@ -10,6 +9,22 @@ Navigate to client folder. Run:
 npm run build
 sudo rm -rf /var/www/webspace
 sudo mv build /var/www/webspace
+```
+Configure nginx:
+```
+sudo vim /etc/nginx/sites-available/default
+```
+Example location block:
+```
+location /webspace {
+  alias /var/www/webspace;
+  try_files $uri $uri/ /webspace/index.html;
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection 'upgrade';
+  proxy_set_header Host $host;
+  proxy_cache_bypass $http_upgrade;
+}
 ```
 
 ## Attributions
