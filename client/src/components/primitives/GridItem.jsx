@@ -20,20 +20,27 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
       >
         <div className='w-14'>{titleLeft}</div>
         <div className='flex-1 min-h-[20px]'>
-          <input
-            type="text"
-            className="bg-transparent font-medium text-sm outline-0 text-slate-800 text-ellipsis block text-center w-full p-1"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => titleChange(e.target.value)}
-            maxLength={100}
-          />
+
+          {/* title */}
+          { titleChange ? 
+            <input
+              type="text"
+              className="bg-transparent font-medium text-sm outline-0 text-slate-800 text-ellipsis block text-center w-full p-1"
+              placeholder="Title"
+              value={title}
+              onChange={(e) => titleChange(e.target.value)}
+              maxLength={100}
+            />
+          :
+            <div className="bg-transparent font-medium text-sm outline-0 text-slate-800 text-ellipsis block text-center w-full p-1 cursor-default">{title}</div>
+          }
+
         </div>
         <div className='flex justify-end'>
           {titleRight}
 
           {/* options pane */}
-          { optionsPane &&
+          { optionsPane ?
             <div
               className='flex justify-center items-center h-7 w-7 hover:bg-gray-800/10'
             >
@@ -54,7 +61,8 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
                 {optionsPane}
               </ButtonPopover>
             </div>
-
+            :
+            <div className='w-7'></div>
           }
 
           {/* close button */}

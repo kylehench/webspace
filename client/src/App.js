@@ -4,6 +4,7 @@ import widgetsReducer from './reducers/WidgetsReducer';
 import Grid from './components/Grid';
 import LoginRegButton from './components/LoginRegButton';
 import NoteButton from './components/NoteButton';
+import QuoteButton from './components/QuoteButton';
 
 function App() {
   const [ user, setUser ] = useState({
@@ -26,6 +27,7 @@ function App() {
       <div className='flex flex-col justify-start py-2 pl-2'>
         <LoginRegButton appState={appState} />
         <NoteButton appState={appState} />
+        <QuoteButton appState={appState} />
       </div>
       <div className='flex-1 overflow-y-auto'>
         <Grid appState={appState} />
