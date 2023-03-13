@@ -12,6 +12,7 @@ app.SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # database configuration and engine creation
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.environ.get('DATABASE_USER')}:{os.environ.get('DATABASE_PASSWORD')}@localhost/webspace"
+# app.config["SQLALCHEMY_ECHO"] = True
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 migrate = Migrate(app, db)
