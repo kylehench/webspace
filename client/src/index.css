@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  @font-face {
+    font-family: 'Lora';
+    src: local('Lora'), url(./fonts/Lora-Regular.ttf) format('truetype');
+  }
+}
+
 div > .react-grid-item.react-grid-placeholder {
   background: orange;
 }

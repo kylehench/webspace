@@ -18,8 +18,8 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
       <div className="grid-item__title flex justify-between items-center h-7 rounded-t-md slideUpAndFade transition-colors"
         style={{backgroundColor: widgetProps.titleBgColor}}
       >
-        <div className='w-14'>{titleLeft}</div>
-        <div className='flex-1 min-h-[20px]'>
+        <div className='flex-1 mr-2'>{titleLeft}</div>
+        <div className='min-h-[20px]'>
 
           {/* title */}
           { titleChange ? 
@@ -36,7 +36,7 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
           }
 
         </div>
-        <div className='flex justify-end'>
+        <div className='flex-1 flex justify-end'>
           {titleRight}
 
           {/* options pane */}
