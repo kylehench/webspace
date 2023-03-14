@@ -27,7 +27,7 @@ const Quote = ({ appState, widgetProps }) => {
             {quote.text}
           </div>
           <div className="mt-2 flex justify-end items-end font-semibold">
-            <span className='text-[16px]'>- {quote.author}</span>
+            <span className='text-[16px]'>- {quote.author ? quote.author : 'Unknown'}</span>
           </div>
         </div>
       }
