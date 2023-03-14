@@ -11,15 +11,13 @@ const QuoteButton = ({ appState }) => {
       type: 'quote',
       reactId
     }})
-    setLayout(layout => {
-      return [...layout, {
-        w: 1,
-        h: 2,
-        x: 0,
-        y: 0,
-        i: reactId
-      }]
-    })
+    setLayout(layout => [...layout, {
+      w: 1,
+      h: 2,
+      x: 0,
+      y: 0,
+      i: reactId
+    }])
   }
   
   return (

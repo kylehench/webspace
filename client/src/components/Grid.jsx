@@ -35,7 +35,13 @@ const Grid = ({ appState }) => {
     } else {
       const reactId = Math.random().toString()
       widgetsDispatch({type: 'SET', payload: [{...welcomeNote, reactId}]})
-      handleLayoutChange([{i:reactId,w:2,h:3,x:0,y:0}])
+      setLayout(layout => [...layout, {
+        w: 2,
+        h: 3,
+        x: 0,
+        y: 0,
+        i: reactId
+      }])
     }
   }, [user])
 
