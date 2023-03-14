@@ -18,29 +18,29 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
       <div className="grid-item__title flex justify-between items-center h-7 rounded-t-md slideUpAndFade transition-colors"
         style={{backgroundColor: widgetProps.titleBgColor}}
       >
-        <div className='flex-1 mr-2'>{titleLeft}</div>
-        <div className='min-h-[20px]'>
+        <div>{titleLeft}</div>
+        <div className='flex-1 min-h-[20px]'>
 
           {/* title */}
           { titleChange ? 
             <input
               type="text"
-              className="bg-transparent font-medium text-sm outline-0 text-slate-800 text-ellipsis block text-center w-full p-1"
+              className="bg-transparent w-full font-medium text-sm outline-0 text-slate-800 text-ellipsis block text-center p-1"
               placeholder="Title"
               value={title}
               onChange={(e) => titleChange(e.target.value)}
               maxLength={100}
             />
           :
-            <div className="bg-transparent font-medium text-sm outline-0 text-slate-800 text-ellipsis block text-center w-full p-1 cursor-default">{title}</div>
+            <div className="bg-transparent font-medium text-sm outline-0 text-slate-800 text-ellipsis block text-center p-1 cursor-default">{title}</div>
           }
 
         </div>
-        <div className='flex-1 flex justify-end'>
+        <div className='flex justify-end'>
           {titleRight}
 
           {/* options pane */}
-          { optionsPane ?
+          { optionsPane &&
             <div
               className='flex justify-center items-center h-7 w-7 hover:bg-gray-800/10'
             >
@@ -61,8 +61,6 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
                 {optionsPane}
               </ButtonPopover>
             </div>
-            :
-            <div className='w-7'></div>
           }
 
           {/* close button */}

@@ -14,6 +14,12 @@ const Grid = ({ appState }) => {
   
   const [transparentSelection, setTransparentSelection] = useState(true)
   const [layout, setLayout] = useState([])
+  const [gridActive, setGridActive] = useState(false)
+
+  setTimeout(() => {
+    // prevents initial layout state ([]) overwriting layout and widgets in localstorage
+    setGridActive(true)
+  }, 0);
 
   // initial load layout
   useEffect(() => {
@@ -35,10 +41,12 @@ const Grid = ({ appState }) => {
 
   // layout change handler
   const handleLayoutChange = layout => {
-    setLayout(layout)
-    if (user.id) {
-      localStorage.setItem('webspace_layout', JSON.stringify(layout))
-      widgetsDispatch({type: 'LOCAL_STORAGE_SET'})
+    if (gridActive) {
+      setLayout(layout)
+      if (user.id) {
+        localStorage.setItem('webspace_layout', JSON.stringify(layout))
+        widgetsDispatch({type: 'LOCAL_STORAGE_SET'})
+      }
     }
   }
   

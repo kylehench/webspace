@@ -5,8 +5,6 @@ import axios from 'axios'
 const Quote = ({ appState, widgetProps }) => {
   const [quote, setQuote] = useState({})
 
-  console.log(widgetProps)
-  
   useEffect(() => {
     if (widgetProps.id) {
       axios.get(`${process.env.REACT_APP_SERVER_URI}/api/quotes/${widgetProps.id}`)
