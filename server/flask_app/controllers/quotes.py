@@ -21,7 +21,7 @@ def post_quotes():
 @app.route('/api/quotes/today')
 def get_quote_today():
   count = Quote.query.count()
-  id = abs(hash(datetime.datetime.now().strftime("%Y%m%d")))%count
+  id = int(datetime.datetime.now().strftime("%Y%m%d"))%count
   quote = db.session.get(Quote, id)
   return {"quote": quote_schema.dump(quote)}
 
