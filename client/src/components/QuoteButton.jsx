@@ -3,7 +3,7 @@ import ButtonTooltip from './primitives/ButtonTooltip'
 import { GrBlockQuote } from "react-icons/gr";
 
 const QuoteButton = ({ appState }) => {
-  const { setLayout, widgetsDispatch } = appState
+  const { layout, layoutDispatch, widgetsDispatch } = appState
 
   const addQuote = () => {
     const reactId = Math.random().toString()
@@ -11,13 +11,7 @@ const QuoteButton = ({ appState }) => {
       type: 'quote',
       reactId
     }})
-    setLayout(layout => [...layout, {
-      w: 1,
-      h: 2,
-      x: 0,
-      y: 0,
-      i: reactId
-    }])
+    layoutDispatch({type: "CREATE", payload: {i: reactId, h: 2}})
   }
   
   return (

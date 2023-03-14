@@ -1,6 +1,7 @@
 import { useReducer, useState } from 'react';
-import noteListReducer from './reducers/NoteListReducer';
+import layoutReducer from './reducers/LayoutReducer';
 import widgetsReducer from './reducers/WidgetsReducer';
+import noteListReducer from './reducers/NoteListReducer';
 import Grid from './components/Grid';
 import LoginRegButton from './components/LoginRegButton';
 import NoteButton from './components/NoteButton';
@@ -12,13 +13,13 @@ function App() {
     username: localStorage.getItem('webspace_username'),
     email: localStorage.getItem('webspace_email'),
   })
-  const [layout, setLayout] = useState([])
+  const [layout, layoutDispatch] = useReducer(layoutReducer, [])
   const [widgets, widgetsDispatch] = useReducer(widgetsReducer, [])
   const [noteList, noteListDispatch] = useReducer(noteListReducer, [])
 
   const appState = {
     user, setUser,
-    layout, setLayout,
+    layout, layoutDispatch,
     widgets, widgetsDispatch,
     noteList, noteListDispatch,
   }

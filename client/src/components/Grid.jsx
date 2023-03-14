@@ -10,7 +10,7 @@ import welcomeNote from '../config/welcomeNote';
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
 const Grid = ({ appState }) => {
-  const { user, layout, setLayout, widgets, widgetsDispatch } = appState
+  const { user, layout, layoutDispatch, widgets, widgetsDispatch } = appState
   
   const [transparentSelection, setTransparentSelection] = useState(true)
   
@@ -29,26 +29,18 @@ const Grid = ({ appState }) => {
         localStorage.removeItem('webspace_layout')
         localStorage.removeItem('webspace_widgets')
       }
-      
-      setLayout(JSON.parse(localStorage.getItem('webspace_layout')) || [])
+      layoutDispatch({type: "SET", payload: JSON.parse(localStorage.getItem('webspace_layout')) || []})
       widgetsDispatch({type: 'LOCAL_STORAGE_GET'})
     } else {
       const reactId = Math.random().toString()
       widgetsDispatch({type: 'SET', payload: [{...welcomeNote, reactId}]})
-      setLayout(layout => [...layout, {
-        w: 2,
-        h: 3,
-        x: 0,
-        y: 0,
-        i: reactId
-      }])
+      layoutDispatch({type: "CREATE", payload: {i: reactId, w: 2, h: 3}})
     }
   }, [user])
 
   // layout change handler
   const handleLayoutChange = layout => {
     if (gridActive) {
-      setLayout(layout)
       if (user.id) {
         localStorage.setItem('webspace_layout', JSON.stringify(layout))
         widgetsDispatch({type: 'LOCAL_STORAGE_SET'})
