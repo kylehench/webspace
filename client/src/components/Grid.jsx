@@ -41,6 +41,7 @@ const Grid = ({ appState }) => {
   // layout change handler
   const handleLayoutChange = layout => {
     if (gridActive) {
+      layoutDispatch({type: "SET", payload: layout})
       if (user.id) {
         localStorage.setItem('webspace_layout', JSON.stringify(layout))
         widgetsDispatch({type: 'LOCAL_STORAGE_SET'})

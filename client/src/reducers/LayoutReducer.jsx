@@ -7,7 +7,7 @@ const layoutReducer = (layout, action) => {
     case "CREATE":
       return [...layout, {
         x: 0,
-        y: 0,
+        y: 1000,
         w: 1,
         h: 1,
         ...action.payload,
