@@ -10,10 +10,10 @@ import welcomeNote from '../config/welcomeNote';
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
 const Grid = ({ appState }) => {
-  const { user, widgetsDispatch } = appState
+  const { user, layout, setLayout, widgets, widgetsDispatch } = appState
   
   const [transparentSelection, setTransparentSelection] = useState(true)
-  const [layout, setLayout] = useState([])
+  
   const [gridActive, setGridActive] = useState(false)
 
   setTimeout(() => {
@@ -35,7 +35,7 @@ const Grid = ({ appState }) => {
     } else {
       const reactId = Math.random().toString()
       widgetsDispatch({type: 'SET', payload: [{...welcomeNote, reactId}]})
-      handleLayoutChange([{"i":reactId,"w":2,"h":3,"x":0,"y":0}])
+      handleLayoutChange([{i:reactId,w:2,h:3,x:0,y:0}])
     }
   }, [user])
 
@@ -74,7 +74,7 @@ const Grid = ({ appState }) => {
         onResizeStart={() => {setTransparentSelection(true)}}
         onResizeStop={() => {setTransparentSelection(false)}}
       >
-        {appState.widgets.map((widget, i) => {
+        {widgets.map((widget, i) => {
           for (let key of ['titleBgColor', 'contentBgColor']) {
             if (!widget[key]) delete widget[key]
           }
@@ -82,6 +82,7 @@ const Grid = ({ appState }) => {
           return (
             <div
               key={`${widget.reactId}`}
+              height={5}
               className='grid-cell flex flex-col h-full rounded-md bg-slate-100'
               style={{backgroundColor: widgetProps.contentBgColor}}
             >

@@ -12,11 +12,13 @@ function App() {
     username: localStorage.getItem('webspace_username'),
     email: localStorage.getItem('webspace_email'),
   })
+  const [layout, setLayout] = useState([])
   const [widgets, widgetsDispatch] = useReducer(widgetsReducer, [])
   const [noteList, noteListDispatch] = useReducer(noteListReducer, [])
 
   const appState = {
     user, setUser,
+    layout, setLayout,
     widgets, widgetsDispatch,
     noteList, noteListDispatch,
   }
