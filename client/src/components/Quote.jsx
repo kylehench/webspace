@@ -45,7 +45,7 @@ const Quote = ({ appState, widgetProps }) => {
             hoverText='Pin quote'
             onClick={() => setPin(!widgetProps.pin)}
           >
-            {widgetProps.pin ? <IoPin /> : <IoPinOutline/>}
+            {widgetProps.pin ? <IoPin /> : <IoPinOutline className='opacity-80' />}
           </GridItemTitleButton>
 
           {/* new quote button */}
