@@ -1,4 +1,4 @@
-import datetime
+import datetime, random
 from flask import request, make_response
 from flask_sqlalchemy import SQLAlchemy
 
@@ -22,6 +22,14 @@ def post_quotes():
 def get_quote_today():
   count = Quote.query.count()
   id = int(datetime.datetime.now().strftime("%Y%m%d"))%count
+  quote = db.session.get(Quote, id)
+  return {"quote": quote_schema.dump(quote)}
+
+# get random quote
+@app.route('/api/quotes/random')
+def get_quote_random():
+  count = Quote.query.count()
+  id = int(random.random()*count)
   quote = db.session.get(Quote, id)
   return {"quote": quote_schema.dump(quote)}
 

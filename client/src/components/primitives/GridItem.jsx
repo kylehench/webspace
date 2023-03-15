@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import colors from 'tailwindcss/colors'
 import { IoCloseOutline, IoEllipsisHorizontal } from "react-icons/io5";
 import Tooltip from './Tooltip';
+import GridItemTitleButton from './GridItemTitleButton'
 import ButtonPopover from './ButtonPopover';
 
 const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, optionsPane, appState, children }) => {
@@ -64,18 +65,14 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
           }
 
           {/* close button */}
-          <Tooltip text={'Close'} side='bottom'>
-            <button 
-              className='h-7 w-7 rounded-tr-md  hover:bg-gray-800/10'
-              onClick={() => closeWidget()}
-            >
-              <IoCloseOutline 
-                className='mx-auto' 
-                color={colors.gray[600]} 
-                size={20} 
-              />
-            </button>
-          </Tooltip>
+          <GridItemTitleButton
+            hoverText='Close'
+            onClick={closeWidget}
+          >
+            <IoCloseOutline 
+              size={20} 
+            />
+          </GridItemTitleButton>
 
         </div>
       </div>
