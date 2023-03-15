@@ -13,6 +13,9 @@ const layoutReducer = (layout, action) => {
         ...action.payload,
       }]
 
+    case "CLEAR":
+      return []
+
     default:
       return layout
   }

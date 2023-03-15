@@ -13,8 +13,14 @@ function App() {
     username: localStorage.getItem('webspace_username'),
     email: localStorage.getItem('webspace_email'),
   })
-  const [layout, layoutDispatch] = useReducer(layoutReducer, [])
-  const [widgets, widgetsDispatch] = useReducer(widgetsReducer, [])
+  const [layout, layoutDispatch] = useReducer(
+    layoutReducer,
+    JSON.parse(localStorage.getItem('webspace_layout')) || []
+  )
+  const [widgets, widgetsDispatch] = useReducer(
+    widgetsReducer,
+    JSON.parse(localStorage.getItem('webspace_widgets')) || []
+  )
   const [noteList, noteListDispatch] = useReducer(noteListReducer, [])
 
   const appState = {

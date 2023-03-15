@@ -4,7 +4,7 @@ import * as Tabs from '@radix-ui/react-tabs'
 import Button from './primitives/Button'
 
 const LoginRegForm = ({ appState }) => {
-  const { user, setUser, widgetsDispatch } = appState
+  const { user, setUser, widgetsDispatch, layoutDispatch } = appState
   
   const [ registerUsername, setRegisterUsername ] = useState()
   const [ registerEmail, setRegisterEmail ] = useState()
@@ -28,9 +28,11 @@ const LoginRegForm = ({ appState }) => {
         setRegisterErrors({})
         localStorage.setItem('webspace_user_id', data.user_id)
         localStorage.setItem('webspace_username', data.username)
-        localStorage.setItem('webspace_username', data.email)
+        localStorage.setItem('webspace_email', data.email)
         setUser({...user, id: data.user_id, username: data.username, email: data.email})
         setActiveTab('tab1')
+        layoutDispatch({type: "CLEAR"})
+        widgetsDispatch({type: "CLEAR"})
       } else {
         console.log(data.errors)
         setRegisterErrors(data.errors)
@@ -49,12 +51,14 @@ const LoginRegForm = ({ appState }) => {
         localStorage.setItem('webspace_username', data.username)
         localStorage.setItem('webspace_email', data.email)
         setUser({...user, id: data.user_id, username: data.username, email: data.email})
+        layoutDispatch({type: "CLEAR"})
+        widgetsDispatch({type: "CLEAR"})
       } else {
         setLoginErrors(data.errors)
       }
     }).catch(err => console.log(err))
   }
-
+  
   const registerGuest = () => {
     const rand = Math.floor(Math.random()*(1e7)).toString()
     register(
@@ -62,20 +66,22 @@ const LoginRegForm = ({ appState }) => {
       `guest_${rand}@guest.guest`,
       `guest_${rand}@guest.guest`,
       `guest_${rand}@guest.guest`
-    )
-  }
-
-  const logout = e => {
-    axios.get(`${process.env.REACT_APP_AUTH_URI}/api/logout`, {withCredentials: true})
-    .then(res => {
-      if (res.data.status==='success') {
-        localStorage.setItem('webspace_prev_user_id', user.id)
-        localStorage.removeItem('webspace_user_id')
-        localStorage.removeItem('webspace_username')
-        localStorage.removeItem('webspace_email')
-        setUser({})
-        widgetsDispatch({type: "CLEAR"})
-      }
+      )
+    }
+    
+    const logout = e => {
+      axios.get(`${process.env.REACT_APP_AUTH_URI}/api/logout`, {withCredentials: true})
+      .then(res => {
+        if (res.data.status==='success') {
+          localStorage.removeItem('webspace_user_id')
+          localStorage.removeItem('webspace_username')
+          localStorage.removeItem('webspace_email')
+          localStorage.removeItem('webspace_widgets')
+          localStorage.removeItem('webspace_layout')
+          setUser({})
+          layoutDispatch({type: "CLEAR"})
+          widgetsDispatch({type: "CLEAR"})
+        }
     }).catch(err => console.log(err))
   }
   

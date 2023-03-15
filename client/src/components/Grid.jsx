@@ -13,25 +13,10 @@ const Grid = ({ appState }) => {
   const { user, layout, layoutDispatch, widgets, widgetsDispatch } = appState
   
   const [transparentSelection, setTransparentSelection] = useState(true)
-  
-  const [gridActive, setGridActive] = useState(false)
-
-  setTimeout(() => {
-    // prevents initial layout state ([]) overwriting layout and widgets in localstorage
-    setGridActive(true)
-  }, 2000);
 
   // initial load layout
   useEffect(() => {
-    if (user.id) {
-      // clear grid data in local storage if current user is not previous user
-      if (user.id.toString() !==localStorage.getItem('webspace_prev_user_id')) {
-        localStorage.removeItem('webspace_layout')
-        localStorage.removeItem('webspace_widgets')
-      }
-      layoutDispatch({type: "SET", payload: JSON.parse(localStorage.getItem('webspace_layout')) || []})
-      widgetsDispatch({type: 'LOCAL_STORAGE_GET'})
-    } else {
+    if (!user.id) {
       const reactId = Math.random().toString()
       widgetsDispatch({type: 'SET', payload: [{...welcomeNote, reactId}]})
       layoutDispatch({type: "CREATE", payload: {i: reactId, w: 2, h: 3}})
@@ -40,15 +25,12 @@ const Grid = ({ appState }) => {
 
   // layout change handler
   const handleLayoutChange = layout => {
-    if (gridActive) {
-      layoutDispatch({type: "SET", payload: layout})
-      if (user.id) {
-        localStorage.setItem('webspace_layout', JSON.stringify(layout))
-        widgetsDispatch({type: 'LOCAL_STORAGE_SET'})
-      }
+    layoutDispatch({type: "SET", payload: layout})
+    if (user.id) {
+      localStorage.setItem('webspace_layout', JSON.stringify(layout))
+      localStorage.setItem('webspace_widgets', JSON.stringify(widgets))
     }
   }
-  
 
   const widgetMap = {
     'note': (widgetProps) => <Note widgetProps={widgetProps} appState={appState} />,
