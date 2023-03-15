@@ -11,7 +11,6 @@ npm run build
 ```
 Replace previous build:
 ```
-npm run build
 sudo rm -rf /var/www/webspace
 sudo mv build /var/www/webspace
 ```
