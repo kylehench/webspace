@@ -19,7 +19,7 @@ const Grid = ({ appState }) => {
   setTimeout(() => {
     // prevents initial layout state ([]) overwriting layout and widgets in localstorage
     setGridActive(true)
-  }, 0);
+  }, 100);
 
   // initial load layout
   useEffect(() => {
