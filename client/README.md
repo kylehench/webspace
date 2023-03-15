@@ -4,7 +4,12 @@
 ```
 git pull
 ```
-Navigate to client folder. Run:
+Navigate to client and build app:
+```
+cd client
+npm run build
+```
+Replace previous build:
 ```
 npm run build
 sudo rm -rf /var/www/webspace
