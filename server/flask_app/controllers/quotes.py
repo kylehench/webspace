@@ -21,7 +21,7 @@ def post_quotes():
 @app.route('/api/quotes/today')
 def get_quote_today():
   count = Quote.query.count()
-  id = int(datetime.datetime.now().strftime("%Y%m%d"))%count
+  id = int(datetime.datetime.now().strftime("%Y%m%d"))%count + 1
   quote = db.session.get(Quote, id)
   return {"quote": quote_schema.dump(quote)}
 
@@ -29,7 +29,7 @@ def get_quote_today():
 @app.route('/api/quotes/random')
 def get_quote_random():
   count = Quote.query.count()
-  id = int(random.random()*count)
+  id = random.randint(1, count)
   quote = db.session.get(Quote, id)
   return {"quote": quote_schema.dump(quote)}
 
