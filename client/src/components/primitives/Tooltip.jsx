@@ -20,7 +20,8 @@ const Tooltip = ({ text, side, children, toolTipOpen, setToolTipOpen }) => {
           side={side}
           sideOffset={5}
         >
-          {text}
+          
+          <div className='outline-none'>{text}</div>
           <RTooltip.Arrow className="fill-white" />
         </RTooltip.Content>
       </RTooltip.Portal>

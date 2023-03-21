@@ -28,7 +28,7 @@ const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, o
         <Popover.Trigger asChild>
           <button
             className={styled===false ? '' : 'my-2 rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-cyan11 bg-white shadow-[0_2px_10px] shadow-blackA7 hover:bg-cyan3 cursor-default outline-none'}
-            aria-label="Update dimensions"
+            aria-label="Popover"
           >
             {icon}
           </button>
