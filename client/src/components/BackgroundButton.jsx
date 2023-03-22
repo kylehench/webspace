@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { IoImageOutline } from 'react-icons/io5'
 import ButtonPopover from './primitives/ButtonPopover'
 import GrassImg from '../img/green-grass-sm.jpg'
@@ -19,13 +19,6 @@ const BackgroundButton = ({ appState }) => {
   const { setBackgroundImage } = appState
   
   const [open, setOpen] = useState(false)
-  
-  useEffect(() => {
-    images.forEach(image => {
-      const img = new Image()
-      img.src = `${process.env.PUBLIC_URL}/img/${image.name}.jpg"`
-    })
-  }, [])
 
   return (
     <ButtonPopover
