@@ -7,11 +7,11 @@ import OceanImg from '../img/ocean-sm.jpg'
 
 const images = [
   { thumbnail: GrassImg,
-    link: '/img/green-grass-lg.jpg' },
+    name: 'green-grass-lg' },
   { thumbnail: GreenLeafImg,
-    link: '/img/green-leaf-lg.jpg' },
+    name: 'green-leaf-lg' },
   { thumbnail: OceanImg,
-    link: '/img/ocean-lg.jpg' },
+    name: 'ocean-lg' },
 ]
 
 
@@ -31,11 +31,14 @@ const BackgroundButton = ({ appState }) => {
       <div className='pb-4 px-4'>
         { images.map(image => (
           <img
-            key={image.link}
+            key={image.name}
             className='pt-4 w-48'
             src={image.thumbnail}
             alt=""
-            onClick={() => setBackgroundImage(image.link)}
+            onClick={() => {
+              setBackgroundImage(image.name)
+              localStorage.setItem('webspace_backgroundImage', image.name)
+            }}
           />))
         }
       </div>

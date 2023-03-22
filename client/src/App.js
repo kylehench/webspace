@@ -14,7 +14,7 @@ function App() {
     username: localStorage.getItem('webspace_username'),
     email: localStorage.getItem('webspace_email'),
   })
-  const [backgroundImage, setBackgroundImage] = useState('/img/ocean.jpg')
+  const [backgroundImage, setBackgroundImage] = useState(localStorage.getItem('webspace_backgroundImage') || 'ocean')
   const [layout, layoutDispatch] = useReducer(
     layoutReducer,
     JSON.parse(localStorage.getItem('webspace_layout')) || []
@@ -35,7 +35,7 @@ function App() {
   
   
   return (
-    <div className={`flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("${process.env.PUBLIC_URL}${backgroundImage}")`}}>
+    <div className={`flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/img/${backgroundImage}.jpg")`}}>
       <div className='flex flex-col justify-start py-2 pl-2'>
         <LoginRegButton appState={appState} />
         <BackgroundButton appState={appState} />
