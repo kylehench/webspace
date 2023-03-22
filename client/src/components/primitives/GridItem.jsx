@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import colors from 'tailwindcss/colors'
 import { IoCloseOutline, IoEllipsisHorizontal } from "react-icons/io5";
-import Tooltip from './Tooltip';
 import GridItemTitleButton from './GridItemTitleButton'
 import ButtonPopover from './ButtonPopover';
 
