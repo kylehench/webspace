@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import useImagePreloader from '../hooks/useImagePreloader'
 import { IoImageOutline } from 'react-icons/io5'
 import ButtonPopover from './primitives/ButtonPopover'
 import GrassImg from '../img/green-grass-sm.jpg'
@@ -19,6 +20,8 @@ const BackgroundButton = ({ appState }) => {
   const { setBackgroundImage } = appState
   
   const [open, setOpen] = useState(false)
+
+  useImagePreloader(images.map(img => img.thumbnail))
 
   return (
     <ButtonPopover

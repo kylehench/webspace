@@ -14,7 +14,7 @@ function App() {
     username: localStorage.getItem('webspace_username'),
     email: localStorage.getItem('webspace_email'),
   })
-  const [backgroundImage, setBackgroundImage] = useState(localStorage.getItem('webspace_backgroundImage') || 'ocean')
+  const [backgroundImage, setBackgroundImage] = useState(localStorage.getItem('webspace_backgroundImage') || 'ocean-lg')
   const [layout, layoutDispatch] = useReducer(
     layoutReducer,
     JSON.parse(localStorage.getItem('webspace_layout')) || []
@@ -45,7 +45,6 @@ function App() {
       <div className='flex-1 overflow-y-auto'>
         <Grid appState={appState} />
       </div>
-      {/* <div className='p-10 bg-orange-100'></div> */}
     </div>
   );
 }
