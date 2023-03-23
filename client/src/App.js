@@ -14,6 +14,7 @@ function App() {
     username: localStorage.getItem('webspace_username'),
     email: localStorage.getItem('webspace_email'),
   })
+  // note: background images are prefetched in index.html > head
   const [backgroundImage, setBackgroundImage] = useState(localStorage.getItem('webspace_backgroundImage') || 'ocean-lg')
   const [layout, layoutDispatch] = useReducer(
     layoutReducer,

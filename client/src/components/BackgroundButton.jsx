@@ -21,6 +21,7 @@ const BackgroundButton = ({ appState }) => {
   
   const [open, setOpen] = useState(false)
 
+  // preloads thumbnails. Can only be used for images in source folder.
   useImagePreloader(images.map(img => img.thumbnail))
 
   return (
