@@ -64,7 +64,7 @@ const Grid = ({ appState }) => {
             <div
               key={`${widget.reactId}`}
               height={5}
-              className='grid-cell flex flex-col h-full rounded-md bg-slate-100'
+              className='grid-cell flex flex-col h-full rounded-md overflow-hidden bg-slate-100'
               style={{backgroundColor: widgetProps.contentBgColor}}
             >
               {widgetMap[widget.type](widgetProps)}

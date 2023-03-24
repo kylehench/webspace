@@ -148,7 +148,7 @@ const Note = ({ widgetProps, appState }) => {
         </div>
       }
     >
-      <div className='h-full overflow-hidden rounded-md'>
+      <div className='h-full overflow-hidden'>
         { loading && !widgetProps.noSync ?
           <div
             className='p-3 bg-transparent text-slate-800 text-sm outline-0'

@@ -15,7 +15,7 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
   
   return (
     <>
-      <div className="grid-item__title flex justify-between items-center h-7 rounded-t-md slideUpAndFade transition-colors"
+      <div className="grid-item__title flex justify-between items-center h-7 slideUpAndFade transition-colors"
         style={{backgroundColor: widgetProps.titleBgColor}}
       >
         <div>{titleLeft}</div>
@@ -76,7 +76,7 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
         </div>
       </div>
       <div
-        className='text flex-1 overflow-hidden rounded-b-md'
+        className='text flex-1 overflow-hidden'
         style={{backgroundColor: widgetProps.contentBgColor}}
       >
         {children}
