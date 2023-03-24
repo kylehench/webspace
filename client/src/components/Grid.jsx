@@ -21,7 +21,7 @@ const Grid = ({ appState }) => {
       widgetsDispatch({type: 'SET', payload: [{...welcomeNote, reactId}]})
       layoutDispatch({type: "CREATE", payload: {i: reactId, w: 2, h: 3}})
     }
-  }, [user])
+  }, [layoutDispatch, user, widgetsDispatch])
 
   // layout change handler
   const handleLayoutChange = layout => {

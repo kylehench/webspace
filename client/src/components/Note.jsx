@@ -58,7 +58,7 @@ const Note = ({ widgetProps, appState }) => {
         setContent('Please sign in or enter as guest to continue.')
       }
     }
-  }, [])
+  }, [content, noteListDispatch, title, user.id, widgetProps.content, widgetProps.noSync, widgetProps.noteId, widgetProps.reactId, widgetProps.title, widgetsDispatch])
 
   const titleChange = (value) => {
     setTitle(value)

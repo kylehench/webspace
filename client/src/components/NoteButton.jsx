@@ -22,7 +22,7 @@ const NoteButton = ({ appState }) => {
     } else {
       noteListDispatch({type: "CLEAR"})
     }
-  }, [user])
+  }, [noteListDispatch, user])
 
   const addNote = (id) => {
     widgetsDispatch({type: "CREATE", payload: {

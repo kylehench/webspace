@@ -17,7 +17,7 @@ const Quote = ({ appState, widgetProps }) => {
         axios.get(`${process.env.REACT_APP_SERVER_URI}/api/quotes/today`)
         .then(res => setQuote(res.data.quote))
       }
-    }, [])
+  }, [widgetProps.id, widgetProps.pin])
 
   const setPin = (pin) => {
     // pin is boolean

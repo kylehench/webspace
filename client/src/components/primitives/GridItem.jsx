@@ -76,7 +76,7 @@ const GridItem = ({ widgetProps, title, titleChange, titleRight, titleLeft, opti
         </div>
       </div>
       <div
-        className='text flex-1 overflow-hidden rounded-md'
+        className='text flex-1 overflow-hidden rounded-b-md'
         style={{backgroundColor: widgetProps.contentBgColor}}
       >
         {children}
