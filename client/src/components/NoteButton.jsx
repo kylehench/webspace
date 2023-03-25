@@ -6,7 +6,7 @@ import { BsPlusCircle } from 'react-icons/bs'
 import ScrollArea from './primitives/ScrollArea'
 
 const NoteButton = ({ appState }) => {
-  const { noteList, noteListDispatch, user, widgetsDispatch } = appState
+  const { noteList, noteListDispatch, user, widgetsDispatch, layoutDispatch } = appState
 
   const [open, setOpen] = useState(false)
 
@@ -25,10 +25,13 @@ const NoteButton = ({ appState }) => {
   }, [])
 
   const addNote = (id) => {
+    const reactId = Math.random().toString()
     widgetsDispatch({type: "CREATE", payload: {
-      noteId: id,
       type: 'note',
+      reactId,
+      noteId: id,
     }})
+    layoutDispatch({type: "CREATE", payload: {i: reactId, h: 2}})
   }
   
   return (
