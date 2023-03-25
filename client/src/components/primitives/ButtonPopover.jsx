@@ -11,7 +11,7 @@ const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, o
   // note: open and setOpen refer to Popover status
   useEffect(() => {
     if (open) setTooltipDisabled(true)
-    else setTimeout(() => setTooltipDisabled(false), 500)
+    else setTimeout(() => setTooltipDisabled(false), 200)
   }, [open])
 
   return (

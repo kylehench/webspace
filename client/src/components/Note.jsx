@@ -58,7 +58,7 @@ const Note = ({ widgetProps, appState }) => {
         setContent('Please sign in or enter as guest to continue.')
       }
     }
-  }, [content, noteListDispatch, title, user.id, widgetProps.content, widgetProps.noSync, widgetProps.noteId, widgetProps.reactId, widgetProps.title, widgetsDispatch])
+  }, [])
 
   const titleChange = (value) => {
     setTitle(value)
@@ -116,7 +116,7 @@ const Note = ({ widgetProps, appState }) => {
     <GridItem
       widgetProps={{...widgetProps}}
       title={title}
-      titleChange={loading ? ()=>{} : titleChange}
+      titleChange={loading ? null : titleChange}
       titleLeft={
         <IoSync className={`w-7 text-slate-500 animate-spin transition-opacity duration-700 ${((!loading && syncTimeoutId===0) || widgetProps.noSync) && 'opacity-0'}`} />
       }
