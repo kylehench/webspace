@@ -6,10 +6,9 @@ from flask_app.services.authorization import user_id_from_token
 api = Api(app)
 
 parser = reqparse.RequestParser()
-parser.add_argument('title')
-parser.add_argument('content')
-parser.add_argument('titleBgColor')
-parser.add_argument('contentBgColor')
+args = ['title', 'content', 'titleBgColor', 'contentBgColor']
+for arg in args:
+  parser.add_argument(arg)
 
 def get_user_id():
   try:

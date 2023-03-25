@@ -82,7 +82,7 @@ const Note = ({ widgetProps, appState }) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
     setSyncTimeoutId(setTimeout(() => {
       if (widgetProps.noteId && !widgetProps.noSync) {
-        const newProps = {title, content, ...newData}
+        const newProps = {title, content, contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
         axios.put(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`, newProps)
           .then(() => {
             setSyncTimeoutId(0)
