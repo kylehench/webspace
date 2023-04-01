@@ -1,28 +1,14 @@
 import React, { useState } from 'react'
-import useImagePreloader from '../hooks/useImagePreloader'
 import { IoImageOutline } from 'react-icons/io5'
 import ButtonPopover from './primitives/ButtonPopover'
-import GrassImg from '../img/green-grass-sm.jpg'
-import GreenLeafImg from '../img/green-leaf-sm.jpg'
-import OceanImg from '../img/ocean-sm.jpg'
 
-const images = [
-  { thumbnail: GrassImg,
-    name: 'green-grass-lg' },
-  { thumbnail: GreenLeafImg,
-    name: 'green-leaf-lg' },
-  { thumbnail: OceanImg,
-    name: 'ocean-lg' },
-]
-
+// note: large images already preloaded
+const images = ['green-grass-lg','green-leaf-lg','ocean-lg']
 
 const BackgroundButton = ({ appState }) => {
   const { setBackgroundImage } = appState
   
   const [open, setOpen] = useState(false)
-
-  // preloads thumbnails. Can only be used for images in source folder.
-  useImagePreloader(images.map(img => img.thumbnail))
 
   return (
     <ButtonPopover
@@ -37,11 +23,11 @@ const BackgroundButton = ({ appState }) => {
           <img
             key={image.name}
             className='pt-4 w-48'
-            src={image.thumbnail}
+            src={`${process.env.PUBLIC_URL}/img/${image}.jpg`}
             alt=""
             onClick={() => {
-              setBackgroundImage(image.name)
-              localStorage.setItem('webspace_backgroundImage', image.name)
+              setBackgroundImage(image)
+              localStorage.setItem('webspace_backgroundImage', image)
             }}
           />))
         }
