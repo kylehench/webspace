@@ -162,6 +162,12 @@ const Note = ({ widgetProps, appState }) => {
             disabled={widgetProps.noSync}
           ></textarea>
         }
+        {/* {
+          content.split("\n").map((string, i) => <input type="text" value={string} onKeyDown={e => {
+            console.log(e.key)
+            console.log(e.target.selectionStart, e.target.selectionEnd)
+          }} />)
+        } */}
       </div>
     </GridItem>
   )

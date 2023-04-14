@@ -22,7 +22,8 @@ const NoteButton = ({ appState }) => {
     } else {
       noteListDispatch({type: "CLEAR"})
     }
-  }, [])
+  }, [user])
+    // user as dependency updates user's notes list when they log in
 
   const addNote = (id) => {
     const reactId = Math.random().toString()
