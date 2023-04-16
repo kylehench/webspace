@@ -22,7 +22,8 @@ const Tooltip = ({ text, side, children, toolTipOpen, setToolTipOpen }) => {
         >
           
           <div className='outline-none'>{text}</div>
-          <RTooltip.Arrow className="fill-white" />
+          <RTooltip.Arrow className="fill-white m-[-0.5px]" />
+          {/* slight negative margin fixes rendering artifact */}
         </RTooltip.Content>
       </RTooltip.Portal>
     </RTooltip.Root>

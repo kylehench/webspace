@@ -2,11 +2,11 @@ import React from 'react'
 import * as RScrollArea from '@radix-ui/react-scroll-area'
 
 
-const ScrollArea = ({ children, height }) => {
+const ScrollArea = ({ children, style }) => {
   return (
     <RScrollArea.Root
-      className={`w-[200px] rounded overflow-hidden bg-white`}
-      style={{height: height}}
+      className={`h-full w-full overflow-hidden`}
+      style={style}
     >
       <RScrollArea.Viewport className="w-full h-full rounded">
         {children}
@@ -26,10 +26,6 @@ const ScrollArea = ({ children, height }) => {
       <RScrollArea.Corner className="bg-blackA8" />
   </RScrollArea.Root>
   )
-}
-
-ScrollArea.defaultProps = {
-  height: '300px'
 }
 
 export default ScrollArea

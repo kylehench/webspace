@@ -43,48 +43,50 @@ const NoteButton = ({ appState }) => {
       open={open}
       setOpen={setOpen}
     >
-      <ScrollArea
-        height={noteList.length < 8 ? 'auto' : '360px'}
-      >
-        <div className="py-[15px] px-5">
-          
-          {/* create new note button */}
-          <button
-            className="flex items-center text-cyan11 text-[15px] leading-[18px] font-medium"
-            onClick={() => {
-                setOpen(false)
-                addNote()
-              }
-            }
-          >
-            <BsPlusCircle />
-            <span className='ml-2'>Create new note</span>
-          </button>
-          <div className="text-mauve11 text-[13px] leading-[18px] mt-2.5 pt-2.5 border-t border-t-mauve8">
-            { noteList.length>0 ?
-                'Open note'
-              :
-                'Future notes will appear here.'
-            }
-          </div>
-          {noteList.map((note) => (
-            <div
-              className="text-cyan11 text-[15px] leading-[18px] font-medium mt-1.5 pt-2.5 border-t border-t-mauve5"
-              key={note.id}
-            >
-              <button
-                className='h-6 w-[160px] text-left truncate overflow-hidden'
-                onClick={() => {
-                  addNote(note.id)
+      <div className='rounded overflow-hidden'>
+        <ScrollArea
+          style={{height: (noteList.length < 8 ? 'auto' : '360px')}}
+        >
+          <div className="py-[15px] px-5">
+            
+            {/* create new note button */}
+            <button
+              className="flex items-center text-cyan11 text-[15px] leading-[18px] font-medium"
+              onClick={() => {
                   setOpen(false)
-                }}
-              >
-                {note.title ? note.title : '(untitled)'}
-              </button>
+                  addNote()
+                }
+              }
+            >
+              <BsPlusCircle />
+              <span className='ml-2'>Create new note</span>
+            </button>
+            <div className="text-mauve11 text-[13px] leading-[18px] mt-2.5 pt-2.5 border-t border-t-mauve8">
+              { noteList.length>0 ?
+                  'Open note'
+                :
+                  'Future notes will appear here.'
+              }
             </div>
-          ))}
-        </div>
-      </ScrollArea>
+            {noteList.map((note) => (
+              <div
+                className="text-cyan11 text-[15px] leading-[18px] font-medium mt-1.5 pt-2.5 border-t border-t-mauve5"
+                key={note.id}
+              >
+                <button
+                  className='h-6 w-[160px] text-left truncate overflow-hidden'
+                  onClick={() => {
+                    addNote(note.id)
+                    setOpen(false)
+                  }}
+                >
+                  {note.title ? note.title : '(untitled)'}
+                </button>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
     </ButtonPopover>
   )
 }

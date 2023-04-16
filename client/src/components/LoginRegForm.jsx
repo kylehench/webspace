@@ -84,26 +84,41 @@ const LoginRegForm = ({ appState }) => {
         }
     }).catch(err => console.log(err))
   }
+
+  // vertical bar used to cover rendering artifacts
+  const verticalBar = () => <div 
+      className='mx-[-1px] mb-[1px] w-[2px] bg-white z-[1]'
+    ></div>
   
   return (
     <Tabs.Root
       className="flex flex-col p-4 w-72 md:w-96"
+      // class:transform-gpu mitigates inset-shadow rendering issue
       value={activeTab}
       onValueChange={setActiveTab}
     >
       <Tabs.List className="shrink-0 flex border-b border-mauve6" aria-label="Account">
+
+      {verticalBar()}
+
         <Tabs.Trigger
           className="bg-white px-5 h-[45px] flex-1 flex items-center justify-center text-[15px] leading-none text-mauve11 select-none first:rounded-tl-md last:rounded-tr-md hover:text-cyan11 data-[state=active]:text-cyan11 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:relative outline-none cursor-default"
           value="tab1"
         >
           Login
         </Tabs.Trigger>
+
+        {verticalBar()}
+
         <Tabs.Trigger
           className="bg-white px-5 h-[45px] flex-1 flex items-center justify-center text-[15px] leading-none text-mauve11 select-none first:rounded-tl-md last:rounded-tr-md hover:text-cyan11 data-[state=active]:text-cyan11 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:relative outline-none cursor-default"
           value="tab2"
         >
           Register
         </Tabs.Trigger>
+
+        {verticalBar()}
+
       </Tabs.List>
       <Tabs.Content
         value="tab1"

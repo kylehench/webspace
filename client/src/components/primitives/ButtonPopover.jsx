@@ -42,14 +42,14 @@ const ButtonPopover = ({ hoverText, icon, styled, children, side, closeButton, o
             {children}
             {closeButton &&
               <Popover.Close
-                className="rounded-full h-[25px] w-[25px] inline-flex items-center justify-center text-cyan11 absolute top-[5px] right-[5px] hover:bg-cyan4 outline-none cursor-default"
+                className="rounded-full h-[25px] w-[25px] inline-flex items-center justify-center text-cyan11 absolute top-[5px] right-[5px] hover:bg-cyan4 outline-none cursor-default z-[2]"
                 aria-label="Close"
               >
                 <Cross2Icon />
               </Popover.Close>
             }
             { arrow !== false &&
-              <Popover.Arrow className="fill-white" />
+              <Popover.Arrow className="fill-white m-[-0.5px]" />
             }
           </Popover.Content>
         </Popover.Portal>

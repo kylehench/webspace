@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import GridItem from './primitives/GridItem'
+import ScrollArea from './primitives/ScrollArea'
 import axios from 'axios'
 import colors from 'tailwindcss/colors'
 import { IoTrashOutline } from "react-icons/io5"
@@ -148,27 +149,38 @@ const Note = ({ widgetProps, appState }) => {
         </div>
       }
     >
-      <div className='h-full overflow-hidden'>
-        { loading && !widgetProps.noSync ?
-          <div
-            className='p-3 bg-transparent text-slate-800 text-sm outline-0'
-          >{content}</div>
-        :
-          <textarea
-            className='p-3 bg-transparent text-slate-800 text-sm outline-0 block h-full w-full resize-none'
-            onChange={(e) => contentChange(e.target.value)}
-            value={content}
-            maxLength={1e4}
-            disabled={widgetProps.noSync}
-          ></textarea>
-        }
-        {/* {
-          content.split("\n").map((string, i) => <input type="text" value={string} onKeyDown={e => {
-            console.log(e.key)
-            console.log(e.target.selectionStart, e.target.selectionEnd)
-          }} />)
-        } */}
-      </div>
+
+      { loading && !widgetProps.noSync ?
+        <div
+          className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0'
+        >{content}</div>
+      :
+        <textarea
+          className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none overflow-auto'
+          onChange={(e) => contentChange(e.target.value)}
+          value={content}
+          maxLength={1e4}
+          disabled={widgetProps.noSync}
+        ></textarea>
+        // <div
+        //   className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none'
+        //   onInput={(e) => {
+        //       console.log(e.target.innerText)
+        //       contentChange(e.target.innerText)
+        //     }}
+        //   contentEditable
+        //   maxLength={1e4}
+        //   // disabled={widgetProps.noSync}
+        // >{content}</div>
+      }
+
+      {/* {
+        content.split("\n").map((string, i) => <input type="text" value={string} onKeyDown={e => {
+          console.log(e.key)
+          console.log(e.target.selectionStart, e.target.selectionEnd)
+        }} />)
+      } */}
+      
     </GridItem>
   )
 }

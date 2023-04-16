@@ -21,7 +21,7 @@ const BackgroundButton = ({ appState }) => {
       <div className='pb-4 px-4'>
         { images.map(image => (
           <img
-            key={image.name}
+            key={image}
             className='pt-4 w-48'
             src={`${process.env.PUBLIC_URL}/img/${image}.jpg`}
             alt=""
