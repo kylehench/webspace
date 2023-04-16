@@ -150,36 +150,38 @@ const Note = ({ widgetProps, appState }) => {
       }
     >
 
-      { loading && !widgetProps.noSync ?
-        <div
-          className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0'
-        >{content}</div>
-      :
-        <textarea
-          className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none overflow-auto'
-          onChange={(e) => contentChange(e.target.value)}
-          value={content}
-          maxLength={1e4}
-          disabled={widgetProps.noSync}
-        ></textarea>
-        // <div
-        //   className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none'
-        //   onInput={(e) => {
-        //       console.log(e.target.innerText)
-        //       contentChange(e.target.innerText)
-        //     }}
-        //   contentEditable
-        //   maxLength={1e4}
-        //   // disabled={widgetProps.noSync}
-        // >{content}</div>
-      }
+      <div className='h-full mr-[3px]'>
+        { loading && !widgetProps.noSync ?
+          <div
+            className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0'
+          >{content}</div>
+        :
+          <textarea
+            className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none overflow-auto'
+            onChange={(e) => contentChange(e.target.value)}
+            value={content}
+            maxLength={1e4}
+            disabled={widgetProps.noSync}
+          ></textarea>
+          // <div
+          //   className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none'
+          //   onInput={(e) => {
+          //       console.log(e.target.innerText)
+          //       contentChange(e.target.innerText)
+          //     }}
+          //   contentEditable
+          //   maxLength={1e4}
+          //   // disabled={widgetProps.noSync}
+          // >{content}</div>
+        }
 
-      {/* {
-        content.split("\n").map((string, i) => <input type="text" value={string} onKeyDown={e => {
-          console.log(e.key)
-          console.log(e.target.selectionStart, e.target.selectionEnd)
-        }} />)
-      } */}
+        {/* {
+          content.split("\n").map((string, i) => <input type="text" value={string} onKeyDown={e => {
+            console.log(e.key)
+            console.log(e.target.selectionStart, e.target.selectionEnd)
+          }} />)
+        } */}
+      </div>
       
     </GridItem>
   )
