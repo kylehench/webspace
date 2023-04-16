@@ -18,12 +18,12 @@ div > .react-grid-item.react-grid-placeholder {
 }
 
 textarea::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
 }
 
-textarea::-webkit-scrollbar-track {
-  /* background: #E2E2E2; */
-}
+/* textarea::-webkit-scrollbar-track {
+  background: #E2E2E2;
+} */
 
 textarea::-webkit-scrollbar-thumb {
   background-color: #86848D;
