@@ -27,7 +27,7 @@ const NoteButton = ({ appState }) => {
 
   const addNote = (id) => {
     // checks to ensure note is not already present in widgets
-    if (widgets.filter(widget => widget.noteId === id).length === 0) {
+    if (!id || widgets.filter(widget => widget.noteId === id).length === 0) {
       const reactId = Math.random().toString()
       widgetsDispatch({type: "CREATE", payload: {
         type: 'note',
