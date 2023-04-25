@@ -36,14 +36,14 @@ function App() {
   
   
   return (
-    <div className={`flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/img/${backgroundImage}.jpg")`}}>
+    <div className={`pr-1 flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/img/${backgroundImage}.jpg")`}}>
       <div className='flex flex-col justify-start py-2 pl-2'>
         <LoginRegButton appState={appState} />
         <BackgroundButton appState={appState} />
         <NoteButton appState={appState} />
         <QuoteButton appState={appState} />
       </div>
-      <div className='flex-1 overflow-y-auto'>
+      <div className='flex-1 overflow-y-auto thin-scrollbar'>
         <Grid appState={appState} />
       </div>
     </div>

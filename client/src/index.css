@@ -17,15 +17,11 @@ div > .react-grid-item.react-grid-placeholder {
   z-index: 10;
 }
 
-textarea::-webkit-scrollbar {
+.thin-scrollbar::-webkit-scrollbar {
   width: 5px;
 }
 
-/* textarea::-webkit-scrollbar-track {
-  background: #E2E2E2;
-} */
-
-textarea::-webkit-scrollbar-thumb {
+.thin-scrollbar::-webkit-scrollbar-thumb {
   background-color: #86848D;
   border-radius: 5px;
   /* border: 3px solid #E2E2E2; */

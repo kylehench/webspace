@@ -157,7 +157,7 @@ const Note = ({ widgetProps, appState }) => {
           >{content}</div>
         :
           <textarea
-            className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none overflow-auto'
+            className='h-full p-3 thin-scrollbar bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none overflow-auto'
             onChange={(e) => contentChange(e.target.value)}
             value={content}
             maxLength={1e4}
