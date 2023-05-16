@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Lora';
+    src: local('Lora'), url(./fonts/Lora-Regular.ttf) format('truetype');
+  }
+}
+
+div > .react-grid-item.react-grid-placeholder {
+  background: orange;
+}
+
+.react-grid-item:hover{
+  z-index: 10;
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #86848D;
+  border-radius: 5px;
+  /* border: 3px solid #E2E2E2; */
+}
