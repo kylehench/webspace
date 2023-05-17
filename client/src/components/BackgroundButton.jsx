@@ -23,7 +23,7 @@ const BackgroundButton = ({ appState }) => {
           <img
             key={image}
             className='pt-4 w-48'
-            src={`${import.meta.env.BASE_URL}/img/${image}.jpg`}
+            src={`/img/${image}.jpg`}
             alt=""
             onClick={() => {
               setBackgroundImage(image)
