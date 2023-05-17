@@ -36,7 +36,7 @@ function App() {
   
   
   return (
-    <div className={`pr-1 flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("/img/${backgroundImage}.jpg")`}}>
+    <div className={`pr-1 flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("${import.meta.env.BASE_URL}/img/${backgroundImage}.jpg")`}}>
       <div className='flex flex-col justify-start py-2 pl-2'>
         <LoginRegButton appState={appState} />
         <BackgroundButton appState={appState} />
