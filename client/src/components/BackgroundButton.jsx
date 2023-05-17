@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { IoImageOutline } from 'react-icons/io5'
 import ButtonPopover from './primitives/ButtonPopover'
 
@@ -23,7 +23,7 @@ const BackgroundButton = ({ appState }) => {
           <img
             key={image}
             className='pt-4 w-48'
-            src={`${process.env.PUBLIC_URL}/img/${image}.jpg`}
+            src={`${import.meta.env.BASE_URL}/img/${image}.jpg`}
             alt=""
             onClick={() => {
               setBackgroundImage(image)

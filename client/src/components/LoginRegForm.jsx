@@ -19,7 +19,7 @@ const LoginRegForm = ({ appState }) => {
   const [ activeTab, setActiveTab ] = useState('tab1')
 
   const register = (username=registerUsername, email=registerEmail, password=registerPassword, password_confirm=registerPasswordConfirm) => {
-    axios.post(`${process.env.REACT_APP_AUTH_URI}/api/register`,
+    axios.post(`${import.meta.env.VITE_AUTH_URI}/api/register`,
       {username, email, password, password_confirm}
     ).then(res => {
       const data = res.data.data
@@ -41,7 +41,7 @@ const LoginRegForm = ({ appState }) => {
   }
 
   const login = () => {
-    axios.post(`${process.env.REACT_APP_AUTH_URI}/api/login`,
+    axios.post(`${import.meta.env.VITE_AUTH_URI}/api/login`,
       {email: loginEmail, password: loginPassword}
     ).then(res => {
       const data = res.data.data
@@ -70,7 +70,7 @@ const LoginRegForm = ({ appState }) => {
     }
     
     const logout = e => {
-      axios.get(`${process.env.REACT_APP_AUTH_URI}/api/logout`, {withCredentials: true})
+      axios.get(`${import.meta.env.VITE_AUTH_URI}/api/logout`, {withCredentials: true})
       .then(res => {
         if (res.data.status==='success') {
           localStorage.removeItem('webspace_user_id')

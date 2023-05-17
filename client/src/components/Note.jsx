@@ -30,7 +30,7 @@ const Note = ({ widgetProps, appState }) => {
   useEffect(() => {
     if (widgetProps.noteId) {
       // load note
-      axios.get(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`)
+      axios.get(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`)
         .then(res => {
           const note = res.data.note
           setTitle(note.title)
@@ -43,7 +43,7 @@ const Note = ({ widgetProps, appState }) => {
         })
     } else if (user.id && !widgetProps.noSync) {
       // post new note, save note id
-      axios.post(`${process.env.REACT_APP_SERVER_URI}/api/notes`, { title, content })
+      axios.post(`${import.meta.env.VITE_SERVER_URI}/api/notes`, { title, content })
       .then(res => {
         noteListDispatch({type: "CREATE", payload: {
           id: res.data, title, content
@@ -84,7 +84,7 @@ const Note = ({ widgetProps, appState }) => {
     setSyncTimeoutId(setTimeout(() => {
       if (widgetProps.noteId && !widgetProps.noSync) {
         const newProps = {title, content, contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
-        axios.put(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`, newProps)
+        axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newProps)
           .then(() => {
             setSyncTimeoutId(0)
           })
@@ -100,7 +100,7 @@ const Note = ({ widgetProps, appState }) => {
   // delete note
   const deleteNote = () => {
     if (user.id) {
-      axios.delete(`${process.env.REACT_APP_SERVER_URI}/api/notes/${widgetProps.noteId}`)
+      axios.delete(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`)
         .then(res => {
           noteListDispatch({
             type: "DELETE",

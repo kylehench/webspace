@@ -11,10 +11,10 @@ const Quote = ({ appState, widgetProps }) => {
 
   useEffect(() => {
     if (widgetProps.pin && widgetProps.id) {
-      axios.get(`${process.env.REACT_APP_SERVER_URI}/api/quotes/${widgetProps.id}`)
+      axios.get(`${import.meta.env.VITE_SERVER_URI}/api/quotes/${widgetProps.id}`)
         .then(res => setQuote(res.data.quote))
       } else {
-        axios.get(`${process.env.REACT_APP_SERVER_URI}/api/quotes/today`)
+        axios.get(`${import.meta.env.VITE_SERVER_URI}/api/quotes/today`)
         .then(res => setQuote(res.data.quote))
       }
   }, [])
@@ -25,7 +25,7 @@ const Quote = ({ appState, widgetProps }) => {
   }
     
   const getRandomQuote = () => {
-    axios.get(`${process.env.REACT_APP_SERVER_URI}/api/quotes/random`)
+    axios.get(`${import.meta.env.VITE_SERVER_URI}/api/quotes/random`)
       .then(res => setQuote(res.data.quote))
     setPin(false)
   }
