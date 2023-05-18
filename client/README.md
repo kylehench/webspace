@@ -18,6 +18,10 @@ Configure nginx:
 ```
 sudo vim /etc/nginx/sites-available/default
 ```
+Restart nginx:
+```
+sudo service nginx restart
+```
 Example location block:
 ```
 location /webspace {
