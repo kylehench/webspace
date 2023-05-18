@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import GridItem from './primitives/GridItem'
-import ScrollArea from './primitives/ScrollArea'
 import axios from 'axios'
 import colors from 'tailwindcss/colors'
 import { IoTrashOutline } from "react-icons/io5"
@@ -101,7 +100,7 @@ const Note = ({ widgetProps, appState }) => {
   const deleteNote = () => {
     if (user.id) {
       axios.delete(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`)
-        .then(res => {
+        .then(() => {
           noteListDispatch({
             type: "DELETE",
             id: widgetProps.noteId,
@@ -185,6 +184,11 @@ const Note = ({ widgetProps, appState }) => {
       
     </GridItem>
   )
+}
+
+Note.propTypes = {
+  widgetProps: Object,
+  appState: Object
 }
 
 export default Note

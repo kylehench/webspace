@@ -15,7 +15,7 @@ function App() {
     email: localStorage.getItem('webspace_email'),
   })
   // note: background images are prefetched in index.html > head
-  const [backgroundImage, setBackgroundImage] = useState(localStorage.getItem('webspace_backgroundImage') || 'ocean-lg')
+  const [backgroundImage, setBackgroundImage] = useState(localStorage.getItem('webspace_backgroundImage') || 'ocean')
   const [layout, layoutDispatch] = useReducer(
     layoutReducer,
     JSON.parse(localStorage.getItem('webspace_layout')) || []
@@ -36,7 +36,7 @@ function App() {
   
   
   return (
-    <div className={`pr-1 flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("${import.meta.env.BASE_URL}/img/${backgroundImage}.jpg")`}}>
+    <div className={`pr-1 flex h-screen bg-cover mx-auto bg-center transition-all`} style={{ backgroundImage: `url("${import.meta.env.BASE_URL}/img/${backgroundImage}-lg.jpg")`}}>
       <div className='flex flex-col justify-start py-2 pl-2'>
         <LoginRegButton appState={appState} />
         <BackgroundButton appState={appState} />
