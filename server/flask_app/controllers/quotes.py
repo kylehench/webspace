@@ -15,7 +15,10 @@ def fetch_variable():
 # get quote of the day
 @app.route('/api/quotes/today')
 def get_quote_today():
-  id = int(datetime.datetime.now().strftime("%Y%m%d")) % app.config['quote_id_max'] + app.config['quote_id_min']
+  id = int(datetime.datetime.now().strftime("%Y%m%d")) % (app.config['quote_id_max']-app.config['quote_id_min']+1) + app.config['quote_id_min']
+  print(f'id: {id}')
+  print(f'min: {min}')
+  print(f'max: {id}')
   quote = db.session.get(Quote, id)
   return {"quote": quote_schema.dump(quote)}
 
