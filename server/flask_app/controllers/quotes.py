@@ -8,7 +8,7 @@ from flask_app.models.quote import Quote, quote_schema
 
 # get quote id min and max
 @app.before_first_request
-def fetch_variable():
+def fetch_quote_id_range():
   app.config['quote_id_min'] = db.session.execute(text("SELECT id FROM quote ORDER BY id LIMIT 1")).scalar()
   app.config['quote_id_max'] = db.session.execute(text("SELECT id FROM quote ORDER BY id DESC LIMIT 1")).scalar()
 
@@ -16,9 +16,6 @@ def fetch_variable():
 @app.route('/api/quotes/today')
 def get_quote_today():
   id = int(datetime.datetime.now().strftime("%Y%m%d")) % (app.config['quote_id_max']-app.config['quote_id_min']+1) + app.config['quote_id_min']
-  print(f'id: {id}')
-  print(f'min: {min}')
-  print(f'max: {id}')
   quote = db.session.get(Quote, id)
   return {"quote": quote_schema.dump(quote)}
 
