@@ -1,16 +1,8 @@
 import datetime, random
 from flask import request, abort
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import text
 
 from flask_app import app, db
 from flask_app.models.quote import Quote, quote_schema
-
-# get quote id min and max
-@app.before_first_request
-def fetch_quote_id_range():
-  app.config['quote_id_min'] = db.session.execute(text("SELECT id FROM quote ORDER BY id LIMIT 1")).scalar()
-  app.config['quote_id_max'] = db.session.execute(text("SELECT id FROM quote ORDER BY id DESC LIMIT 1")).scalar()
 
 # get quote of the day
 @app.route('/api/quotes/today')
