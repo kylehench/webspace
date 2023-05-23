@@ -1,5 +1,5 @@
 import datetime, random
-from flask import request, make_response
+from flask import request, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 
@@ -37,7 +37,7 @@ def get_quote_by_id(id):
 @app.route('/api/quotes/', methods=['POST'])
 def post_quotes():
   if request.json.get('secret_key') != app.SECRET_KEY:
-    return 'Please provide secret_key.'
+    abort(401)
   quotes = request.json.get('quotes')
   for quote in quotes:
     db.session.add(Quote(text=quote['text'], author=quote['author']))
@@ -48,7 +48,7 @@ def post_quotes():
 @app.route('/api/quotes/')
 def get_quotes():
   if request.json.get('secret_key') != app.SECRET_KEY:
-    return 'Please provide secret_key.'
+    abort(401)
   quotes = db.session.execute(db.select(Quote)).scalars()
   quotes_array = []
   for quote in quotes:
