@@ -25,7 +25,7 @@ export default ({ mode }) => {
       proxy: {
         [VITE_AUTH_URI]: {
           target: 'http://localhost:4000/',
-          rewrite: (path) => path.replace(new RegExp(VITE_AUTH_URI), '')
+          rewrite: (path) => path.replace(RegExp(VITE_AUTH_URI), '')
         },
         [`${VITE_SERVER_URI}/api`]: {
           target: 'http://localhost:5000/',
