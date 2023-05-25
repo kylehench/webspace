@@ -2,9 +2,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import fs from 'fs'
 import path from 'path'
+import dotenv from 'dotenv'
+
+// Load environment variables from .env file
+dotenv.config();
+const { VITE_URL_BASENAME, VITE_AUTH_URI, VITE_SERVER_URI } = process.env
 
 // https://vitejs.dev/config/
-export default ({mode}) => {
+export default ({ mode }) => {
   // Path to the .env file
   const envFilePath = path.resolve(__dirname, '.env')
   
@@ -15,16 +20,16 @@ export default ({mode}) => {
 
   return defineConfig({
     plugins: [react()],
-    base: '/webspace',
+    base: VITE_URL_BASENAME,
     server: {
       proxy: {
-        '/auth': {
+        [VITE_AUTH_URI]: {
           target: 'http://localhost:4000/',
-          rewrite: (path) => path.replace(/^\/auth/, '')
+          rewrite: (path) => path.replace(new RegExp(VITE_AUTH_URI), '')
         },
-        '/webspace/api': {
+        [`${VITE_SERVER_URI}/api`]: {
           target: 'http://localhost:5000/',
-          rewrite: (path) => path.replace(/^\/webspace/, '')
+          rewrite: (path) => path.replace(RegExp(VITE_SERVER_URI), '')
         }
       }
     }

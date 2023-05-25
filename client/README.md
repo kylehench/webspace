@@ -1,26 +1,20 @@
 # authentication server
 
-## Client Deployment (initial or update)
+## Client Deployment (update)
+Navigate to `/webspace/client` and build app:
 ```
 git pull
-```
-Navigate to client and build app:
-```
-cd client
 npm run build
 ```
-Replace previous build:
+Replace previous build and restart Nginx:
 ```
 sudo rm -rf /var/www/webspace
 sudo mv dist /var/www/webspace
+sudo service nginx restart
 ```
-Configure nginx:
+## Configure nginx
 ```
 sudo vim /etc/nginx/sites-available/default
-```
-Restart nginx:
-```
-sudo service nginx restart
 ```
 Example location block:
 ```
