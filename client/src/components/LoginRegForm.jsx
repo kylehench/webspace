@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import * as Tabs from '@radix-ui/react-tabs'
 import Button from './primitives/Button'
@@ -18,21 +18,28 @@ const LoginRegForm = ({ appState }) => {
 
   const [ activeTab, setActiveTab ] = useState('tab1')
 
+  const setUserVariables = (res) => {
+    const data = res.data.data
+    
+    // set local storage variables
+    for (let key of ['user_id', 'username', 'email', 'token_expires']) {
+      localStorage.setItem(`webspace_${key}`, data[key])
+    }
+    // set React state variables
+    setUser({...user, id: data.user_id, username: data.username, email: data.email})
+    layoutDispatch({type: "CLEAR"})
+    widgetsDispatch({type: "CLEAR"})
+  }
+
   const register = (username=registerUsername, email=registerEmail, password=registerPassword, password_confirm=registerPasswordConfirm) => {
     axios.post(`${import.meta.env.VITE_AUTH_URI}/api/register`,
       {username, email, password, password_confirm}
     ).then(res => {
       const data = res.data.data
-      console.log(res)
       if (res.data.status==='success') {
         setRegisterErrors({})
-        localStorage.setItem('webspace_user_id', data.user_id)
-        localStorage.setItem('webspace_username', data.username)
-        localStorage.setItem('webspace_email', data.email)
-        setUser({...user, id: data.user_id, username: data.username, email: data.email})
+        setUserVariables(res)
         setActiveTab('tab1')
-        layoutDispatch({type: "CLEAR"})
-        widgetsDispatch({type: "CLEAR"})
       } else {
         console.log(data.errors)
         setRegisterErrors(data.errors)
@@ -47,12 +54,7 @@ const LoginRegForm = ({ appState }) => {
       const data = res.data.data
       if (res.data.status==='success') {
         setLoginErrors({})
-        localStorage.setItem('webspace_user_id', data.user_id)
-        localStorage.setItem('webspace_username', data.username)
-        localStorage.setItem('webspace_email', data.email)
-        setUser({...user, id: data.user_id, username: data.username, email: data.email})
-        layoutDispatch({type: "CLEAR"})
-        widgetsDispatch({type: "CLEAR"})
+        setUserVariables(res)
       } else {
         setLoginErrors(data.errors)
       }
@@ -69,15 +71,13 @@ const LoginRegForm = ({ appState }) => {
       )
     }
     
-    const logout = e => {
+    const logout = () => {
       axios.get(`${import.meta.env.VITE_AUTH_URI}/api/logout`, {withCredentials: true})
       .then(res => {
         if (res.data.status==='success') {
-          localStorage.removeItem('webspace_user_id')
-          localStorage.removeItem('webspace_username')
-          localStorage.removeItem('webspace_email')
-          localStorage.removeItem('webspace_widgets')
-          localStorage.removeItem('webspace_layout')
+          for (let key of ['webspace_user_id', 'webspace_username', 'webspace_email', 'webspace_token_expires', 'webspace_widgets', 'webspace_layout']) {
+            localStorage.removeItem(key)
+          }
           setUser({})
           layoutDispatch({type: "CLEAR"})
           widgetsDispatch({type: "CLEAR"})
