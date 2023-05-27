@@ -80,7 +80,7 @@ const NoteButton = ({ appState }) => {
                   className='h-6 w-[160px] text-left truncate overflow-hidden'
                   onClick={() => {
                     addNote(note.id)
-                    setOpen(false)
+                    // setOpen(false)
                   }}
                 >
                   {note.title ? note.title : '(untitled)'}
