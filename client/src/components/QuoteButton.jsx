@@ -6,7 +6,7 @@ const QuoteButton = ({ appState }) => {
   const { layoutDispatch, widgetsDispatch } = appState
 
   const addQuote = () => {
-    const reactId = Math.random().toString()
+    const reactId = Math.random().toString().slice(2,14)
     widgetsDispatch({type: "CREATE", payload: {
       type: 'quote',
       reactId

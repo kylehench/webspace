@@ -17,7 +17,7 @@ const Grid = ({ appState }) => {
   // initial load layout
   useEffect(() => {
     if (!user.id) {
-      const reactId = Math.random().toString()
+      const reactId = Math.random().toString().slice(2,14)
       widgetsDispatch({type: 'SET', payload: [{...welcomeNote, reactId}]})
       layoutDispatch({type: "CREATE", payload: {i: reactId, w: 2, h: 3}})
     }
