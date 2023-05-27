@@ -1,4 +1,4 @@
-# authentication server
+# React Client
 
 ## Client Deployment (update)
 Navigate to `/webspace/client` and build app:
