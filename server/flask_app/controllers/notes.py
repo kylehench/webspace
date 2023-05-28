@@ -14,8 +14,8 @@ def get_user_id():
   try:
     user_id = user_id_from_token(request)
     return user_id
-  except:
-    abort(401, message="Please sign in.")
+  except PermissionError as e:
+    abort(401, message=str(e))
 
 class NoteResource(Resource):
   def get(self, note_id):
