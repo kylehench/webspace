@@ -8,8 +8,8 @@ class Note(db.Model):
   content = db.Column(db.String(int(1e4)))
   titleBgColor = db.Column(db.String(20))
   contentBgColor = db.Column(db.String(20))
-  created_at = db.Column(db.String(255), default=datetime.now)
-  updated_at = db.Column(db.String(255), default=datetime.now, onupdate=datetime.now)
+  created_utc = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
+  updated_utc = db.Column(db.DateTime(timezone=True), onupdate=datetime.utcnow)
 
   def update(self, new_data):
     for key, val in new_data.items():

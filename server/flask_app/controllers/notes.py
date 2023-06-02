@@ -54,7 +54,7 @@ class NoteListResource(Resource):
   def get(self):
     user_id = get_user_id()
     # note: returns id and titles of user's notes in updated order (descending)
-    notes = db.session.execute(db.select(Note.id, Note.title).where(Note.user_id == user_id).order_by(Note.updated_at.desc()))
+    notes = db.session.execute(db.select(Note.id, Note.title).where(Note.user_id == user_id).order_by(Note.updated_utc.desc()))
     notes = [{"id": id, "title": title} for id, title in notes]
     return notes
   
