@@ -19,6 +19,9 @@ ma = Marshmallow(app)
 migrate = Migrate(app, db)
 
 # some quote routes need min and max quote ids
-with app.app_context():
-  app.config['quote_id_min'] = db.session.execute(text("SELECT id FROM quote ORDER BY id LIMIT 1")).scalar()
-  app.config['quote_id_max'] = db.session.execute(text("SELECT id FROM quote ORDER BY id DESC LIMIT 1")).scalar()
+try:
+  with app.app_context():
+    app.config['quote_id_min'] = db.session.execute(text("SELECT id FROM quote ORDER BY id LIMIT 1")).scalar()
+    app.config['quote_id_max'] = db.session.execute(text("SELECT id FROM quote ORDER BY id DESC LIMIT 1")).scalar()
+except:
+  print('Error querying quote table. Does it exist yet? (ignore if before database upgrade)')
