@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 
 // Load environment variables from .env file
 dotenv.config();
-const { VITE_URL_BASENAME, VITE_AUTH_URI, VITE_SERVER_URI } = process.env
+const { VITE_URL_BASENAME, VITE_AUTH_URI, VITE_AUTH_URI_LOCAL, VITE_SERVER_URI, VITE_SERVER_URI_LOCAL } = process.env
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -24,11 +24,11 @@ export default ({ mode }) => {
     server: {
       proxy: {
         [VITE_AUTH_URI]: {
-          target: 'http://localhost:4000/',
+          target: VITE_AUTH_URI_LOCAL || 'http://localhost:4000/',
           rewrite: (path) => path.replace(RegExp(VITE_AUTH_URI), '')
         },
         [`${VITE_SERVER_URI}/api`]: {
-          target: 'http://localhost:5000/',
+          target: VITE_SERVER_URI_LOCAL || 'http://localhost:5000/',
           rewrite: (path) => path.replace(RegExp(VITE_SERVER_URI), '')
         }
       }
