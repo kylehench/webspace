@@ -149,14 +149,14 @@ const Note = ({ widgetProps, appState }) => {
       }
     >
 
-      <div className='h-full mr-[3px]'>
+      <div className='h-full thin-scrollbar-parent'>
         { loading && !widgetProps.noSync ?
           <div
             className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0'
           >{content}</div>
         :
           <textarea
-            className='h-full p-3 thin-scrollbar bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none overflow-auto'
+            className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none thin-scrollbar overflow-auto'
             onChange={(e) => contentChange(e.target.value)}
             value={content}
             maxLength={1e4}

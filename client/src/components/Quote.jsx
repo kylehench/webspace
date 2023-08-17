@@ -58,16 +58,17 @@ const Quote = ({ appState, widgetProps }) => {
         </div>
       }
     >
-      {quote.text && 
-        <div className='px-8 pb-2 h-full flex flex-col justify-center font-[Lora] text-lg'>
-          <div className=''>
+      {quote.text && <>
+        {/* note: tailwind container query used to dynamically adjust quote text size */}
+        <div className='@container pb-2 h-full flex flex-col justify-center font-[Lora] text-[14px] thin-scrollbar-parent'>
+          <div className='px-4 @[14rem]:px-8 @[14rem]:text-sm @[18rem]:text-base @[24rem]:text-lg thin-scrollbar overflow-auto'>
             {quote.text}
-          </div>
-          <div className="flex justify-end items-end font-semibold">
-            <span className='text-[16px]'>- {quote.author ? quote.author : 'Unknown'}</span>
+            <div className="flex justify-end items-end font-semibold">
+              <span className=''>- {quote.author ? quote.author : 'Unknown'}</span>
+            </div>
           </div>
         </div>
-      }
+      </>}
     </GridItem>
   )
 }
