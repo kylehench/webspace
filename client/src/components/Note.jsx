@@ -4,6 +4,7 @@ import axios from 'axios'
 import colors from 'tailwindcss/colors'
 import { IoTrashOutline } from "react-icons/io5"
 import { IoSync } from "react-icons/io5"
+import Checkboxes from './Checkboxes'
 
 const colorsList = [
   [colors.yellow[100], colors.yellow[300]],
@@ -150,7 +151,7 @@ const Note = ({ widgetProps, appState }) => {
     >
 
       <div className='h-full thin-scrollbar-parent'>
-        { loading && !widgetProps.noSync ?
+        {/* { loading && !widgetProps.noSync ?
           <div
             className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0'
           >{content}</div>
@@ -162,6 +163,7 @@ const Note = ({ widgetProps, appState }) => {
             maxLength={1e4}
             disabled={widgetProps.noSync}
           ></textarea>
+
           // <div
           //   className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none'
           //   onInput={(e) => {
@@ -172,14 +174,13 @@ const Note = ({ widgetProps, appState }) => {
           //   maxLength={1e4}
           //   // disabled={widgetProps.noSync}
           // >{content}</div>
-        }
-
-        {/* {
-          content.split("\n").map((string, i) => <input type="text" value={string} onKeyDown={e => {
-            console.log(e.key)
-            console.log(e.target.selectionStart, e.target.selectionEnd)
-          }} />)
         } */}
+
+        <div className="h-full overflow-auto thin-scrollbar">
+          <Checkboxes
+            content={content}
+          />
+        </div>
       </div>
       
     </GridItem>

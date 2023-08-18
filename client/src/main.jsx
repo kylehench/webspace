@@ -11,10 +11,10 @@ axios.defaults.headers.common['X-WEBSPACE-CSRF-PROTECTION'] = '1'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <>
-    <React.StrictMode>
+    {/* <React.StrictMode> */}
       <RTooltip.Provider>
         <App />
       </RTooltip.Provider>
-    </React.StrictMode>
+    {/* </React.StrictMode> */}
   </>
 )
