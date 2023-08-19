@@ -1,21 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
-import { CheckCircledIcon, CircleIcon } from '@radix-ui/react-icons';
+import { CheckCircledIcon, CircleIcon } from '@radix-ui/react-icons'
+import axios from 'axios'
+import { current } from 'tailwindcss/colors'
 
+const getRandomId = () => Math.random().toString().slice(2)
 
-
-const Checkboxes = ({  }) => {
-  const textRef = useRef([
-    {reactId: 1, content: 'hello, world1'},
-    {reactId: 2, content: 'hello, world2'},
-    {reactId: 3, content: 'hello, world3'},
-  ])
+const Checkboxes = ({ widgetProps, content, contentChange }) => {
+  const textRef = useRef(content.split('\n').map(line => {
+    return {reactId: getRandomId(),
+      content: line
+    }
+  }))
   const inputRefs = useRef([])
-  const [ textArray, setTextArray ] = useState([
-    {reactId: 1, checked: false}, 
-    {reactId: 2, checked: false}, 
-    {reactId: 3, checked: false},
-  ])
+  const [ textArray, setTextArray ] = useState(
+    textRef.current.map(({reactId}) => {
+      return {
+        reactId,
+        checked: false,
+      }
+    })
+  )
   const [ focusIndex, setFocusIndex ] = useState(0)
+  const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
 
   // sets checkbox focus when focusIndex is modified
   useEffect(() => {
@@ -29,7 +35,7 @@ const Checkboxes = ({  }) => {
     switch (e.key) {
       case 'Enter': {
         e.preventDefault()
-        const reactId = Math.random().toString().slice(2)
+        const reactId = getRandomId()
         textRef.current.splice(i+1, 0, {reactId: reactId, content: ''})
         setTextArray(textArray => {
           const newTextArray = [...textArray]
@@ -59,31 +65,27 @@ const Checkboxes = ({  }) => {
         break
         
       default:
-        // console.log(e.target.innerText)
-        // setTextArray(textArray => {
-        //   const newTextArray = [...textArray]
-        //   newTextArray[i].content = e.target.innerText
-        //   return newTextArray
-        // })
         break
     }
 
   }
 
-  const onKeyUp = (e, i) => {
-    // console.log(e.target.textContent)
-    // if (e.key === 'Backspace' && textArray[i].content.length==0) {
-    //   console.log('HERE!!!!!!');
-    //   console.log(textArray[i].content);
-    //   e.preventDefault()
-    //   // delete task if text length == 0
-    //   setTextArray(textArray => textArray.filter(idx => idx != i))
-    //   if (i>0) setFocusIndex(i-1)
-    // }
+
+  const syncHandler = (newData, i) => {
+    if (syncTimeoutId) clearTimeout(syncTimeoutId)
+    setSyncTimeoutId(setTimeout(() => {
+      if (widgetProps.noteId && !widgetProps.noSync) {
+        axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
+          .then(() => {
+            setSyncTimeoutId(0)
+          })
+      }
+    }, 1500))
   }
 
   const onInput = (e, i) => {
     textRef.current[i].content = e.target.textContent
+    syncHandler({content: textRef.current.map(item => item.content).join('\n')}, i)
   }
 
   const toggleCheck = i => {
@@ -101,16 +103,6 @@ const Checkboxes = ({  }) => {
         key={reactId}
         className='p-1 flex items-center border-b-[1px] border-gray-500 bg-transparent text-slate-800 text-sm resize-none thin-scrollbar overflow-auto'
       >
-        {/* <Checkbox.Root
-          className="hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white outline-none"
-          defaultChecked
-          id="c1"
-        >
-          <Checkbox.Indicator className="text-violet11">
-            <CheckIcon />
-          </Checkbox.Indicator>
-        </Checkbox.Root> */}
-
         <button className='px-2' onClick={() => toggleCheck(i)}>
           { checked ? 
             <CheckCircledIcon className='h-5 w-5 text-gray-500' />
@@ -126,14 +118,16 @@ const Checkboxes = ({  }) => {
           ref={(ref) => inputRefs[i] = ref}
           type="text"
           onInput={e => {
+            // setCursor(window.getSelection().anchorOffset)
             onInput(e, i)
           }}
           // onChange={e => {
-          //   setTextArray(text => {
-          //     const newText = [...text]
-          //     newText[i] = e.target.value
-          //     return newText
-          //   })
+          //   console.log(e)
+          //   // setTextArray(text => {
+          //   //   const newText = [...text]
+          //   //   newText[i] = e.target.value
+          //   //   return newText
+          //   // })
           //   // e.target.selectionStart = 2
           //   // e.target.selectionEnd = 2
             
@@ -146,6 +140,7 @@ const Checkboxes = ({  }) => {
           onKeyDown={e => onKeyDown(e, i)}
           // onKeyUp={e => onKeyUp(e, i)}
           // onBlur={() => inputRef.current.setSelectionRange(cursorPosition, cursorPosition)}
+          suppressContentEditableWarning={true}
         >
           {textRef.current[i].content}
         </div>

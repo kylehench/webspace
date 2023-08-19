@@ -22,6 +22,8 @@ const Note = ({ widgetProps, appState }) => {
 
   const [ title, setTitle ] = useState('')
   const [ content, setContent ] = useState('')
+
+  const [ checkboxesVisible, setCheckboxesVisible ] = useState(false)
   
   const [ loading, setLoading ] = useState(true)
   const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
@@ -96,7 +98,7 @@ const Note = ({ widgetProps, appState }) => {
       }
     }, 1500))
   }
-  
+
   // delete note
   const deleteNote = () => {
     if (user.id) {
@@ -111,6 +113,11 @@ const Note = ({ widgetProps, appState }) => {
     } else {
       widgetsDispatch({type: "DELETE", reactId: widgetProps.reactId})
     }
+  }
+
+  // toggle checkboxes
+  const toggleCheckboxes = () => {
+    setCheckboxesVisible(!checkboxesVisible)
   }
   
   return (
@@ -132,17 +139,21 @@ const Note = ({ widgetProps, appState }) => {
               if (i===0) buttonStyle.borderTopLeftRadius = '4px'
               if (i===colorsList.length-1) buttonStyle.borderTopRightRadius = '4px'
               return <button 
-                  className='py-4 flex-1'
-                  style={{...buttonStyle, backgroundColor: titleBgColor}}
-                  key={i}
-                  onClick={() => colorChange({contentBgColor, titleBgColor})}
-                ></button>
+                className='py-4 flex-1'
+                style={{...buttonStyle, backgroundColor: titleBgColor}}
+                key={i}
+                onClick={() => colorChange({contentBgColor, titleBgColor})}
+              ></button>
             }
             )}
           </div>
 
+          {/* show checkboxes */}
+          <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={() => toggleCheckboxes()}>
+          <div className='pl-2'>Show Checkboxes</div>
+          </button>
           {/* delete note */}
-          <button className="flex items-center px-12 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] bg-red5 text-red11 hover:bg-red7 outline-none cursor-default" onClick={() => deleteNote()}>
+          <button className="flex items-center px-4 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] w-full bg-red5 text-red11 hover:bg-red6 outline-none cursor-default" onClick={() => deleteNote()}>
             <IoTrashOutline /><div className='pl-2'>Delete</div>
           </button>
 
@@ -151,36 +162,33 @@ const Note = ({ widgetProps, appState }) => {
     >
 
       <div className='h-full thin-scrollbar-parent'>
-        {/* { loading && !widgetProps.noSync ?
+        
+        
+        { (loading && !widgetProps.noSync) ?
           <div
             className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0'
           >{content}</div>
         :
-          <textarea
-            className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none thin-scrollbar overflow-auto'
-            onChange={(e) => contentChange(e.target.value)}
-            value={content}
-            maxLength={1e4}
-            disabled={widgetProps.noSync}
-          ></textarea>
+          ( checkboxesVisible ?
+            <div className="h-full overflow-auto thin-scrollbar">
+              <Checkboxes
+                widgetProps={widgetProps}
+                content={content}
+                contentChange={contentChange}
+              />
+            </div>
+          :
+            <textarea
+              className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none thin-scrollbar overflow-auto'
+              onChange={(e) => contentChange(e.target.value)}
+              value={content}
+              maxLength={1e4}
+              disabled={widgetProps.noSync}
+            ></textarea>
+          )
+        }
 
-          // <div
-          //   className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none'
-          //   onInput={(e) => {
-          //       console.log(e.target.innerText)
-          //       contentChange(e.target.innerText)
-          //     }}
-          //   contentEditable
-          //   maxLength={1e4}
-          //   // disabled={widgetProps.noSync}
-          // >{content}</div>
-        } */}
-
-        <div className="h-full overflow-auto thin-scrollbar">
-          <Checkboxes
-            content={content}
-          />
-        </div>
+        
       </div>
       
     </GridItem>
