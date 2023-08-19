@@ -19,6 +19,7 @@ div > .react-grid-item.react-grid-placeholder {
 
 .thin-scrollbar::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb {

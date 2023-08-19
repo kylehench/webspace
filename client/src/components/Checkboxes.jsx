@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckCircledIcon, CircleIcon } from '@radix-ui/react-icons';
 
 
@@ -53,7 +52,7 @@ const Checkboxes = ({  }) => {
         
       case 'Backspace':
         // delete task if text length == 0
-        if (textRef.current[i].content.length>0) break
+        if (textRef.current[i].content.length>0 || textRef.current.length==1) break
         textRef.current = textRef.current.filter((task, idx) => idx != i)
         setTextArray(textArray => textArray.filter((task, idx) => idx != i))
         if (i>0) setFocusIndex(i-1)
@@ -121,7 +120,7 @@ const Checkboxes = ({  }) => {
         </button>
         
         <div
-          className={`py-2 flex-grow outline-0 ${checked && 'line-through'}`}
+          className={`py-2 flex-grow outline-0 overflow-clip ${checked && 'line-through'}`}
           // rows={1}
           contentEditable="plaintext-only"
           ref={(ref) => inputRefs[i] = ref}
