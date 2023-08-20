@@ -150,7 +150,7 @@ const Note = ({ widgetProps, appState }) => {
 
           {/* show checkboxes */}
           <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={() => toggleCheckboxes()}>
-          <div className='pl-2'>Show Checkboxes</div>
+          <div className='pl-2'>{ checkboxesVisible ? "Hide" : "Show"} Checkboxes</div>
           </button>
           {/* delete note */}
           <button className="flex items-center px-4 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] w-full bg-red5 text-red11 hover:bg-red6 outline-none cursor-default" onClick={() => deleteNote()}>
@@ -174,7 +174,7 @@ const Note = ({ widgetProps, appState }) => {
               <Checkboxes
                 widgetProps={widgetProps}
                 content={content}
-                contentChange={contentChange}
+                setContent={setContent}
               />
             </div>
           :

@@ -5,7 +5,7 @@ import { current } from 'tailwindcss/colors'
 
 const getRandomId = () => Math.random().toString().slice(2)
 
-const Checkboxes = ({ widgetProps, content, contentChange }) => {
+const Checkboxes = ({ widgetProps, content, setContent }) => {
   const textRef = useRef(content.split('\n').map(line => {
     return {reactId: getRandomId(),
       content: line
@@ -42,23 +42,31 @@ const Checkboxes = ({ widgetProps, content, contentChange }) => {
           newTextArray.splice(i+1, 0, {reactId: reactId, checked: false})
           return newTextArray
         })
+
+        onBlur(e, i)
+        
         setFocusIndex(i+1)
         break
       }
 
       case 'ArrowUp':
         // move cursor to previous task
+        onBlur(e, i)
         if (i>0) setFocusIndex(i-1)
         break
 
       case 'ArrowDown':
         // move cursor to next task
+        onBlur(e, i)
         if (i<textArray.length-1) setFocusIndex(i+1)
         break
         
       case 'Backspace':
         // delete task if text length == 0
-        if (textRef.current[i].content.length>0 || textRef.current.length==1) break
+        if (e.target.textContent.length>0 || textRef.current.length==1) break
+
+        onBlur(e, i)
+        
         textRef.current = textRef.current.filter((task, idx) => idx != i)
         setTextArray(textArray => textArray.filter((task, idx) => idx != i))
         if (i>0) setFocusIndex(i-1)
@@ -76,16 +84,17 @@ const Checkboxes = ({ widgetProps, content, contentChange }) => {
     setSyncTimeoutId(setTimeout(() => {
       if (widgetProps.noteId && !widgetProps.noSync) {
         axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
-          .then(() => {
-            setSyncTimeoutId(0)
-          })
+          .then(() => setSyncTimeoutId(0))
       }
     }, 1500))
   }
 
-  const onInput = (e, i) => {
+  const onBlur = (e, i) => {
+    if (textRef.current[i].content === e.target.textContent) return
     textRef.current[i].content = e.target.textContent
-    syncHandler({content: textRef.current.map(item => item.content).join('\n')}, i)
+    const text = textRef.current.map(item => item.content).join('\n')
+    setContent(text)
+    syncHandler({content: text}, i)
   }
 
   const toggleCheck = i => {
@@ -112,15 +121,16 @@ const Checkboxes = ({ widgetProps, content, contentChange }) => {
         </button>
         
         <div
-          className={`py-2 flex-grow outline-0 overflow-clip ${checked && 'line-through'}`}
+          className={`py-2 flex-grow outline-0 overflow-clip ${checked && 'line-through text-gray-500'}`}
           // rows={1}
           contentEditable="plaintext-only"
           ref={(ref) => inputRefs[i] = ref}
           type="text"
-          onInput={e => {
-            // setCursor(window.getSelection().anchorOffset)
-            onInput(e, i)
-          }}
+          onBlur={e => onBlur(e, i)}
+          // onInput={e => {
+          //   // setCursor(window.getSelection().anchorOffset)
+          //   onInput(e, i)
+          // }}
           // onChange={e => {
           //   console.log(e)
           //   // setTextArray(text => {
