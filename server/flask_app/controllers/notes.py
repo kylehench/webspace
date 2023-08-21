@@ -30,7 +30,7 @@ class NoteResource(Resource):
   
   def put(self, note_id):
     user_id = get_user_id()
-    new_note_dict = parser.parse_args()
+    new_note_dict = {key: value for key, value in parser.parse_args().items() if value != None}
     note = db.session.scalar(db.select(Note).where(Note.id == note_id))
     # check permission to update note
     if user_id != note.user_id:
