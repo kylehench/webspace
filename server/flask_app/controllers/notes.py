@@ -1,14 +1,9 @@
-from flask_app import app, db
-from flask_restful import reqparse, abort, Api, Resource, request
+from flask_app import app, db, ma
+from flask_restful import abort, Api, Resource, request
 from flask_app.models.note import Note, note_schema
 from flask_app.services.authorization import user_id_from_token
 
 api = Api(app)
-
-parser = reqparse.RequestParser()
-args = ['title', 'content', 'titleBgColor', 'contentBgColor']
-for arg in args:
-  parser.add_argument(arg)
 
 def get_user_id():
   try:
@@ -30,12 +25,13 @@ class NoteResource(Resource):
   
   def put(self, note_id):
     user_id = get_user_id()
-    new_note_dict = {key: value for key, value in parser.parse_args().items() if value != None}
     note = db.session.scalar(db.select(Note).where(Note.id == note_id))
     # check permission to update note
     if user_id != note.user_id:
       abort(401, message="You do not have authorization to edit this resource.")
-    note.update(new_note_dict)
+    request_data = note_schema.load(request.get_json())
+    request_data.user_id = None
+    note.update({key: val for key, val in note_schema.dump(request_data).items() if val != None})
     db.session.commit()
     return '', 204
   
@@ -60,7 +56,8 @@ class NoteListResource(Resource):
   
   def post(self):
     user_id = get_user_id()
-    note = Note(user_id=user_id, **parser.parse_args())
+    note = note_schema.load(request.get_json())
+    note.user_id = user_id
     db.session.add(note)
     db.session.commit()
     return note.id, 201

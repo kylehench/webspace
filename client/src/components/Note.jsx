@@ -4,7 +4,7 @@ import axios from 'axios'
 import colors from 'tailwindcss/colors'
 import { IoTrashOutline } from "react-icons/io5"
 import { IoSync } from "react-icons/io5"
-import Checkboxes from './Checkboxes'
+import TaskList from './TaskList'
 
 const colorsList = [
   [colors.yellow[100], colors.yellow[300]],
@@ -24,6 +24,7 @@ const Note = ({ widgetProps, appState }) => {
   const [ content, setContent ] = useState('')
 
   const [ checkboxesVisible, setCheckboxesVisible ] = useState(false)
+  const [ checked, setChecked ] = useState('')
   
   const [ loading, setLoading ] = useState(true)
   const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
@@ -37,6 +38,8 @@ const Note = ({ widgetProps, appState }) => {
           const note = res.data.note
           setTitle(note.title)
           setContent(note.content)
+          setCheckboxesVisible(note.checkboxes_visible)
+          setChecked(note.checked || '')
           widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {
             titleBgColor: note.titleBgColor,
             contentBgColor: note.contentBgColor
@@ -71,6 +74,16 @@ const Note = ({ widgetProps, appState }) => {
     setContent(value)
     syncHandler({content: value})
   }
+  const checkboxesVisibleChange = (value) => {
+    setCheckboxesVisible(value)
+    setChecked('')
+    syncHandler({checkboxes_visible: value, checked: ''})
+  }
+  const checkedChange = (value) => {
+    console.log({checked: value});
+    setChecked(value)
+    syncHandler({checked: value})
+  }
   const colorChange = (newData) => {
     syncHandler(newData)
     widgetsDispatch({
@@ -85,7 +98,7 @@ const Note = ({ widgetProps, appState }) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
     setSyncTimeoutId(setTimeout(() => {
       if (widgetProps.noteId && !widgetProps.noSync) {
-        const newProps = {title, content, contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
+        const newProps = {contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
         axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newProps)
           .then(() => {
             setSyncTimeoutId(0)
@@ -117,7 +130,7 @@ const Note = ({ widgetProps, appState }) => {
 
   // toggle checkboxes
   const toggleCheckboxes = () => {
-    setCheckboxesVisible(!checkboxesVisible)
+    checkboxesVisibleChange(!checkboxesVisible)
   }
   
   return (
@@ -171,10 +184,13 @@ const Note = ({ widgetProps, appState }) => {
         :
           ( checkboxesVisible ?
             <div className="h-full overflow-auto thin-scrollbar">
-              <Checkboxes
+              <TaskList
                 widgetProps={widgetProps}
                 content={content}
                 setContent={setContent}
+                checked={checked}
+                checkedChange={checkedChange}
+                syncHandler={syncHandler}
               />
             </div>
           :

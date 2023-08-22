@@ -5,7 +5,9 @@ class Note(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer)
   title = db.Column(db.String(100))
-  content = db.Column(db.String(int(1e4)))
+  content = db.Column(db.Text())
+  checkboxes_visible = db.Column(db.Boolean)
+  checked = db.Column(db.Text()) # row idxs of content marked as "checked"
   titleBgColor = db.Column(db.String(20))
   contentBgColor = db.Column(db.String(20))
   created_utc = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)

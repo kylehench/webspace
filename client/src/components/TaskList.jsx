@@ -5,23 +5,26 @@ import { current } from 'tailwindcss/colors'
 
 const getRandomId = () => Math.random().toString().slice(2)
 
-const Checkboxes = ({ widgetProps, content, setContent }) => {
-  const textRef = useRef(content.split('\n').map(line => {
-    return {reactId: getRandomId(),
+const Checkboxes = ({ widgetProps, content, setContent, checked, checkedChange, syncHandler }) => {
+  // task content stored in useRef to prevent rendering issues
+  const taskContentRef = useRef(content.split('\n').map(line => {
+    return {
+      reactId: getRandomId(),
       content: line
     }
   }))
+  // references to editable divs
   const inputRefs = useRef([])
-  const [ textArray, setTextArray ] = useState(
-    textRef.current.map(({reactId}) => {
+  const checkedSet = new Set(checked.split(','))
+  const [ taskState, setTaskState ] = useState(
+    taskContentRef.current.map(({reactId}, i) => {
       return {
         reactId,
-        checked: false,
+        checked: checkedSet.has(i.toString()),
       }
     })
   )
   const [ focusIndex, setFocusIndex ] = useState(0)
-  const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
 
   // sets checkbox focus when focusIndex is modified
   useEffect(() => {
@@ -32,18 +35,19 @@ const Checkboxes = ({ widgetProps, content, setContent }) => {
   const onKeyDown = (e, i) => {
     // console.log(e.key)
     // console.log(e.target.selectionStart, e.target.selectionEnd)
+    let newTaskState
     switch (e.key) {
       case 'Enter': {
         e.preventDefault()
         const reactId = getRandomId()
-        textRef.current.splice(i+1, 0, {reactId: reactId, content: ''})
-        setTextArray(textArray => {
-          const newTextArray = [...textArray]
-          newTextArray.splice(i+1, 0, {reactId: reactId, checked: false})
-          return newTextArray
-        })
+        taskContentRef.current.splice(i+1, 0, {reactId: reactId, content: ''})
+        newTaskState = [...taskState]
+        newTaskState.splice(i+1, 0, {reactId: reactId, checked: false})
+        setTaskState(newTaskState)
 
-        onBlur(e, i)
+        // onBlur(e, i)
+        
+        syncContentChecked(newTaskState)
         
         setFocusIndex(i+1)
         break
@@ -58,17 +62,19 @@ const Checkboxes = ({ widgetProps, content, setContent }) => {
       case 'ArrowDown':
         // move cursor to next task
         onBlur(e, i)
-        if (i<textArray.length-1) setFocusIndex(i+1)
+        if (i<taskState.length-1) setFocusIndex(i+1)
         break
         
       case 'Backspace':
         // delete task if text length == 0
-        if (e.target.textContent.length>0 || textRef.current.length==1) break
+        if (e.target.textContent.length>0 || taskContentRef.current.length==1) break
 
-        onBlur(e, i)
+        // onBlur(e, i)
         
-        textRef.current = textRef.current.filter((task, idx) => idx != i)
-        setTextArray(textArray => textArray.filter((task, idx) => idx != i))
+        taskContentRef.current = taskContentRef.current.filter((task, idx) => idx != i)
+        newTaskState = taskState.filter((task, idx) => idx != i)
+        setTaskState(newTaskState)
+        syncContentChecked(newTaskState)
         if (i>0) setFocusIndex(i-1)
         break
         
@@ -79,35 +85,49 @@ const Checkboxes = ({ widgetProps, content, setContent }) => {
   }
 
 
-  const syncHandler = (newData, i) => {
-    if (syncTimeoutId) clearTimeout(syncTimeoutId)
-    setSyncTimeoutId(setTimeout(() => {
-      if (widgetProps.noteId && !widgetProps.noSync) {
-        axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
-          .then(() => setSyncTimeoutId(0))
-      }
-    }, 1500))
+  // const syncHandler = (newData, i) => {
+  //   if (syncTimeoutId) clearTimeout(syncTimeoutId)
+  //   setSyncTimeoutId(setTimeout(() => {
+  //     if (widgetProps.noteId && !widgetProps.noSync) {
+  //       axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
+  //         .then(() => setSyncTimeoutId(0))
+  //     }
+  //   }, 1500))
+  // }
+
+  const dumpChecked = (taskState) => {
+    const newChecked = []
+    taskState.forEach((task, i) => {
+      if (task.checked) newChecked.push(i)
+    })
+    return newChecked.join(',')
+  }
+  
+  const syncContentChecked = (taskState=taskState) => {
+    const newContent = taskContentRef.current.map(item => item.content).join('\n')
+    syncHandler({content: newContent, checked: dumpChecked(taskState)})
   }
 
   const onBlur = (e, i) => {
-    if (textRef.current[i].content === e.target.textContent) return
-    textRef.current[i].content = e.target.textContent
-    const text = textRef.current.map(item => item.content).join('\n')
+    // updates taskContentRef data if text has changed, calls sync
+    if (taskContentRef.current[i].content === e.target.textContent) return
+    taskContentRef.current[i].content = e.target.textContent
+    const text = taskContentRef.current.map(item => item.content).join('\n')
     setContent(text)
-    syncHandler({content: text}, i)
+    syncHandler({content: text})
+    // syncHandler({content: text, checked: dumpChecked(taskState)})
   }
 
   const toggleCheck = i => {
-    setTextArray(textArray => {
-      const newTextArray = [...textArray]
-      newTextArray[i].checked = !newTextArray[i].checked
-      return newTextArray
-    })
+    const newTaskState = [...taskState]
+    newTaskState[i].checked = !newTaskState[i].checked
+    setTaskState(newTaskState)
+    syncHandler({checked: dumpChecked(newTaskState)})
   }
   
   
   return ( <>
-    {textArray.map(({reactId, checked}, i) => 
+    {taskState.map(({reactId, checked}, i) => 
       <div
         key={reactId}
         className='p-1 flex items-center border-b-[1px] border-gray-500 bg-transparent text-slate-800 text-sm resize-none thin-scrollbar overflow-auto'
@@ -133,7 +153,7 @@ const Checkboxes = ({ widgetProps, content, setContent }) => {
           // }}
           // onChange={e => {
           //   console.log(e)
-          //   // setTextArray(text => {
+          //   // setTaskState(text => {
           //   //   const newText = [...text]
           //   //   newText[i] = e.target.value
           //   //   return newText
@@ -152,7 +172,7 @@ const Checkboxes = ({ widgetProps, content, setContent }) => {
           // onBlur={() => inputRef.current.setSelectionRange(cursorPosition, cursorPosition)}
           suppressContentEditableWarning={true}
         >
-          {textRef.current[i].content}
+          {taskContentRef.current[i].content}
         </div>
       </div>
     )}
