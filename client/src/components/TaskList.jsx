@@ -120,7 +120,7 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
         </button>
         
         <div
-          className={`py-2 flex-grow outline-0 overflow-clip ${checked && 'line-through text-gray-500'}`}
+          className={`py-1.5 flex-grow outline-0 overflow-clip ${checked && 'line-through text-gray-500'}`}
           contentEditable="plaintext-only"
           ref={(ref) => inputRefs[i] = ref}
           type="text"
