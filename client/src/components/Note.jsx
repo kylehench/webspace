@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import GridItem from './primitives/GridItem'
 import axios from 'axios'
 import colors from 'tailwindcss/colors'
-import { IoTrashOutline } from "react-icons/io5"
-import { IoSync } from "react-icons/io5"
+import { IoTrashOutline, IoSync } from "react-icons/io5"
 import TaskList from './TaskList'
 
 const colorsList = [
@@ -66,25 +65,20 @@ const Note = ({ widgetProps, appState }) => {
     }
   }, [])
 
-  const titleChange = (value) => {
+  const updateTitle = (value) => {
     setTitle(value)
     syncHandler({title: value})
   }
-  const contentChange = (value) => {
+  const updateContent = (value) => {
     setContent(value)
     syncHandler({content: value})
   }
-  const checkboxesVisibleChange = (value) => {
+  const updateCheckboxesVisible = (value) => {
     setCheckboxesVisible(value)
     setChecked('')
     syncHandler({checkboxes_visible: value, checked: ''})
   }
-  const checkedChange = (value) => {
-    console.log({checked: value});
-    setChecked(value)
-    syncHandler({checked: value})
-  }
-  const colorChange = (newData) => {
+  const updateColor = (newData) => {
     syncHandler(newData)
     widgetsDispatch({
       type: "UPDATE",
@@ -94,19 +88,21 @@ const Note = ({ widgetProps, appState }) => {
   }
   
   // syncs note with server
+  const [ syncDataQueue, setSyncDataQueue ] = useState({}) // used to save data in overwritten sync event
   const syncHandler = (newData) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
+    newData = {...syncDataQueue, ...newData}
+    setSyncDataQueue(newData)
     setSyncTimeoutId(setTimeout(() => {
+      setSyncDataQueue({})
       if (widgetProps.noteId && !widgetProps.noSync) {
-        const newProps = {contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
-        axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newProps)
-          .then(() => {
-            setSyncTimeoutId(0)
-          })
+        newData = {contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
+        axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
+          .then(() => setSyncTimeoutId(0))
         noteListDispatch({
           type: "UPDATE",
           id: widgetProps.noteId,
-          payload: newProps
+          payload: newData
         })
       }
     }, 1500))
@@ -130,14 +126,14 @@ const Note = ({ widgetProps, appState }) => {
 
   // toggle checkboxes
   const toggleCheckboxes = () => {
-    checkboxesVisibleChange(!checkboxesVisible)
+    updateCheckboxesVisible(!checkboxesVisible)
   }
   
   return (
     <GridItem
       widgetProps={{...widgetProps}}
       title={title}
-      titleChange={loading ? null : titleChange}
+      titleChange={loading ? null : updateTitle}
       titleLeft={
         <IoSync className={`w-7 text-slate-500 animate-spin transition-opacity duration-700 ${((!loading && syncTimeoutId===0) || widgetProps.noSync) && 'opacity-0'}`} />
       }
@@ -155,18 +151,18 @@ const Note = ({ widgetProps, appState }) => {
                 className='py-4 flex-1'
                 style={{...buttonStyle, backgroundColor: titleBgColor}}
                 key={i}
-                onClick={() => colorChange({contentBgColor, titleBgColor})}
+                onClick={() => updateColor({contentBgColor, titleBgColor})}
               ></button>
             }
             )}
           </div>
 
           {/* show checkboxes */}
-          <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={() => toggleCheckboxes()}>
+          <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={toggleCheckboxes}>
           <div className='pl-2'>{ checkboxesVisible ? "Hide" : "Show"} Checkboxes</div>
           </button>
           {/* delete note */}
-          <button className="flex items-center px-4 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] w-full bg-red5 text-red11 hover:bg-red6 outline-none cursor-default" onClick={() => deleteNote()}>
+          <button className="flex items-center px-4 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] w-full bg-red5 text-red11 hover:bg-red6 outline-none cursor-default" onClick={deleteNote}>
             <IoTrashOutline /><div className='pl-2'>Delete</div>
           </button>
 
@@ -185,18 +181,16 @@ const Note = ({ widgetProps, appState }) => {
           ( checkboxesVisible ?
             <div className="h-full overflow-auto thin-scrollbar">
               <TaskList
-                widgetProps={widgetProps}
                 content={content}
                 setContent={setContent}
                 checked={checked}
-                checkedChange={checkedChange}
                 syncHandler={syncHandler}
               />
             </div>
           :
             <textarea
               className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none thin-scrollbar overflow-auto'
-              onChange={(e) => contentChange(e.target.value)}
+              onChange={(e) => updateContent(e.target.value)}
               value={content}
               maxLength={1e4}
               disabled={widgetProps.noSync}
