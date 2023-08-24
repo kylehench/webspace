@@ -21,25 +21,25 @@ def get_quote_random():
 # get quote by id
 @app.route('/api/quotes/<int:id>')
 def get_quote_by_id(id):
-  quote = db.session.get(Quote, id)
+  quote = db.get_or_404(Quote, id)
   return {"quote": quote_schema.dump(quote)}
 
 # post an array of quotes. JSON:
-# {quotes: [{quote1}, {quote2}, ... ]}
+# { 'secret_key': ...,
+#   'quotes': [{quote1}, {quote2}, ... ] }
 @app.route('/api/quotes/', methods=['POST'])
 def post_quotes():
-  if request.json.get('secret_key') != app.SECRET_KEY:
+  if request.headers.get('Authorization') != app.SECRET_KEY:
     abort(401)
-  quotes = request.json.get('quotes')
-  for quote in quotes:
-    db.session.add(Quote(text=quote['text'], author=quote['author']))
+  quotes = [quote_schema.load({'text': d['text'], 'author': d['author']}) for d in request.json.get('quotes')]
+  db.session.add_all(quotes)
   db.session.commit()
   return 'success'
 
 # get all quotes
 @app.route('/api/quotes/')
 def get_quotes():
-  if request.json.get('secret_key') != app.SECRET_KEY:
+  if request.headers.get('Authorization') != app.SECRET_KEY:
     abort(401)
   quotes = db.session.execute(db.select(Quote)).scalars()
   quotes_array = []
