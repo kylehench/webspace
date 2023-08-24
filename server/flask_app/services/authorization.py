@@ -1,6 +1,4 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()
+from flask_app import app
 import jwt
 from datetime import datetime, timezone
 
@@ -14,7 +12,7 @@ def user_id_from_token(request):
   # decrypt jwt
   decrypted_token = jwt.decode(
     request.cookies.get('usertoken'),
-    os.environ.get('SECRET_KEY'),
+    app.SECRET_KEY,
     algorithms="HS256"
   )
 
