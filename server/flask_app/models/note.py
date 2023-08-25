@@ -13,7 +13,12 @@ class Note(db.Model):
   created_utc = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
   updated_utc = db.Column(db.DateTime(timezone=True), onupdate=datetime.utcnow)
 
-  def update(self, new_data):
+  def patch(self, new_data, safe=True):
+    if safe:
+      exclude_keys = ['id', 'user_id']
+      for key in exclude_keys:
+        if key in new_data:
+          del new_data[key]
     for key, val in new_data.items():
       setattr(self, key, val)
 

@@ -88,7 +88,7 @@ const Note = ({ widgetProps, appState }) => {
   }
   
   // syncs note with server
-  const [ syncDataQueue, setSyncDataQueue ] = useState({}) // used to save data in overwritten sync event
+  const [ syncDataQueue, setSyncDataQueue ] = useState({}) // used to save data in canceled sync event
   const syncHandler = (newData) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
     newData = {...syncDataQueue, ...newData}
@@ -97,7 +97,7 @@ const Note = ({ widgetProps, appState }) => {
       setSyncDataQueue({})
       if (widgetProps.noteId && !widgetProps.noSync) {
         newData = {contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
-        axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
+        axios.patch(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
           .then(() => setSyncTimeoutId(0))
         noteListDispatch({
           type: "UPDATE",
@@ -157,8 +157,8 @@ const Note = ({ widgetProps, appState }) => {
             )}
           </div>
 
-          {/* show checkboxes */}
-          <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={toggleCheckboxes}>
+          {/* show/hide checkboxes */}
+          <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] w-full bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={toggleCheckboxes}>
           <div className='pl-2'>{ checkboxesVisible ? "Hide" : "Show"} Checkboxes</div>
           </button>
           {/* delete note */}

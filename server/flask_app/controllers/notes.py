@@ -1,6 +1,7 @@
 from flask_app import app, db
 from flask_restful import abort, Api, Resource, request
 from flask_app.models.note import Note, note_schema
+from flask_marshmallow import exceptions
 from flask_app.services.authorization import user_id_from_token
 
 api = Api(app)
@@ -21,16 +22,17 @@ class NoteResource(Resource):
       abort(401, message="You do not have authorization to view this resource.")
     return {'note': note_schema.dump(note)}
   
-  def put(self, note_id):
+  def patch(self, note_id):
     user_id = get_user_id()
     note = db.get_or_404(Note, note_id)
     # check permission to update note
     if user_id != note.user_id:
       abort(401, message="You do not have authorization to edit this resource.")
-    # validate and update permitted fields
-    note_updates = note_schema.load(request.get_json() | {'user_id': None})
-    note_updates.id = None
-    note.update({key: val for key, val in note_schema.dump(note_updates).items() if val != None})
+    note_updates = request.get_json()
+    validation_errors = note_schema.validate(note_updates)
+    if validation_errors:
+      return {'errors': validation_errors}, 400
+    note.patch(note_updates)
     db.session.commit()
     return '', 204
   
@@ -41,7 +43,7 @@ class NoteResource(Resource):
       abort(401, message="Invalid request.")
     db.session.delete(note)
     db.session.commit()
-    return '', '204'
+    return '', 204
 
 
 
@@ -55,8 +57,11 @@ class NoteListResource(Resource):
   
   def post(self):
     user_id = get_user_id()
-    note = note_schema.load(request.get_json() | {'user_id': user_id})
-    note.id = None
+    try:
+      note = note_schema.load(request.get_json() | {'user_id': user_id})
+      note.id = None
+    except exceptions.ValidationError as errors:
+      return {'errors': errors.messages}, 400
     db.session.add(note)
     db.session.commit()
     return note.id, 201
