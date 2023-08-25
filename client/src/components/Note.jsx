@@ -88,17 +88,19 @@ const Note = ({ widgetProps, appState }) => {
   }
   
   // syncs note with server
-  const [ syncDataQueue, setSyncDataQueue ] = useState({}) // used to save data in canceled sync event
+  const [ syncDataQueue, setSyncDataQueue ] = useState({}) // used to save data in canceled or unsuccessful sync event
   const syncHandler = (newData) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
     newData = {...syncDataQueue, ...newData}
     setSyncDataQueue(newData)
     setSyncTimeoutId(setTimeout(() => {
-      setSyncDataQueue({})
       if (widgetProps.noteId && !widgetProps.noSync) {
         newData = {contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
         axios.patch(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
-          .then(() => setSyncTimeoutId(0))
+          .then(() => {
+            setSyncTimeoutId(0)
+            setSyncDataQueue({})
+          })
         noteListDispatch({
           type: "UPDATE",
           id: widgetProps.noteId,
