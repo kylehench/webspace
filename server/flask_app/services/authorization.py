@@ -10,11 +10,14 @@ def user_id_from_token(request):
     raise PermissionError('CSRF header missing.')
 
   # decrypt jwt
-  decrypted_token = jwt.decode(
-    request.cookies.get('usertoken'),
-    app.SECRET_KEY,
-    algorithms="HS256"
-  )
+  try:
+    decrypted_token = jwt.decode(
+      request.cookies.get('usertoken'),
+      app.SECRET_KEY,
+      algorithms="HS256"
+    )
+  except:
+    raise PermissionError('Login required')
 
   # check that token has not expired
   expires = datetime.fromisoformat(decrypted_token['expires'])

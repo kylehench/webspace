@@ -25,8 +25,8 @@ def get_quote_by_id(id):
   return {"quote": quote_schema.dump(quote)}
 
 # post an array of quotes. JSON:
-# { 'secret_key': ...,
-#   'quotes': [{quote1}, {quote2}, ... ] }
+# { 'quotes': [{quote1}, {quote2}, ... ] }
+# place secret key in header
 @app.route('/api/quotes/', methods=['POST'])
 def post_quotes():
   if request.headers.get('Authorization') != app.SECRET_KEY:
