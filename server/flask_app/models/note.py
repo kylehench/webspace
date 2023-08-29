@@ -1,17 +1,18 @@
 from flask_app import db, ma
+from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime
 from datetime import datetime
 
 class Note(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  user_id = db.Column(db.Integer)
-  title = db.Column(db.String(100))
-  content = db.Column(db.Text())
-  checkboxes_visible = db.Column(db.Boolean)
-  checked = db.Column(db.Text()) # row idxs of content marked as "checked"
-  titleBgColor = db.Column(db.String(20))
-  contentBgColor = db.Column(db.String(20))
-  created_utc = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
-  updated_utc = db.Column(db.DateTime(timezone=True), onupdate=datetime.utcnow)
+  id = Column(Integer, primary_key=True)
+  user_id = Column(Integer)
+  title = Column(String(100))
+  content = Column(Text())
+  checkboxes_visible = Column(Boolean)
+  checked = Column(Text()) # row idxs of content marked as "checked"
+  title_bg_color = Column(String(20))
+  content_bg_color = Column(String(20))
+  created_utc = Column(DateTime(timezone=True), default=datetime.utcnow)
+  updated_utc = Column(DateTime(timezone=True), onupdate=datetime.utcnow)
 
   def patch(self, new_data, safe=True):
     if safe:
