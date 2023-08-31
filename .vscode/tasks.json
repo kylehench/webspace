@@ -23,7 +23,8 @@
       "options": {
         "cwd": "auth"
       },
-      "command": "pipenv run python server.py",
+      "command": "pipenv run flask run -p 4000 --debug",
+      // "command": "pipenv run python server.py",
       "presentation": {
         "reveal": "always",
         "focus": false,
@@ -37,7 +38,8 @@
       "options": {
         "cwd": "server"
       },
-      "command": "pipenv run python server.py",
+      "command": "pipenv run flask run -p 5000 --debug",
+      // "command": "pipenv run python server.py",
       "presentation": {
         "reveal": "always",
         "focus": false,

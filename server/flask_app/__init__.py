@@ -24,4 +24,4 @@ try:
     app.config['quote_id_min'] = db.session.execute(text("SELECT id FROM quote ORDER BY id LIMIT 1")).scalar()
     app.config['quote_id_max'] = db.session.execute(text("SELECT id FROM quote ORDER BY id DESC LIMIT 1")).scalar()
 except:
-  print('Error querying quote table. Does it exist yet? (ignore if before database upgrade)')
+  print('Error querying quote table for min, max id. Does it exist yet? (ignore if before database upgrade)')

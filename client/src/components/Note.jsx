@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 import GridItem from './primitives/GridItem'
 import axios from 'axios'
 import colors from 'tailwindcss/colors'
-import { IoTrashOutline } from "react-icons/io5"
-import { IoSync } from "react-icons/io5"
-import Checkboxes from './Checkboxes'
+import { IoTrashOutline, IoSync } from "react-icons/io5"
+import TaskList from './TaskList'
 
 const colorsList = [
   [colors.yellow[100], colors.yellow[300]],
@@ -24,6 +23,7 @@ const Note = ({ widgetProps, appState }) => {
   const [ content, setContent ] = useState('')
 
   const [ checkboxesVisible, setCheckboxesVisible ] = useState(false)
+  const [ checked, setChecked ] = useState('')
   
   const [ loading, setLoading ] = useState(true)
   const [ syncTimeoutId, setSyncTimeoutId ] = useState(0)
@@ -37,6 +37,8 @@ const Note = ({ widgetProps, appState }) => {
           const note = res.data.note
           setTitle(note.title)
           setContent(note.content)
+          setCheckboxesVisible(note.checkboxes_visible)
+          setChecked(note.checked || '')
           widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {
             titleBgColor: note.titleBgColor,
             contentBgColor: note.contentBgColor
@@ -63,15 +65,20 @@ const Note = ({ widgetProps, appState }) => {
     }
   }, [])
 
-  const titleChange = (value) => {
+  const updateTitle = (value) => {
     setTitle(value)
     syncHandler({title: value})
   }
-  const contentChange = (value) => {
+  const updateContent = (value) => {
     setContent(value)
     syncHandler({content: value})
   }
-  const colorChange = (newData) => {
+  const updateCheckboxesVisible = (value) => {
+    setCheckboxesVisible(value)
+    setChecked('')
+    syncHandler({checkboxes_visible: value, checked: ''})
+  }
+  const updateColor = (newData) => {
     syncHandler(newData)
     widgetsDispatch({
       type: "UPDATE",
@@ -81,19 +88,23 @@ const Note = ({ widgetProps, appState }) => {
   }
   
   // syncs note with server
+  const [ syncDataQueue, setSyncDataQueue ] = useState({}) // used to save data in canceled or unsuccessful sync event
   const syncHandler = (newData) => {
     if (syncTimeoutId) clearTimeout(syncTimeoutId)
+    newData = {...syncDataQueue, ...newData}
+    setSyncDataQueue(newData)
     setSyncTimeoutId(setTimeout(() => {
       if (widgetProps.noteId && !widgetProps.noSync) {
-        const newProps = {title, content, contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
-        axios.put(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newProps)
+        newData = {contentBgColor: widgetProps.contentBgColor, titleBgColor: widgetProps.titleBgColor, ...newData}
+        axios.patch(`${import.meta.env.VITE_SERVER_URI}/api/notes/${widgetProps.noteId}`, newData)
           .then(() => {
             setSyncTimeoutId(0)
+            setSyncDataQueue({})
           })
         noteListDispatch({
           type: "UPDATE",
           id: widgetProps.noteId,
-          payload: newProps
+          payload: newData
         })
       }
     }, 1500))
@@ -117,14 +128,14 @@ const Note = ({ widgetProps, appState }) => {
 
   // toggle checkboxes
   const toggleCheckboxes = () => {
-    setCheckboxesVisible(!checkboxesVisible)
+    updateCheckboxesVisible(!checkboxesVisible)
   }
   
   return (
     <GridItem
       widgetProps={{...widgetProps}}
       title={title}
-      titleChange={loading ? null : titleChange}
+      titleChange={loading ? null : updateTitle}
       titleLeft={
         <IoSync className={`w-7 text-slate-500 animate-spin transition-opacity duration-700 ${((!loading && syncTimeoutId===0) || widgetProps.noSync) && 'opacity-0'}`} />
       }
@@ -142,18 +153,18 @@ const Note = ({ widgetProps, appState }) => {
                 className='py-4 flex-1'
                 style={{...buttonStyle, backgroundColor: titleBgColor}}
                 key={i}
-                onClick={() => colorChange({contentBgColor, titleBgColor})}
+                onClick={() => updateColor({contentBgColor, titleBgColor})}
               ></button>
             }
             )}
           </div>
 
-          {/* show checkboxes */}
-          <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={() => toggleCheckboxes()}>
+          {/* show/hide checkboxes */}
+          <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] w-full bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={toggleCheckboxes}>
           <div className='pl-2'>{ checkboxesVisible ? "Hide" : "Show"} Checkboxes</div>
           </button>
           {/* delete note */}
-          <button className="flex items-center px-4 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] w-full bg-red5 text-red11 hover:bg-red6 outline-none cursor-default" onClick={() => deleteNote()}>
+          <button className="flex items-center px-4 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] w-full bg-red5 text-red11 hover:bg-red6 outline-none cursor-default" onClick={deleteNote}>
             <IoTrashOutline /><div className='pl-2'>Delete</div>
           </button>
 
@@ -171,16 +182,17 @@ const Note = ({ widgetProps, appState }) => {
         :
           ( checkboxesVisible ?
             <div className="h-full overflow-auto thin-scrollbar">
-              <Checkboxes
-                widgetProps={widgetProps}
+              <TaskList
                 content={content}
                 setContent={setContent}
+                checked={checked}
+                syncHandler={syncHandler}
               />
             </div>
           :
             <textarea
               className='h-full p-3 bg-transparent text-slate-800 text-sm outline-0 block w-full resize-none thin-scrollbar overflow-auto'
-              onChange={(e) => contentChange(e.target.value)}
+              onChange={(e) => updateContent(e.target.value)}
               value={content}
               maxLength={1e4}
               disabled={widgetProps.noSync}
