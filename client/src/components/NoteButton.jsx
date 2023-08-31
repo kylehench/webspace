@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import ButtonPopover from './primitives/ButtonPopover'
 import { FaRegStickyNote } from 'react-icons/fa'

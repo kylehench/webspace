@@ -1,13 +1,13 @@
 import ButtonTooltip from './primitives/ButtonTooltip'
-import { GrBlockQuote } from "react-icons/gr";
+import { TiWeatherCloudy } from "react-icons/ti";
 
-const QuoteButton = ({ appState }) => {
+const WeatherButton = ({ appState }) => {
   const { layoutDispatch, widgetsDispatch } = appState
 
-  const addQuote = () => {
+  const addWeather = () => {
     const reactId = Math.random().toString().slice(2,14)
     widgetsDispatch({type: "CREATE", payload: {
-      type: 'quote',
+      type: 'weather',
       reactId
     }})
     layoutDispatch({type: "CREATE", payload: {i: reactId, h: 2}})
@@ -15,12 +15,12 @@ const QuoteButton = ({ appState }) => {
   
   return (
     <ButtonTooltip
-      icon={<GrBlockQuote />}
-      hoverText='Inspirational Quote'
+      icon={<TiWeatherCloudy size={20} />}
+      hoverText='Weather'
       side='right'
-      onClick={addQuote}
+      onClick={addWeather}
     />
   )
 }
 
-export default QuoteButton
+export default WeatherButton

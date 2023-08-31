@@ -6,6 +6,7 @@ import Grid from './components/Grid';
 import LoginRegButton from './components/LoginRegButton';
 import NoteButton from './components/NoteButton';
 import QuoteButton from './components/QuoteButton';
+import WeatherButton from './components/WeatherButton';
 import BackgroundButton from './components/BackgroundButton';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         <BackgroundButton appState={appState} />
         <NoteButton appState={appState} />
         <QuoteButton appState={appState} />
+        <WeatherButton appState={appState} />
       </div>
       <div className='flex-1 overflow-y-auto thin-scrollbar'>
         <Grid appState={appState} />

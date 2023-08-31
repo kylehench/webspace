@@ -4,6 +4,7 @@ import "/node_modules/react-grid-layout/css/styles.css";
 import "../index.css"
 import Quote from './Quote'
 import Note from './Note'
+import Weather from './Weather';
 import widgetDefaults from '../config/widgetDefaults';
 import welcomeNote from '../config/welcomeNote';
 
@@ -35,6 +36,7 @@ const Grid = ({ appState }) => {
   const widgetMap = {
     'note': (widgetProps) => <Note widgetProps={widgetProps} appState={appState} />,
     'quote': (widgetProps) => <Quote widgetProps={widgetProps} appState={appState} />,
+    'weather': (widgetProps) => <Weather widgetProps={widgetProps} appState={appState} />,
   }
 
   return (
