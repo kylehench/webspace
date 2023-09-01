@@ -40,10 +40,10 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
   
   // sets checkbox focus when focusIndex is modified
   useEffect(() => {
-    if (!focusIndex) return
+    if (focusIndex===undefined) return
     const divRef = inputRefs[focusIndex]
     divRef.focus()
-    setFocusIndex(null)
+    setFocusIndex(undefined)
     // if (divRef.firstChild) updateCursorPosition(divRef, taskContentRef.current[focusIndex].content.length-1)
   }, [focusIndex])
 
@@ -70,21 +70,18 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
   }
 
   const onKeyDown = (e, i) => {
-    let newCheckedState
-    let position
     switch (e.key) {
       case 'Enter': {
         e.preventDefault()
         const reactId = getRandomId()
         const position = window.getSelection().anchorOffset
         const taskContent = taskContentRef.current[i].content
-        console.log(taskContent.slice(position));
         taskContentRef.current.splice(i+1, 0, {
           reactId: reactId,
           content: taskContent.slice(position)
         })
         taskContentRef.current[i].content = taskContent.slice(0, position)
-        newCheckedState = [...checkedState]
+        const newCheckedState = [...checkedState]
         newCheckedState.splice(i+1, 0, {reactId: reactId, checked: false})
         setCheckedState(newCheckedState)
         syncContentChecked(newCheckedState)
@@ -92,32 +89,32 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
         break
       }
 
-      case 'ArrowUp':
+      case 'ArrowUp': {
         // move cursor to previous task
         if (i>0) setFocusIndex(i-1)
         break
+      }
 
-      case 'ArrowDown':
+      case 'ArrowDown': {
         // move cursor to next task
         if (i<checkedState.length-1) setFocusIndex(i+1)
         break
+      }
         
-      case 'Backspace':
+      case 'Backspace': {
         // delete task if text length == 0 and at least 1 task present
         if (i===0 || window.getSelection().anchorOffset!==0) break
         e.preventDefault()
-        position = taskContentRef.current[i-1].content.length
+        const position = taskContentRef.current[i-1].content.length
         taskContentRef.current[i-1].content += taskContentRef.current[i].content
         taskContentRef.current = taskContentRef.current.filter((task, idx) => idx != i)
-        newCheckedState = checkedState.filter((task, idx) => idx != i)
+        const newCheckedState = checkedState.filter((task, idx) => idx != i)
         setCheckedState(newCheckedState)
         syncContentChecked(newCheckedState)
-        // setFocusIndex(i-1)
-        // console.log(inputRefs[i-1], position)
-        // updateCursorPosition([, position])
         inputRefs.current = inputRefs.current.filter(idx => idx !== i)
         setCursorPosition({node: inputRefs[i-1], position, callFocus: true})
         break
+      }
         
       default:
         break
