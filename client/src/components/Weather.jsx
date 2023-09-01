@@ -12,8 +12,10 @@ const Weather = ({ appState, widgetProps }) => {
   const [ countryInput, setCountryInput ] = useState('')
   const [ countryResults, setCountryResults ] = useState([])
   const [ countryCode, setCountryCode ] = useState('')
-
   const [ zipCode, setZipCode ] = useState('')
+
+  const [ weatherData, setWeatherData ] = useState()
+  const [ weatherDataGenerated, setWeatherDataGenerated ] = useState()
 
   const handleCountryInput = e => {
     setCountryCode('')
@@ -29,6 +31,22 @@ const Weather = ({ appState, widgetProps }) => {
     }
   }
 
+  const weatherRequest = () => {
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    axios.get(`${import.meta.env.VITE_SERVER_URI}/api/weather/`, { params: {
+      datetime: now.toISOString(),
+      countryCode,
+      zipCode,
+    }}).then(res => {
+      console.log(res.data.data);
+      setWeatherData(res.data.data
+        .reduce((obj, paramObj) => ({...obj, [paramObj.parameter.split(':')[0]]: paramObj.coordinates[0].dates.map(date => date.value)}), {})
+      )
+      setWeatherDataGenerated(res.data.dateGenerated)
+    })
+  }
+
   return (
     <GridItem
       widgetProps={{...widgetProps}}
@@ -36,21 +54,24 @@ const Weather = ({ appState, widgetProps }) => {
       titleLeft={<div className='px-6'></div>}
       title='Weather'
     >
-      <div className='thin-scrollbar-parent'>
+      <div className='py-2 pl-2 h-full thin-scrollbar-parent'>
 
-        {widgetProps.location ?
+        {weatherData ?
           <>
+            <div>T max: { JSON.stringify(weatherData.t_max_2m_24h) }</div>
+            <div>T min: { JSON.stringify(weatherData.t_min_2m_24h) }</div>
+            <div>Weather symbol: { JSON.stringify(weatherData.weather_symbol_24h) }</div>
           </>
         :
-          <div className='px-3 overflow-auto thin-scrollbar'>
+          <div className='h-full px-3 overflow-auto thin-scrollbar'>
 
             {/* country search box */}
-            <fieldset className="mb-[15px] w-full flex flex-col justify-start">
+            <fieldset className="mb-[10px] flex flex-col justify-start">
               <label className="text-[13px] leading-none mb-2.5 text-cyan12 block">
                 Enter Country
               </label>
               <input
-                className={`grow shrink-0 rounded px-2.5 text-[15px] leading-none text-cyan11 shadow-[0_0_0_1px] shadow-cyan7 h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-cyan8 outline-none  ${countryCode ? 'bg-green-100' : 'bg-white'}`}
+                className={`grow shrink-0 rounded px-2.5 text-[15px] leading-none text-cyan11 shadow-[0_0_0_1px] shadow-cyan7 h-[33px] focus:shadow-[0_0_0_2px] focus:shadow-cyan8 outline-none  ${countryCode ? 'bg-green-100' : 'bg-white'}`}
                 type="text"
                 value={countryInput}
                 onChange={handleCountryInput}
@@ -75,12 +96,12 @@ const Weather = ({ appState, widgetProps }) => {
             </div>
 
             {/* zip code input */}
-            <fieldset className="mb-[15px] w-full flex flex-col justify-start">
+            <fieldset className="mb-[10px] w-full flex flex-col justify-start">
               <label className="text-[13px] leading-none mb-2.5 text-cyan12 block">
                 Enter Zip Code
               </label>
               <input
-                className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-cyan11 shadow-[0_0_0_1px] shadow-cyan7 h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-cyan8 outline-none bg-white'
+                className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-cyan11 shadow-[0_0_0_1px] shadow-cyan7 h-[33px] focus:shadow-[0_0_0_2px] focus:shadow-cyan8 outline-none bg-white'
                 type="text"
                 value={zipCode}
                 onChange={e => setZipCode(e.target.value)}
@@ -88,10 +109,10 @@ const Weather = ({ appState, widgetProps }) => {
             </fieldset>
 
             {/* set location button */}
-            <div className="mt-4 flex justify-center">
+            <div className="mt-3 flex justify-center">
               <button
                 className="rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-slate-200 text-slate-500 hover:bg-slate-300 focus:shadow-[0_0_0_2px] focus:shadow-slate-400 outline-none cursor-default"
-                onClick={null}
+                onClick={weatherRequest}
               >
               Set Location
             </button>

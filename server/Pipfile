@@ -15,6 +15,7 @@ marshmallow-sqlalchemy = "*"
 pyjwt = "*"
 flask-restful = "*"
 gunicorn = "*"
+requests = "*"
 
 [dev-packages]
 
