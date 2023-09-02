@@ -1,7 +1,3 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
 import requests
 from flask import request
 from flask_app import app
@@ -19,7 +15,7 @@ def get_weather():
   utc_end = datetime_end.isoformat().replace('+00:00','Z')
   weather_url = f"https://api.meteomatics.com/{utc_start}--{utc_end}:P1D/t_max_2m_24h:F,t_min_2m_24h:F,weather_symbol_24h:idx/postal_{country_code}{zip_code}/json?model=mix"
 
-  # json_res = requests.get(f'https://api.meteomatics.com/2023-08-31T00:00:00Z--2023-09-03T00:00:00Z:P1D/t_max_2m_24h:F,t_min_2m_24h:F,weather_symbol_24h:idx/postal_US94087/json?model=mix', auth=(os.environ.get('METEOMATICS_USER'), os.environ.get('METEOMATICS_PASSWORD'))).json()
+  # json_res = requests.get(f'https://api.meteomatics.com/2023-08-31T00:00:00Z--2023-09-03T00:00:00Z:P1D/t_max_2m_24h:F,t_min_2m_24h:F,weather_symbol_24h:idx/postal_US94087/json?model=mix', auth=(app.config['METEOMATICS_USER'], app.config['METEOMATICS_PASSWORD'])).json()
   # if json_res['status'] != 'OK':
   #   abort(400)
   # return {'data': json_res['data'], 'dateGenerated': json_res['dateGenerated']}

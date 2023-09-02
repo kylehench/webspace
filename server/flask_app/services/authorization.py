@@ -13,7 +13,7 @@ def user_id_from_token(request):
   try:
     decrypted_token = jwt.decode(
       request.cookies.get('usertoken'),
-      app.SECRET_KEY,
+      app.config['SECRET_KEY'],
       algorithms="HS256"
     )
   except:

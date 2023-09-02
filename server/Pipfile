@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 flask = "*"
-python-dotenv = "*"
 flask-sqlalchemy = "*"
 pymysql = "*"
 cryptography = "*"
@@ -16,6 +15,7 @@ pyjwt = "*"
 flask-restful = "*"
 gunicorn = "*"
 requests = "*"
+ratelimit = "*"
 
 [dev-packages]
 
