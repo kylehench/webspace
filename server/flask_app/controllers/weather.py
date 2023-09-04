@@ -6,10 +6,10 @@ from datetime import datetime, timezone, timedelta
 
 @app.route('/api/weather/')
 def get_weather():
-  req_datetime = request.args.get('datetime')
+  day_start = request.args.get('dayStart')
   country_code = request.args.get('countryCode')
   zip_code = request.args.get('zipCode')
-  datetime_start = datetime.fromisoformat(req_datetime).replace(tzinfo=timezone.utc)
+  datetime_start = datetime.fromisoformat(day_start).replace(tzinfo=timezone.utc)
   datetime_end = datetime_start + timedelta(days=3)
   utc_start = datetime_start.isoformat().replace('+00:00','Z')
   utc_end = datetime_end.isoformat().replace('+00:00','Z')

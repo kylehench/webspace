@@ -32,10 +32,10 @@ const Weather = ({ appState, widgetProps }) => {
   }
 
   const weatherRequest = () => {
-    const now = new Date()
-    now.setHours(0, 0, 0, 0)
+    const dayStart = new Date()
+    dayStart.setHours(0, 0, 0, 0)
     axios.get(`${import.meta.env.VITE_SERVER_URI}/api/weather/`, { params: {
-      datetime: now.toISOString(),
+      dayStart: dayStart.toISOString(),
       countryCode,
       zipCode,
     }}).then(res => {
