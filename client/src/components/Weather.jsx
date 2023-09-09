@@ -3,6 +3,13 @@ import axios from 'axios'
 import GridItem from './primitives/GridItem'
 import COUNTRY_CODES from '../config/countryCodes'
 
+const WEATHER_DATA = [
+  {icon: 'i1', label: 'Today', high: '80', low: '60'},
+  {icon: 'i2', label: 'Wed', high: '82', low: '62'},
+  {icon: 'i3', label: 'Thu', high: '80', low: '61'},
+  {icon: 'i4', label: 'Fri', high: '78', low: '55'},
+]
+
 
 const Weather = ({ appState, widgetProps }) => {
   const { widgetsDispatch } = appState
@@ -57,11 +64,27 @@ const Weather = ({ appState, widgetProps }) => {
       <div className='py-2 pl-2 h-full thin-scrollbar-parent'>
 
         {weatherData ?
-          <>
-            <div>T max: { JSON.stringify(weatherData.t_max_2m_24h) }</div>
+          <div className='flex justify-between bg-blue-300'>
+            {/* <div>T max: { JSON.stringify(weatherData.t_max_2m_24h) }</div>
             <div>T min: { JSON.stringify(weatherData.t_min_2m_24h) }</div>
-            <div>Weather symbol: { JSON.stringify(weatherData.weather_symbol_24h) }</div>
-          </>
+            <div>Weather symbol: { JSON.stringify(weatherData.weather_symbol_24h) }</div> */}
+
+            { WEATHER_DATA.map((day, i) => 
+              <div
+                className='w-16 py-0.5 px-2 border'
+                key={i}
+              >
+                <div>{day.label}</div>
+                <div className="flex">
+                  <div>{day.icon}</div>
+                  <div className='mx-1'>
+                    <div className='text-red10'>{day.high}</div>
+                    <div className='text-blue10'>{day.low}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         :
           <div className='h-full px-3 overflow-auto thin-scrollbar'>
 
