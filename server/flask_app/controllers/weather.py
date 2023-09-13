@@ -8,12 +8,12 @@ from datetime import datetime, timezone, timedelta
 @app.route('/api/weather/')
 def get_weather():
   
-
   api = weather_adapter.WeatherAdapter(source='meteomatics')
   res = {}
   try:
     res = api.daily_forcast(
       day_start = request.args.get('dayStart'),
+      days = 4,
       country_code = request.args.get('countryCode'),
       zip_code = request.args.get('zipCode')
     )

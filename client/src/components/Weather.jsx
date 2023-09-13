@@ -47,9 +47,7 @@ const Weather = ({ appState, widgetProps }) => {
       zipCode,
     }}).then(res => {
       console.log(res.data.data);
-      setWeatherData(res.data.data
-        .reduce((obj, paramObj) => ({...obj, [paramObj.parameter.split(':')[0]]: paramObj.coordinates[0].dates.map(date => date.value)}), {})
-      )
+      setWeatherData(res.data)
       setWeatherDataGenerated(res.data.dateGenerated)
     })
   }
@@ -69,7 +67,9 @@ const Weather = ({ appState, widgetProps }) => {
             <div>T min: { JSON.stringify(weatherData.t_min_2m_24h) }</div>
             <div>Weather symbol: { JSON.stringify(weatherData.weather_symbol_24h) }</div> */}
 
-            { WEATHER_DATA.map((day, i) => 
+            { JSON.stringify(weatherData) }
+
+            {/* { WEATHER_DATA.map((day, i) => 
               <div
                 className='w-16 py-0.5 px-2 border'
                 key={i}
@@ -83,7 +83,7 @@ const Weather = ({ appState, widgetProps }) => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         :
           <div className='h-full px-3 overflow-auto thin-scrollbar'>
