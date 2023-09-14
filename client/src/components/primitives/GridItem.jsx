@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import colors from 'tailwindcss/colors'
 import { IoCloseOutline, IoEllipsisHorizontal } from "react-icons/io5";
 import GridItemTitleButton from './GridItemTitleButton'

@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import axios from 'axios'
 import GridItem from './primitives/GridItem'
 import COUNTRY_CODES from '../config/countryCodes'
 import weatherSVG from '../config/weatherSVG'
+import { blue } from 'tailwindcss/colors'
+
+const TEMPERATURE_BAR_HEIGHT = 500
 
 const Weather = ({ appState, widgetProps }) => {
   const { widgetsDispatch } = appState
@@ -15,8 +18,14 @@ const Weather = ({ appState, widgetProps }) => {
   const [ zipCode, setZipCode ] = useState('')
 
   const [ weatherData, setWeatherData ] = useState()
+  const [ temperatureMax, setTemperatureMax ] = useState(0)
+  const [ temperatureMin, setTemperatureMin ] = useState(0)
+  const [ graphSlope, setGraphSlope ] = useState(0)
+  const [ graphIntercept, setGraphIntercept ] = useState(0)
   const [ weatherDataGenerated, setWeatherDataGenerated ] = useState()
+  const svgRefs = useRef([])
 
+  // symbol reference: https://www.meteomatics.com/en/api/available-parameters/derived-weather-and-convenience-parameters/general-weather-state/#weather_symb
   const weatherSymbolMap = {
     0: weatherSVG.NotAvailable, 1: weatherSVG.Sunny, 2: weatherSVG.LightClouds, 3: weatherSVG.PartlyCloudy, 4: weatherSVG.Cloudy, 5: weatherSVG.Rain, 6: weatherSVG.RainMix, 7: weatherSVG.Snow, 8: weatherSVG.RainShower, 9: weatherSVG.SnowShower, 10: weatherSVG.SleetShower, 11: weatherSVG.LightFog, 12: weatherSVG.DenseFog, 13: weatherSVG.FreezingRain, 14: weatherSVG.Thunderstorms, 15: weatherSVG.Drizzle, 16: weatherSVG.Sandstorm
   }
@@ -36,6 +45,7 @@ const Weather = ({ appState, widgetProps }) => {
   }
 
   const weatherRequest = () => {
+    const dayCount = 4
     const dayStart = new Date()
     dayStart.setHours(0, 0, 0, 0)
     axios.get(`${import.meta.env.VITE_SERVER_URI}/api/weather/`, { params: {
@@ -50,7 +60,7 @@ const Weather = ({ appState, widgetProps }) => {
         return weekday
       }
       let data = []
-      for (let i=0; i<4; i++) {
+      for (let i=0; i<dayCount; i++) {
         data.push({
           key: currentDay,
           weekday: getWeekDayAndIncrement(),
@@ -61,6 +71,13 @@ const Weather = ({ appState, widgetProps }) => {
         })
       }
       setWeatherData(data)
+      const tMax = Math.max(...data.map(day => day.high))
+      const tMin = Math.min(...data.map(day => day.low))
+      setTemperatureMax(tMax)
+      setTemperatureMin(tMin)
+      const graphSlope = TEMPERATURE_BAR_HEIGHT/(tMin-tMax)
+      setGraphSlope(graphSlope)
+      setGraphIntercept(-tMax*graphSlope)
       setWeatherDataGenerated(new Date())
     })
   }
@@ -75,21 +92,51 @@ const Weather = ({ appState, widgetProps }) => {
       <div className='py-2 pl-2 h-full thin-scrollbar-parent'>
         { weatherData ?
           <div className='h-full flex justify-between items-stretch divide-x divide-slate-300'>
-            { weatherData.map((day) => 
-              <div
-                className='p-0.5 px-2 flex-1'
-                key={day.key}
-              >
-                <div className='h-full flex flex-col items-center'>
-                  <div>{day.weekday}</div>
-                  <img src={weatherSymbolMap[day.weatherSymbol]} className='max-w-[48px]'/>
-                  <div className='mx-1'>
-                    <div className='text-red10'>{day.high}</div>
-                    <div className='text-blue10'>{day.low}</div>
+            { weatherData.map((day) => {
+              const barY = graphSlope*day.high + graphIntercept
+              const barHeight = graphSlope*day.low + graphIntercept - (graphSlope*day.high + graphIntercept)
+              return (
+                <div
+                  className='p-0.5 px-2 flex-1'
+                  key={day.key}
+                >
+                  <div className='h-full flex flex-col items-center'>
+                    <div>{day.weekday}</div>
+                    <img src={weatherSymbolMap[day.weatherSymbol]} className='max-w-[48px]'/>
+                    <div className='w-8'>
+                      <svg
+                        viewBox={`0 -60 100 ${TEMPERATURE_BAR_HEIGHT+160}`}
+                        ref={svgRefs[day.key]}
+                      >
+                        <text
+                          // className='fill-red11'
+                          x='55%'
+                          y={barY-20}
+                          textAnchor='middle'
+                          fontSize='52'
+                        >{day.high}&deg;</text>
+                        <rect
+                          x={0}
+                          y={barY}
+                          width={100}
+                          height={barHeight}
+                          ry={50}
+                          fill={blue[200]}
+                          />
+                        <text
+                          // className='fill-blue11'
+                          x='55%'
+                          y={barHeight+barY+60}
+                          textAnchor='middle'
+                          fontSize='52'
+                        >{day.low}&deg;</text>
+                      </svg>
+
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )
+            })}
           </div>
         :
           <div className='h-full px-3 overflow-auto thin-scrollbar'>
