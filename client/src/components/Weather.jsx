@@ -3,14 +3,6 @@ import axios from 'axios'
 import GridItem from './primitives/GridItem'
 import COUNTRY_CODES from '../config/countryCodes'
 
-const WEATHER_DATA = [
-  {icon: 'i1', label: 'Today', high: '80', low: '60'},
-  {icon: 'i2', label: 'Wed', high: '82', low: '62'},
-  {icon: 'i3', label: 'Thu', high: '80', low: '61'},
-  {icon: 'i4', label: 'Fri', high: '78', low: '55'},
-]
-
-
 const Weather = ({ appState, widgetProps }) => {
   const { widgetsDispatch } = appState
 
@@ -57,13 +49,12 @@ const Weather = ({ appState, widgetProps }) => {
         data.push({
           key: currentDay,
           weekday: getWeekDayAndIncrement(),
-          high: res.data.highs[i],
+          high: Math.round(res.data.highs[i]),
           // note: tomorrow's low is used as "tonight's low" is displayed for each day
-          low: res.data.highs[i+1],
+          low: Math.round(res.data.lows[i+1]),
           weatherSymbol: res.data.weather_symbol[i],
         })
       }
-      data[0].day = 'Today'
       setWeatherData(data)
       setWeatherDataGenerated(new Date())
     })
@@ -78,14 +69,14 @@ const Weather = ({ appState, widgetProps }) => {
     >
       <div className='py-2 pl-2 h-full thin-scrollbar-parent'>
         { weatherData ?
-          <div className='flex justify-between bg-blue-300'>
+          <div className='h-full flex justify-between items-stretch divide-x divide-slate-300'>
             { weatherData.map((day) => 
               <div
-                className='w-16 py-0.5 px-2 border'
+                className='p-0.5 px-2 flex-1'
                 key={day.key}
               >
-                <div>{day.weekday}</div>
-                <div className="flex">
+                <div className='h-full flex flex-col items-center'>
+                  <div>{day.weekday}</div>
                   <div>{day.icon}</div>
                   <div className='mx-1'>
                     <div className='text-red10'>{day.high}</div>
