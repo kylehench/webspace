@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import GridItem from './primitives/GridItem'
 import COUNTRY_CODES from '../config/countryCodes'
+import weatherSVG from '../config/weatherSVG'
 
 const Weather = ({ appState, widgetProps }) => {
   const { widgetsDispatch } = appState
@@ -15,6 +16,10 @@ const Weather = ({ appState, widgetProps }) => {
 
   const [ weatherData, setWeatherData ] = useState()
   const [ weatherDataGenerated, setWeatherDataGenerated ] = useState()
+
+  const weatherSymbolMap = {
+    0: weatherSVG.NotAvailable, 1: weatherSVG.Sunny, 2: weatherSVG.LightClouds, 3: weatherSVG.PartlyCloudy, 4: weatherSVG.Cloudy, 5: weatherSVG.Rain, 6: weatherSVG.RainMix, 7: weatherSVG.Snow, 8: weatherSVG.RainShower, 9: weatherSVG.SnowShower, 10: weatherSVG.SleetShower, 11: weatherSVG.LightFog, 12: weatherSVG.DenseFog, 13: weatherSVG.FreezingRain, 14: weatherSVG.Thunderstorms, 15: weatherSVG.Drizzle, 16: weatherSVG.Sandstorm
+  }
 
   const handleCountryInput = e => {
     setCountryCode('')
@@ -77,7 +82,7 @@ const Weather = ({ appState, widgetProps }) => {
               >
                 <div className='h-full flex flex-col items-center'>
                   <div>{day.weekday}</div>
-                  <div>{day.icon}</div>
+                  <img src={weatherSymbolMap[day.weatherSymbol]} className='max-w-[48px]'/>
                   <div className='mx-1'>
                     <div className='text-red10'>{day.high}</div>
                     <div className='text-blue10'>{day.low}</div>
