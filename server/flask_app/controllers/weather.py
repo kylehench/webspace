@@ -1,25 +1,25 @@
-import requests
 from flask import request
 from flask_app import app
-from flask_app.services import weather_adapter
+import flask_app.services.weather_service as weather_service
 from flask_restful import abort
 from datetime import datetime, timezone, timedelta
 
 @app.route('/api/weather/')
 def get_weather():
-  
-  api = weather_adapter.WeatherAdapter(source='meteomatics')
-  res = {}
+  request_args = {
+    'day_start': request.args.get('dayStart'),
+    'days': 4,
+    'country_code': request.args.get('countryCode'),
+    'zip_code': request.args.get('zipCode')
+  }
   try:
-    res = api.daily_forcast(
-      day_start = request.args.get('dayStart'),
-      days = 4,
-      country_code = request.args.get('countryCode'),
-      zip_code = request.args.get('zipCode')
-    )
+    res = weather_service.get_weather(request_args)
   except:
     abort(400)
+
   return res
+  
+  
   # datetime_start = datetime.fromisoformat(day_start).replace(tzinfo=timezone.utc)
   # datetime_end = datetime_start + timedelta(days=3)
   # utc_start = datetime_start.isoformat().replace('+00:00','Z')

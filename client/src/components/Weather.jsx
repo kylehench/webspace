@@ -46,9 +46,26 @@ const Weather = ({ appState, widgetProps }) => {
       countryCode,
       zipCode,
     }}).then(res => {
-      console.log(res.data.data);
-      setWeatherData(res.data)
-      setWeatherDataGenerated(res.data.dateGenerated)
+      let currentDay = dayStart
+      const getWeekDayAndIncrement = () => {
+        const weekday = new Intl.DateTimeFormat("en-US", {weekday: 'short'}).format(currentDay)
+        currentDay.setHours(currentDay.getHours() + 24)
+        return weekday
+      }
+      let data = []
+      for (let i=0; i<4; i++) {
+        data.push({
+          key: currentDay,
+          weekday: getWeekDayAndIncrement(),
+          high: res.data.highs[i],
+          // note: tomorrow's low is used as "tonight's low" is displayed for each day
+          low: res.data.highs[i+1],
+          weatherSymbol: res.data.weather_symbol[i],
+        })
+      }
+      data[0].day = 'Today'
+      setWeatherData(data)
+      setWeatherDataGenerated(new Date())
     })
   }
 
@@ -60,21 +77,14 @@ const Weather = ({ appState, widgetProps }) => {
       title='Weather'
     >
       <div className='py-2 pl-2 h-full thin-scrollbar-parent'>
-
-        {weatherData ?
+        { weatherData ?
           <div className='flex justify-between bg-blue-300'>
-            {/* <div>T max: { JSON.stringify(weatherData.t_max_2m_24h) }</div>
-            <div>T min: { JSON.stringify(weatherData.t_min_2m_24h) }</div>
-            <div>Weather symbol: { JSON.stringify(weatherData.weather_symbol_24h) }</div> */}
-
-            { JSON.stringify(weatherData) }
-
-            {/* { WEATHER_DATA.map((day, i) => 
+            { weatherData.map((day) => 
               <div
                 className='w-16 py-0.5 px-2 border'
-                key={i}
+                key={day.key}
               >
-                <div>{day.label}</div>
+                <div>{day.weekday}</div>
                 <div className="flex">
                   <div>{day.icon}</div>
                   <div className='mx-1'>
@@ -83,7 +93,7 @@ const Weather = ({ appState, widgetProps }) => {
                   </div>
                 </div>
               </div>
-            )} */}
+            )}
           </div>
         :
           <div className='h-full px-3 overflow-auto thin-scrollbar'>
