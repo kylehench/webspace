@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import SkeletonLoader from './primitives/SkeletonLoader'
 import axios from 'axios'
 import GridItem from './primitives/GridItem'
 import COUNTRY_CODES from '../config/countryCodes'
@@ -46,6 +47,7 @@ const Weather = ({ appState, widgetProps }) => {
   }
 
   const weatherRequest = () => {
+    widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {countryCode, zipCode}})
     const dayCount = 4
     const dayStart = new Date()
     dayStart.setHours(0, 0, 0, 0)
@@ -80,7 +82,6 @@ const Weather = ({ appState, widgetProps }) => {
       setGraphSlope(graphSlope)
       setGraphIntercept(-tMax*graphSlope)
       setWeatherDataGenerated(new Date())
-      widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {countryCode, zipCode}})
     })
   }
 
@@ -209,7 +210,10 @@ const Weather = ({ appState, widgetProps }) => {
 
               </div>
             :
-            <div>Loading...</div>
+            
+              // skeleton loader
+              <SkeletonLoader />
+
           }
 
         </>}
