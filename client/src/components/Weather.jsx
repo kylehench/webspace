@@ -11,8 +11,6 @@ const TEMPERATURE_BAR_HEIGHT = 500
 const Weather = ({ appState, widgetProps }) => {
   const { widgetsDispatch } = appState
 
-  const [ loading, setLoading ] = useState(true)
-
   const [ countryInput, setCountryInput ] = useState('')
   const [ countryResults, setCountryResults ] = useState([])
 
@@ -20,11 +18,8 @@ const Weather = ({ appState, widgetProps }) => {
   const [ zipCode, setZipCode ] = useState(widgetProps.zipCode)
 
   const [ weatherData, setWeatherData ] = useState()
-  const [ temperatureMax, setTemperatureMax ] = useState(0)
-  const [ temperatureMin, setTemperatureMin ] = useState(0)
   const [ graphSlope, setGraphSlope ] = useState(0)
   const [ graphIntercept, setGraphIntercept ] = useState(0)
-  const [ weatherDataGenerated, setWeatherDataGenerated ] = useState()
   const svgRefs = useRef([])
 
   // symbol reference: https://www.meteomatics.com/en/api/available-parameters/derived-weather-and-convenience-parameters/general-weather-state/#weather_symb
@@ -41,7 +36,7 @@ const Weather = ({ appState, widgetProps }) => {
     } else {
       setCountryResults(COUNTRY_CODES
         .filter(country => country.name.toLowerCase().indexOf(input.toLowerCase())!=-1)
-        .slice(0, 3)
+        .slice(0, 5)
       )
     }
   }
@@ -76,12 +71,9 @@ const Weather = ({ appState, widgetProps }) => {
       setWeatherData(data)
       const tMax = Math.max(...data.map(day => day.high))
       const tMin = Math.min(...data.map(day => day.low))
-      setTemperatureMax(tMax)
-      setTemperatureMin(tMin)
       const graphSlope = TEMPERATURE_BAR_HEIGHT/(tMin-tMax)
       setGraphSlope(graphSlope)
       setGraphIntercept(-tMax*graphSlope)
-      setWeatherDataGenerated(new Date())
     })
   }
 
@@ -169,24 +161,25 @@ const Weather = ({ appState, widgetProps }) => {
                     value={countryInput}
                     onChange={handleCountryInput}
                   />
-                </fieldset>
-
-                {/* country list picker */}
-                <div className='absolute border rounded bg-white'>
-                  { countryResults.map(({code, name}, i) =>
-                    <div
-                      key={code}
-                      className='w-60 border-cyan11 p-2.5 text-[15px] leading-none text-cyan11 border-1 shadow-cyan7 cursor-pointer truncate hover:bg-slate-200'
-                      onClick={() => {
-                        setCountryCode(code)
-                        setCountryInput(name)
-                        setCountryResults([])
-                      }}
-                    >
-                      {name}
+                  <div>
+                    {/* country list picker */}
+                    <div className='absolute border rounded bg-white'>
+                      { countryResults.map(({code, name}, i) =>
+                        <div
+                          key={code}
+                          className='w-60 border-cyan11 p-2.5 text-[15px] leading-none text-cyan11 border-1 shadow-cyan7 cursor-pointer truncate hover:bg-slate-200'
+                          onClick={() => {
+                            setCountryCode(code)
+                            setCountryInput(name)
+                            setCountryResults([])
+                          }}
+                        >
+                          {name}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  </div>
+                </fieldset>
 
                 {/* zip code input */}
                 <fieldset className="mb-[10px] w-full flex flex-col justify-start">
