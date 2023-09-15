@@ -94,8 +94,9 @@ const Weather = ({ appState, widgetProps }) => {
       title='Weather'
     >
       <div className='py-2 pl-2 h-full thin-scrollbar-parent'>
-        { weatherData ?
 
+        {/* display weather if data present */}
+        { weatherData &&
           // display weather if weatherData is present
           <div className='h-full flex justify-between items-stretch divide-x divide-slate-300'>
             { weatherData.map((day) => {
@@ -144,75 +145,78 @@ const Weather = ({ appState, widgetProps }) => {
               )
             })}
           </div>
-        : <>
-          {(!widgetProps.zipCode && !widgetProps.countryCode) ?
+        }
 
-            // display form if zipCode and countryCode is unknown, otherwise display loading symbol
-            <div className='h-full flex flex-col justify-center px-3 overflow-auto thin-scrollbar'>
+        {/* display form if no weather data and not loading */}
+        { (!weatherData && (!widgetProps.zipCode || !widgetProps.countryCode)) &&
+          <div className='h-full flex flex-col justify-center px-3 overflow-auto thin-scrollbar'>
 
-                {/* country search box */}
-                <fieldset className="mb-[10px] flex flex-col justify-start">
-                  <label className="text-[13px] leading-none mb-2.5 text-cyan12 block">
-                    Enter Country
-                  </label>
-                  <input
-                    className={`grow shrink-0 rounded px-2.5 text-[15px] leading-none text-cyan11 shadow-[0_0_0_1px] shadow-cyan7 h-[33px] focus:shadow-[0_0_0_2px] focus:shadow-cyan8 outline-none  ${countryCode ? 'bg-green-100' : 'bg-white'}`}
-                    type="text"
-                    value={countryInput}
-                    onChange={handleCountryInput}
-                  />
-                  <div>
-                    {/* country list picker */}
-                    <div className='absolute border rounded bg-white'>
-                      { countryResults.map(({code, name}, i) =>
-                        <div
-                          key={code}
-                          className='w-60 border-cyan11 p-2.5 text-[15px] leading-none text-cyan11 border-1 shadow-cyan7 cursor-pointer truncate hover:bg-slate-200'
-                          onClick={() => {
-                            setCountryCode(code)
-                            setCountryInput(name)
-                            setCountryResults([])
-                          }}
-                        >
-                          {name}
-                        </div>
-                      )}
-                    </div>
+            {/* country search box */}
+            <fieldset className="mb-[10px] flex flex-col justify-start">
+              <label className="text-[13px] leading-none mb-2.5 text-cyan12 block">
+                Enter Country
+              </label>
+              <input
+                className={`grow shrink-0 rounded px-2.5 text-[15px] leading-none text-cyan11 shadow-[0_0_0_1px] shadow-cyan7 h-[33px] focus:shadow-[0_0_0_2px] focus:shadow-cyan8 outline-none  ${countryCode ? 'bg-green-100' : 'bg-white'}`}
+                type="text"
+                value={countryInput}
+                onChange={handleCountryInput}
+              />
+              
+              {/* country list picker */}
+              { countryResults.length>0 &&
+                <div className='relative'>
+                  <div className='w-full absolute border rounded bg-white'>
+                    { countryResults.map(({code, name}, i) =>
+                      <div
+                        key={code}
+                        className='border-cyan11 p-2.5 text-[15px] leading-none text-cyan11 border-1 shadow-cyan7 cursor-pointer truncate hover:bg-slate-200'
+                        onClick={() => {
+                          setCountryCode(code)
+                          setCountryInput(name)
+                          setCountryResults([])
+                        }}
+                      >
+                        {name}
+                      </div>
+                    )}
                   </div>
-                </fieldset>
-
-                {/* zip code input */}
-                <fieldset className="mb-[10px] w-full flex flex-col justify-start">
-                  <label className="text-[13px] leading-none mb-2.5 text-cyan12 block">
-                    Enter Zip Code
-                  </label>
-                  <input
-                    className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-cyan11 shadow-[0_0_0_1px] shadow-cyan7 h-[33px] focus:shadow-[0_0_0_2px] focus:shadow-cyan8 outline-none bg-white'
-                    type="text"
-                    value={zipCode}
-                    onChange={e => setZipCode(e.target.value)}
-                  />
-                </fieldset>
-
-                {/* set location button */}
-                <div className="mt-2 mb-4 flex justify-center">
-                  <button
-                    className="rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-slate-200 text-slate-500 hover:bg-slate-300 focus:shadow-[0_0_0_2px] focus:shadow-slate-400 outline-none cursor-default"
-                    onClick={weatherRequest}
-                  >
-                    Set Location
-                  </button>
                 </div>
+              }
 
-              </div>
-            :
-            
-              // skeleton loader
-              <SkeletonLoader />
+            </fieldset>
 
-          }
+            {/* zip code input */}
+            <fieldset className="mb-[10px] w-full flex flex-col justify-start">
+              <label className="text-[13px] leading-none mb-2.5 text-cyan12 block">
+                Enter Zip Code
+              </label>
+              <input
+                className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-cyan11 shadow-[0_0_0_1px] shadow-cyan7 h-[33px] focus:shadow-[0_0_0_2px] focus:shadow-cyan8 outline-none bg-white'
+                type="text"
+                value={zipCode}
+                onChange={e => setZipCode(e.target.value)}
+              />
+            </fieldset>
 
-        </>}
+            {/* set location button */}
+            <div className="mt-2 mb-4 flex justify-center">
+              <button
+                className="rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-slate-200 text-slate-500 hover:bg-slate-300 focus:shadow-[0_0_0_2px] focus:shadow-slate-400 outline-none cursor-default"
+                onClick={weatherRequest}
+              >
+                Set Location
+              </button>
+            </div>
+
+          </div>
+        }
+
+        {/* display skeleton loader if no weather data and loading */}
+        { (!weatherData && widgetProps.zipCode && widgetProps.countryCode) &&
+          <SkeletonLoader />
+        }
+
       </div>
     </GridItem>
   )
