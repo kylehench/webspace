@@ -88,6 +88,9 @@ const Weather = ({ appState, widgetProps }) => {
   useEffect(() => {
     if (widgetProps.countryCode && widgetProps.zipCode) {
       weatherRequest()
+      setInterval(() => {
+        weatherRequest()
+      }, 5*60_000)
     }
   }, [])
 
@@ -113,7 +116,7 @@ const Weather = ({ appState, widgetProps }) => {
                 >
                   <div className='h-full flex flex-col items-center'>
                     <div>{day.weekday}</div>
-                    <img src={weatherSymbolMap[day.weatherSymbol]} className='max-w-[48px]'/>
+                    <img src={weatherSymbolMap[day.weatherSymbol]} className='my-1 max-w-[48px]'/>
                     <div className='w-8'>
                       <svg
                         viewBox={`0 -60 100 ${TEMPERATURE_BAR_HEIGHT+160}`}
@@ -153,7 +156,7 @@ const Weather = ({ appState, widgetProps }) => {
           {(!widgetProps.zipCode && !widgetProps.countryCode) ?
 
             // display form if zipCode and countryCode is unknown, otherwise display loading symbol
-            <div className='h-full px-3 overflow-auto thin-scrollbar'>
+            <div className='h-full flex flex-col justify-center px-3 overflow-auto thin-scrollbar'>
 
                 {/* country search box */}
                 <fieldset className="mb-[10px] flex flex-col justify-start">
@@ -199,7 +202,7 @@ const Weather = ({ appState, widgetProps }) => {
                 </fieldset>
 
                 {/* set location button */}
-                <div className="mt-3 flex justify-center">
+                <div className="mt-2 mb-4 flex justify-center">
                   <button
                     className="rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-slate-200 text-slate-500 hover:bg-slate-300 focus:shadow-[0_0_0_2px] focus:shadow-slate-400 outline-none cursor-default"
                     onClick={weatherRequest}

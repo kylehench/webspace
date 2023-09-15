@@ -10,7 +10,7 @@ const QuoteButton = ({ appState }) => {
       type: 'quote',
       reactId
     }})
-    layoutDispatch({type: "CREATE", payload: {i: reactId, h: 2}})
+    layoutDispatch({type: "CREATE", payload: {i: reactId, h: 2, maxH: 3, maxW: 2}})
   }
   
   return (

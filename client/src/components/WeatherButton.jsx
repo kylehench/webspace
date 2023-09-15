@@ -10,7 +10,7 @@ const WeatherButton = ({ appState }) => {
       type: 'weather',
       reactId
     }})
-    layoutDispatch({type: "CREATE", payload: {i: reactId, h: 2}})
+    layoutDispatch({type: "CREATE", payload: {i: reactId, h: 3, w: 1, isResizable: false}})
   }
   
   return (
