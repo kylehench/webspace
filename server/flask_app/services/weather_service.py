@@ -1,5 +1,5 @@
 from flask_app.services import weather_adapter
-from flask_app.models.cached_resource import CachedResource, CachedResourceRepository
+from flask_app.models.cached_resource import CachedResourceRepository
 
 api = weather_adapter.WeatherAdapter(source='meteomatics')
 cache_repository = CachedResourceRepository(

@@ -5,8 +5,9 @@ import GridItem from './primitives/GridItem'
 import COUNTRY_CODES from '../config/countryCodes'
 import weatherSVG from '../config/weatherSVG'
 import { blue } from 'tailwindcss/colors'
+import Tooltip from './primitives/Tooltip'
 
-const TEMPERATURE_BAR_HEIGHT = 500
+const TEMPERATURE_BAR_HEIGHT = 510
 
 const Weather = ({ appState, widgetProps }) => {
   const { widgetsDispatch } = appState
@@ -24,7 +25,23 @@ const Weather = ({ appState, widgetProps }) => {
 
   // symbol reference: https://www.meteomatics.com/en/api/available-parameters/derived-weather-and-convenience-parameters/general-weather-state/#weather_symb
   const weatherSymbolMap = {
-    0: weatherSVG.NotAvailable, 1: weatherSVG.Sunny, 2: weatherSVG.LightClouds, 3: weatherSVG.PartlyCloudy, 4: weatherSVG.Cloudy, 5: weatherSVG.Rain, 6: weatherSVG.RainMix, 7: weatherSVG.Snow, 8: weatherSVG.RainShower, 9: weatherSVG.SnowShower, 10: weatherSVG.SleetShower, 11: weatherSVG.LightFog, 12: weatherSVG.DenseFog, 13: weatherSVG.FreezingRain, 14: weatherSVG.Thunderstorms, 15: weatherSVG.Drizzle, 16: weatherSVG.Sandstorm
+    0: {src: weatherSVG.NotAvailable, label: 'Not Available'},
+    1: {src: weatherSVG.Sunny, label: 'Sunny'},
+    2: {src: weatherSVG.LightClouds, label: 'Light Clouds'},
+    3: {src: weatherSVG.PartlyCloudy, label: 'Partly Cloudy'},
+    4: {src: weatherSVG.Cloudy, label: 'Cloudy'},
+    5: {src: weatherSVG.Rain, label: 'Rain'},
+    6: {src: weatherSVG.RainMix, label: 'Rain Mix'},
+    7: {src: weatherSVG.Snow, label: 'Snow'},
+    8: {src: weatherSVG.RainShower, label: 'Rain Shower'},
+    9: {src: weatherSVG.SnowShower, label: 'Snow Shower'},
+    10: {src: weatherSVG.SleetShower, label: 'Sleet Shower'},
+    11: {src: weatherSVG.LightFog, label: 'Light Fog'},
+    12: {src: weatherSVG.DenseFog, label: 'Dense Fog'},
+    13: {src: weatherSVG.FreezingRain, label: 'Freezing Rain'},
+    14: {src: weatherSVG.Thunderstorms, label: 'Thunderstorms'},
+    15: {src: weatherSVG.Drizzle, label: 'Drizzle'},
+    16: {src: weatherSVG.Sandstorm, label: 'Sandstorm'}
   }
 
   const handleCountryInput = e => {
@@ -102,6 +119,7 @@ const Weather = ({ appState, widgetProps }) => {
             { weatherData.map((day) => {
               const barY = graphSlope*day.high + graphIntercept
               const barHeight = graphSlope*day.low + graphIntercept - (graphSlope*day.high + graphIntercept)
+              const weatherSymbol = weatherSymbolMap[day.weatherSymbol]
               return (
                 <div
                   className='p-0.5 px-2 flex-1'
@@ -109,7 +127,12 @@ const Weather = ({ appState, widgetProps }) => {
                 >
                   <div className='h-full flex flex-col items-center'>
                     <div>{day.weekday}</div>
-                    <img src={weatherSymbolMap[day.weatherSymbol]} className='my-1 max-w-[48px]'/>
+                    <Tooltip
+                      text={weatherSymbol.label}
+                      side='bottom'
+                    >
+                      <img src={weatherSymbol.src} className='mt-1 w-[48px]'/>
+                    </Tooltip>
                     <div className='w-8'>
                       <svg
                         viewBox={`0 -60 100 ${TEMPERATURE_BAR_HEIGHT+160}`}
