@@ -29,7 +29,7 @@ def get_quote_by_id(id):
 # place secret key in header
 @app.route('/api/quotes/', methods=['POST'])
 def post_quotes():
-  if request.headers.get('Authorization') != app.SECRET_KEY:
+  if request.headers.get('Authorization') != app.config['SECRET_KEY']:
     abort(401)
   quotes = [quote_schema.load({'text': d['text'], 'author': d['author']}) for d in request.json.get('quotes')]
   db.session.add_all(quotes)
@@ -39,7 +39,7 @@ def post_quotes():
 # get all quotes
 @app.route('/api/quotes/')
 def get_quotes():
-  if request.headers.get('Authorization') != app.SECRET_KEY:
+  if request.headers.get('Authorization') != app.config['SECRET_KEY']:
     abort(401)
   quotes = db.session.execute(db.select(Quote)).scalars()
   quotes_array = []

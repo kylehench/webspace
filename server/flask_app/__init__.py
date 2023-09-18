@@ -1,7 +1,3 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -9,10 +5,10 @@ from flask_migrate import Migrate
 from sqlalchemy.sql import text
 
 app = Flask(__name__)
-app.SECRET_KEY = os.environ.get('SECRET_KEY')
+app.config.from_prefixed_env()
 
 # database configuration and engine creation
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.environ.get('DATABASE_USER')}:{os.environ.get('DATABASE_PASSWORD')}@localhost/webspace"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{app.config['DATABASE_USER']}:{app.config['DATABASE_PASSWORD']}@localhost/webspace"
 # app.config["SQLALCHEMY_ECHO"] = True
 db = SQLAlchemy(app)
 ma = Marshmallow(app)

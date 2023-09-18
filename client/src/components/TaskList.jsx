@@ -25,12 +25,35 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
   // references to editable divs (used for focusing)
   const inputRefs = useRef([])
   // index of task to focus (move cursor)
-  const [ focusIndex, setFocusIndex ] = useState(0)
+  const [ focusIndex, setFocusIndex ] = useState()
+  const [ cursorPosition, setCursorPosition ] = useState({node: null, position: null, callFocus: false})
 
+  const updateCursorPosition = (node, position) => {
+    if (!node.firstChild) return
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.setStart(node.firstChild, position);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range)
+  }
+  
   // sets checkbox focus when focusIndex is modified
   useEffect(() => {
-    inputRefs[focusIndex].focus()
+    if (focusIndex===undefined) return
+    const divRef = inputRefs[focusIndex]
+    divRef.focus()
+    setFocusIndex(undefined)
+    // if (divRef.firstChild) updateCursorPosition(divRef, taskContentRef.current[focusIndex].content.length-1)
   }, [focusIndex])
+
+  useEffect(() => {
+    const { node, position, callFocus} = cursorPosition
+    if (!node) return
+    if (callFocus) node.focus()
+    updateCursorPosition(node, position)
+    setCursorPosition({})
+  }, [cursorPosition])
 
   const dumpChecked = (checkedState) => {
     const newChecked = []
@@ -47,13 +70,18 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
   }
 
   const onKeyDown = (e, i) => {
-    let newCheckedState
     switch (e.key) {
       case 'Enter': {
         e.preventDefault()
         const reactId = getRandomId()
-        taskContentRef.current.splice(i+1, 0, {reactId: reactId, content: ''})
-        newCheckedState = [...checkedState]
+        const position = window.getSelection().anchorOffset
+        const taskContent = taskContentRef.current[i].content
+        taskContentRef.current.splice(i+1, 0, {
+          reactId: reactId,
+          content: taskContent.slice(position)
+        })
+        taskContentRef.current[i].content = taskContent.slice(0, position)
+        const newCheckedState = [...checkedState]
         newCheckedState.splice(i+1, 0, {reactId: reactId, checked: false})
         setCheckedState(newCheckedState)
         syncContentChecked(newCheckedState)
@@ -61,27 +89,32 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
         break
       }
 
-      case 'ArrowUp':
+      case 'ArrowUp': {
         // move cursor to previous task
-        onBlur(e, i)
         if (i>0) setFocusIndex(i-1)
         break
+      }
 
-      case 'ArrowDown':
+      case 'ArrowDown': {
         // move cursor to next task
-        onBlur(e, i)
         if (i<checkedState.length-1) setFocusIndex(i+1)
         break
+      }
         
-      case 'Backspace':
+      case 'Backspace': {
         // delete task if text length == 0 and at least 1 task present
-        if (e.target.textContent.length>0 || taskContentRef.current.length==1) break
+        if (i===0 || window.getSelection().anchorOffset!==0) break
+        e.preventDefault()
+        const position = taskContentRef.current[i-1].content.length
+        taskContentRef.current[i-1].content += taskContentRef.current[i].content
         taskContentRef.current = taskContentRef.current.filter((task, idx) => idx != i)
-        newCheckedState = checkedState.filter((task, idx) => idx != i)
+        const newCheckedState = checkedState.filter((task, idx) => idx != i)
         setCheckedState(newCheckedState)
         syncContentChecked(newCheckedState)
-        if (i>0) setFocusIndex(i-1)
+        inputRefs.current = inputRefs.current.filter(idx => idx !== i)
+        setCursorPosition({node: inputRefs[i-1], position, callFocus: true})
         break
+      }
         
       default:
         break
@@ -95,6 +128,7 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
     const text = taskContentRef.current.map(item => item.content).join('\n')
     setContent(text)
     syncHandler({content: text})
+    setCursorPosition({node: inputRefs[i], position: window.getSelection().anchorOffset})
   }
 
   const toggleCheck = i => {
@@ -124,7 +158,8 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
           contentEditable="plaintext-only"
           ref={(ref) => inputRefs[i] = ref}
           type="text"
-          onBlur={e => onBlur(e, i)}
+          // onBlur={e => onBlur(e, i)}
+          onInput={e => onBlur(e, i)}
           onKeyDown={e => onKeyDown(e, i)}
           suppressContentEditableWarning={true}
         >
