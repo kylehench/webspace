@@ -24,7 +24,7 @@ class CachedResourceRepository():
     self.expiration_timedelta = timedelta(hours=expiration_hours)
 
   def __get_key(self, request_args: dict):
-    key = json.dumps({'resource_name': self.resource_name} | request_args)
+    key = json.dumps({'resource_name': self.resource_name} | request_args, separators=(',', ':'))
     if len(key) > max_key_length:
       raise KeyError(f'Length of request args dict exceeds {max_key_length} characters')
     return key
@@ -43,7 +43,7 @@ class CachedResourceRepository():
     key = self.__get_key(request_args)
     resource = cached_resource_schema.load({
       'key': key,
-      'value': json.dumps(data)
+      'value': json.dumps(data, separators=(',', ':'))
     })
     db.session.add(resource)
     db.session.commit()
