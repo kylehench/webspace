@@ -5,10 +5,11 @@ from ratelimit import limits
 
 class MeteomaticsAPI:
   def __init__(self):
+    if 'METEOMATICS_USER' not in app.config or 'METEOMATICS_PASSWORD' not in app.config:
+      raise KeyError('Missing Meteomatics API username and/or password: set METEOMATICS_USER and METEOMATICS_PASSWORD .env variables')
+
     self.user = app.config['METEOMATICS_USER']
     self.password = app.config['METEOMATICS_PASSWORD']
-    if not self.user or not self.password:
-      raise KeyError('Missing Meteomatics API username or password')
 
   @limits(calls=50, period=60)
   @limits(calls=500, period=24*3600)
@@ -43,8 +44,8 @@ class WeatherAdapter:
     match source.lower():
       case 'meteomatics':
         self.api = MeteomaticsAPI()
-    if not self.api:
-      raise ValueError('Please specify a valid API source')
+      case other:
+        raise ValueError('Please specify a valid API source')
     
   def daily_forcast(self, **kwargs):
     return self.api.daily_forcast(**kwargs)
