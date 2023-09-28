@@ -12,6 +12,12 @@ sudo rm -rf /var/www/webspace
 sudo mv dist /var/www/webspace
 sudo service nginx restart
 ```
+## Client Deployment (update, shell script)
+Navigate to `/webspace/client`. Set `BUILD_DESTINATION` .env variable (ex. `/var/www/webspace`).
+Grant `build-and-deploy.sh` executable permission. Run:
+```
+./build-and-deploy.sh
+```
 ## Configure nginx
 ```
 sudo vim /etc/nginx/sites-available/default
