@@ -6,6 +6,8 @@ import COUNTRY_CODES from '../config/countryCodes'
 import weatherSVG from '../config/weatherSVG'
 import { blue } from 'tailwindcss/colors'
 import Tooltip from './primitives/Tooltip'
+import objectHash from 'object-hash';
+
 
 const TEMPERATURE_BAR_HEIGHT = 510
 
@@ -77,13 +79,13 @@ const Weather = ({ appState, widgetProps }) => {
       let data = []
       for (let i=0; i<dayCount; i++) {
         data.push({
-          key: currentDay,
           weekday: getWeekDayAndIncrement(),
           high: Math.round(res.data.highs[i]),
           // note: tomorrow's low is used as "tonight's low" is displayed for each day
           low: Math.round(res.data.lows[i+1]),
           weatherSymbol: res.data.weather_symbol[i],
         })
+        data[i].key = objectHash({...data[i], currentDay})
       }
       setWeatherData(data)
       const tMax = Math.max(...data.map(day => day.high))
