@@ -34,6 +34,7 @@ class MeteomaticsAPI:
       'highs': [date['value'] for date in parameters['t_max_2m_24h:F']],
       'lows': [date['value'] for date in parameters['t_min_2m_24h:F']],
       'weather_symbol': [date['value'] for date in parameters['weather_symbol_24h:idx']],
+      'source': 'meteomatics'
     }
     
     return daily_forcast
