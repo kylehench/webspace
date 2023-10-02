@@ -12,7 +12,7 @@ class CachedResourceCollection(Resource):
     for item in items:
 
       # make edits here if desired
-      item.value = json.dumps(json.loads(item.value) | {'source': 'meteomatics'})
+      # item.value = json.dumps(json.loads(item.value) | {'source': 'meteomatics'})
       
       pass
     db.session.commit()
