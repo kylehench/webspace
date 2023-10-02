@@ -16,6 +16,12 @@ class CachedResourceCollection(Resource):
       
       pass
     db.session.commit()
-    return {'cached-resource-collection': [cached_resource_schema.dump(item) for item in items]}
+    res = []
+    for item in items:
+      item = cached_resource_schema.dump(item)
+      item['key'] = json.loads(item['key'])
+      item['value'] = json.loads(item['value'])
+      res.append(item)
+    return {'cached-resource-collection': res}
   
 api.add_resource(CachedResourceCollection, '/api/cached-resource-collection')
