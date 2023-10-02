@@ -3,6 +3,7 @@ from flask import request, abort
 
 from flask_app import app, db
 from flask_app.models.quote import Quote, quote_schema
+from flask_app.services.decorators import authenticate_admin
 
 # get quote of the day
 @app.route('/api/quotes/today')
@@ -26,11 +27,9 @@ def get_quote_by_id(id):
 
 # post an array of quotes. JSON:
 # { 'quotes': [{quote1}, {quote2}, ... ] }
-# place secret key in header
 @app.route('/api/quotes/', methods=['POST'])
+@authenticate_admin
 def post_quotes():
-  if request.headers.get('Authorization') != app.config['SECRET_KEY']:
-    abort(401)
   quotes = [quote_schema.load({'text': d['text'], 'author': d['author']}) for d in request.json.get('quotes')]
   db.session.add_all(quotes)
   db.session.commit()
@@ -38,9 +37,8 @@ def post_quotes():
 
 # get all quotes
 @app.route('/api/quotes/')
+@authenticate_admin
 def get_quotes():
-  if request.headers.get('Authorization') != app.config['SECRET_KEY']:
-    abort(401)
   quotes = db.session.execute(db.select(Quote)).scalars()
   quotes_array = []
   for quote in quotes:

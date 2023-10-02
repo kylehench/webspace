@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
+from flask_restful import Api
 from sqlalchemy.sql import text
 
 app = Flask(__name__)
@@ -13,6 +14,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{app.config['DATABASE_
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 migrate = Migrate(app, db)
+
+api = Api(app)
 
 # some quote routes need min and max quote ids
 try:

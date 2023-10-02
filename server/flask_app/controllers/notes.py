@@ -1,20 +1,18 @@
 from flask import g
-from flask_app import app, db
-from flask_restful import abort, Api, Resource, request
+from flask_app import db, api
+from flask_restful import abort, Resource, request
 from flask_app.models.note import Note, note_schema
 from flask_marshmallow import exceptions
-from flask_app.services.decorators import authenticate
-
-api = Api(app)
+from flask_app.services.decorators import authenticate_user
 
 def get_note_and_authorize(note_id):
   note = db.get_or_404(Note, note_id)
   if note.user_id != g.user_id:
-    abort(401, message="You do not have permission access this resource.")
+    abort(403, message="You do not have permission access this resource.")
   return note
 
 class NoteResource(Resource):
-  method_decorators = [authenticate]
+  method_decorators = [authenticate_user]
   
   def get(self, note_id):
     note = get_note_and_authorize(note_id)
@@ -39,7 +37,7 @@ class NoteResource(Resource):
 
 
 class NoteListResource(Resource):
-  method_decorators = [authenticate]
+  method_decorators = [authenticate_user]
   
   def get(self):
     # returns id and titles of user's notes in updated order (descending)
