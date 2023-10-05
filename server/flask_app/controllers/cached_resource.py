@@ -13,12 +13,7 @@ class CachedResourceCollection(Resource):
 
       # make edits here if desired
       key = json.loads(item.key)
-      key['days'] = 3
       value = json.loads(item.value)
-      weather_params = ['highs', 'lows', 'weather_symbol']
-      for param in weather_params:
-        if len(value[param])>4:
-          del value[param][0]
       item.key = json.dumps(key, separators=(',', ':'))
       item.value = json.dumps(value, separators=(',', ':'))
       
