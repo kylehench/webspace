@@ -2,7 +2,6 @@ from flask import request
 from flask_app import app
 import flask_app.services.weather_service as weather_service
 from flask_restful import abort
-from datetime import datetime, timezone, timedelta
 
 @app.route('/api/weather/')
 def daily_forcast():

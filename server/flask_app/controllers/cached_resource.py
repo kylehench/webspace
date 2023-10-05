@@ -12,7 +12,8 @@ class CachedResourceCollection(Resource):
     for item in items:
 
       # make edits here if desired
-      # item.value = json.dumps(json.loads(item.value) | {'source': 'meteomatics'})
+      # item.key = json.dumps(json.loads(item.key), separators=(',', ':'))
+      # item.value = json.dumps(json.loads(item.value) | {'source': 'meteomatics'}, separators=(',', ':'))
       
       pass
     db.session.commit()
