@@ -14,16 +14,15 @@ class MeteomaticsAPI:
   @limits(calls=50, period=60)
   @limits(calls=500, period=24*3600)
   def daily_forcast(self, day_start, days, country_code, zip_code):
-    datetime_start = datetime.fromisoformat(day_start).replace(tzinfo=timezone.utc)
+    # note: one day added because 't_max_2m_24h' and 't_min_2m_24h' return values from 24h in past: https://www.meteomatics.com/en/api/available-parameters/
+    datetime_start = datetime.fromisoformat(day_start).replace(tzinfo=timezone.utc) + timedelta(days=1)
+    # extra day included because daily low comes from next day's morning
     datetime_end = datetime_start + timedelta(days=days)
     utc_start = datetime_start.isoformat().replace('+00:00','Z')
     utc_end = datetime_end.isoformat().replace('+00:00','Z')
     weather_url = f"https://api.meteomatics.com/{utc_start}--{utc_end}:P1D/t_max_2m_24h:F,t_min_2m_24h:F,weather_symbol_24h:idx/postal_{country_code}{zip_code}/json?model=mix"
     
     json_res = requests.get(weather_url, auth=(self.user, self.password)).json()
-
-    # json_example = {'version': '3.0', 'user': '', 'dateGenerated': '2023-09-13T22:31:49Z', 'status': 'OK', 'data': [{'parameter': 't_max_2m_24h:F', 'coordinates': [{'station_id': 'postal_US94087', 'dates': [{'date': '2023-09-13T07:00:00Z', 'value': 77.6}, {'date': '2023-09-14T07:00:00Z', 'value': 80.7}, {'date': '2023-09-15T07:00:00Z', 'value': 88.3}, {'date': '2023-09-16T07:00:00Z', 'value': 85.7}, {'date': '2023-09-17T07:00:00Z', 'value': 81.8}]}]}, {'parameter': 't_min_2m_24h:F', 'coordinates': [{'station_id': 'postal_US94087', 'dates': [{'date': '2023-09-13T07:00:00Z', 'value': 59.6}, {'date': '2023-09-14T07:00:00Z', 'value': 56.4}, {'date': '2023-09-15T07:00:00Z', 'value': 55.2}, {'date': '2023-09-16T07:00:00Z', 'value': 56.8}, {'date': '2023-09-17T07:00:00Z', 'value': 56.4}]}]}, {'parameter': 'weather_symbol_24h:idx', 'coordinates': [{'station_id': 'postal_US94087', 'dates': [{'date': '2023-09-13T07:00:00Z', 'value': 1}, {'date': '2023-09-14T07:00:00Z', 'value': 1}, {'date': '2023-09-15T07:00:00Z', 'value': 1}, {'date': '2023-09-16T07:00:00Z', 'value': 1}, {'date': '2023-09-17T07:00:00Z', 'value': 3}]}]}]}
-    # json_res = json_example
     
     if json_res['status'] != 'OK':
       raise ConnectionError

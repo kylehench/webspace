@@ -12,8 +12,15 @@ class CachedResourceCollection(Resource):
     for item in items:
 
       # make edits here if desired
-      # item.key = json.dumps(json.loads(item.key), separators=(',', ':'))
-      # item.value = json.dumps(json.loads(item.value) | {'source': 'meteomatics'}, separators=(',', ':'))
+      key = json.loads(item.key)
+      key['days'] = 3
+      value = json.loads(item.value)
+      weather_params = ['highs', 'lows', 'weather_symbol']
+      for param in weather_params:
+        if len(value[param])>4:
+          del value[param][0]
+      item.key = json.dumps(key, separators=(',', ':'))
+      item.value = json.dumps(value, separators=(',', ':'))
       
       pass
     db.session.commit()

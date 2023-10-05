@@ -5,14 +5,13 @@ from flask_restful import abort
 
 @app.route('/api/weather/')
 def daily_forcast():
-  request_args = {
-    'day_start': request.args.get('dayStart'),
-    'days': 4,
-    'country_code': request.args.get('countryCode'),
-    'zip_code': request.args.get('zipCode')
-  }
   try:
-    res = weather_service.daily_forcast(request_args)
+    res = weather_service.daily_forcast(
+      day_start = request.args.get('dayStart'),
+      days = 4,
+      country_code = request.args.get('countryCode'),
+      zip_code = request.args.get('zipCode')
+    )
   except:
     abort(400)
 

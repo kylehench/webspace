@@ -9,7 +9,13 @@ weather_cache_repository = CachedResourceRepository(
   expiration_hours=1
 )
 
-def daily_forcast(request_args):
+def daily_forcast(day_start, days, country_code, zip_code):
+  request_args = {
+    'day_start': day_start,
+    'days': days,
+    'country_code': country_code,
+    'zip_code': zip_code
+  }
   # check cache for weather
   res = weather_cache_repository.get(request_args)
   if res:
