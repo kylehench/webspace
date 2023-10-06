@@ -12,13 +12,13 @@ class CachedResourceCollection(Resource):
     for item in items:
 
       # make edits here if desired
-      key = json.loads(item.key)
-      value = json.loads(item.value)
-      item.key = json.dumps(key, separators=(',', ':'))
-      item.value = json.dumps(value, separators=(',', ':'))
+      # key = json.loads(item.key)
+      # value = json.loads(item.value)
+      # item.key = json.dumps(key, separators=(',', ':'))
+      # item.value = json.dumps(value, separators=(',', ':'))
       
       pass
-    db.session.commit()
+    # db.session.commit()
     res = []
     for item in items:
       item = cached_resource_schema.dump(item)
