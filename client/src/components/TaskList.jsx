@@ -3,7 +3,7 @@ import { CheckCircledIcon, CircleIcon } from '@radix-ui/react-icons'
 
 const getRandomId = () => Math.random().toString().slice(2)
 
-const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
+const TaskList = ({ content, setContent, checked, syncHandler }) => {
 
   // task content stored in useRef to prevent rendering issues in editable div
   const taskContentRef = useRef(content.split('\n').map(line => {
@@ -12,8 +12,9 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
       content: line
     }
   }))
+
   // task completion status (checked state)
-  const [ checkedState, setCheckedState ] = useState(() => {
+  const checkedToArray = () => {
     const checkedSet = new Set(checked.split(','))
     return taskContentRef.current.map(({reactId}, i) => {
       return {
@@ -21,7 +22,14 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
         checked: checkedSet.has(i.toString()),
       }
     })
-  })
+  }
+  const [ checkedState, setCheckedState ] = useState(() => checkedToArray())
+  useEffect(() => {
+    const newCheckedState = checkedToArray()
+    setCheckedState(newCheckedState)
+    syncContentChecked(newCheckedState)
+  }, [checked])
+  
   // references to editable divs (used for focusing)
   const inputRefs = useRef([])
   // index of task to focus (move cursor)
@@ -145,6 +153,7 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
         key={reactId}
         className='p-1 flex items-center border-b-[1px] border-gray-500 bg-transparent text-slate-800 text-sm resize-none thin-scrollbar overflow-auto'
       >
+        {/* checkbox */}
         <button className='px-2' onClick={() => toggleCheck(i)}>
           { checked ? 
             <CheckCircledIcon className='h-5 w-5 text-gray-500' />
@@ -172,4 +181,4 @@ const Checkboxes = ({ content, setContent, checked, syncHandler }) => {
   )
 }
 
-export default Checkboxes
+export default TaskList

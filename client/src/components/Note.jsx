@@ -39,6 +39,7 @@ const Note = ({ widgetProps, appState }) => {
           setContent(note.content)
           setCheckboxesVisible(note.checkboxes_visible)
           setChecked(note.checked || '')
+          // load color
           widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {
             titleBgColor: note.titleBgColor,
             contentBgColor: note.contentBgColor
@@ -144,7 +145,7 @@ const Note = ({ widgetProps, appState }) => {
         <div className=''>
 
           {/* background color selector */}
-          <div className='flex'>
+          <div className='flex w-48'>
             {colorsList.map(([contentBgColor, titleBgColor], i) => {
               const buttonStyle = {}
               if (i===0) buttonStyle.borderTopLeftRadius = '4px'
@@ -160,11 +161,21 @@ const Note = ({ widgetProps, appState }) => {
           </div>
 
           {/* show/hide checkboxes */}
-          <button className="flex items-center px-4 text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] w-full bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={toggleCheckboxes}>
+          <button className="flex items-center text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] w-full bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={toggleCheckboxes}>
           <div className='pl-2'>{ checkboxesVisible ? "Hide" : "Show"} Checkboxes</div>
           </button>
+          {/* uncheck all */}
+          { checkboxesVisible &&
+            <button className="flex items-center text-center mx-auto justify-center text-[15px] leading-none font-medium h-[35px] w-full bg-gray5 text-gray11 hover:bg-gray7 outline-none cursor-default" onClick={() => {
+              // any new value triggers reset
+              setChecked(crypto.randomUUID())
+            }}>
+            <div className='pl-2'>Uncheck All</div>
+            </button>
+          }
+
           {/* delete note */}
-          <button className="flex items-center px-4 text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] w-full bg-red5 text-red11 hover:bg-red6 outline-none cursor-default" onClick={deleteNote}>
+          <button className="flex items-center text-center mx-auto justify-center rounded-b text-[15px] leading-none font-medium h-[35px] w-full bg-red5 text-red11 hover:bg-red6 outline-none cursor-default" onClick={deleteNote}>
             <IoTrashOutline /><div className='pl-2'>Delete</div>
           </button>
 
