@@ -106,7 +106,10 @@ const Weather = ({ appState, widgetProps }) => {
   }, [])
 
   const FormView = () => (
-    <div className='h-full flex flex-col justify-center px-3 overflow-auto thin-scrollbar'>
+    <form
+      className='h-full flex flex-col justify-center px-3 overflow-auto thin-scrollbar'
+      onSubmit={weatherRequest}
+    >
 
       {/* country search box */}
       <fieldset className="mb-[10px] flex flex-col justify-start">
@@ -159,13 +162,12 @@ const Weather = ({ appState, widgetProps }) => {
       <div className="mt-2 mb-4 flex justify-center">
         <button
           className="rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-slate-200 text-slate-500 hover:bg-slate-300 focus:shadow-[0_0_0_2px] focus:shadow-slate-400 outline-none cursor-default"
-          onClick={weatherRequest}
         >
           Set Location
         </button>
       </div>
 
-    </div>
+    </form>
   )
 
   const WeatherView = () => (
