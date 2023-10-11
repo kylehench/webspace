@@ -108,7 +108,10 @@ const Weather = ({ appState, widgetProps }) => {
   const FormView = () => (
     <form
       className='h-full flex flex-col justify-center px-3 overflow-auto thin-scrollbar'
-      onSubmit={weatherRequest}
+      onSubmit={(e) => {
+        e.preventDefault() // prevents unnecessary form submission
+        weatherRequest()
+      }}
     >
 
       {/* country search box */}
