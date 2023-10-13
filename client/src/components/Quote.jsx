@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import GridItem from './primitives/GridItem'
 import GridItemTitleButton from './primitives/GridItemTitleButton'
@@ -61,7 +61,10 @@ const Quote = ({ appState, widgetProps }) => {
       {quote.text && <>
         {/* note: tailwind container query used to dynamically adjust quote text size */}
         <div className='@container pb-2 h-full flex flex-col justify-center font-[Lora] text-[14px] thin-scrollbar-parent'>
-          <div className='px-4 @[14rem]:px-8 @[14rem]:text-sm @[18rem]:text-base @[24rem]:text-lg thin-scrollbar overflow-auto'>
+          <div
+            className='px-4 @[14rem]:px-8 thin-scrollbar overflow-auto'
+            style={{fontSize: Math.min(18, Math.ceil(600/quote.text.length+11))}}
+          >
             {quote.text}
             <div className="flex justify-end items-end font-semibold">
               <span className=''>- {quote.author ? quote.author : 'Unknown'}</span>
