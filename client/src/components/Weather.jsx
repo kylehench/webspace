@@ -19,8 +19,9 @@ const Weather = ({ appState, widgetProps }) => {
 
   const [ countryCode, setCountryCode ] = useState(widgetProps.countryCode)
   const [ zipCode, setZipCode ] = useState(widgetProps.zipCode)
+  const [ locationPresent, setLocationPresent ] = useState(widgetProps.countryCode && widgetProps.zipCode)
 
-  const [ weatherData, setWeatherData ] = useState()
+  const [ weatherData, setWeatherData ] = useState([])
   const [ graphSlope, setGraphSlope ] = useState(0)
   const [ graphIntercept, setGraphIntercept ] = useState(0)
   const svgRefs = useRef([])
@@ -59,58 +60,60 @@ const Weather = ({ appState, widgetProps }) => {
       )
     }
   }
-
-  const weatherRequest = () => {
-    widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {countryCode, zipCode}})
-    const dayCount = 4
-    const dayStart = new Date()
-    dayStart.setHours(0, 0, 0, 0)
-    axios.get(`${import.meta.env.VITE_SERVER_URI}/api/weather/`, { params: {
-      dayStart: dayStart.toISOString(),
-      countryCode,
-      zipCode,
-    }}).then(res => {
-      let currentDay = dayStart
-      const getWeekDayAndIncrement = () => {
-        const weekday = new Intl.DateTimeFormat("en-US", {weekday: 'short'}).format(currentDay)
-        currentDay.setHours(currentDay.getHours() + 24)
-        return weekday
-      }
-      let data = []
-      for (let i=0; i<dayCount; i++) {
-        data.push({
-          weekday: getWeekDayAndIncrement(),
-          high: Math.round(res.data.highs[i]),
-          // note: tomorrow's low is used as "tonight's low" is displayed for each day
-          low: Math.round(res.data.lows[i+1]),
-          weatherSymbol: res.data.weather_symbol[i],
-        })
-        data[i].key = objectHash({...data[i], currentDay})
-      }
-      setWeatherData(data)
-      const tMax = Math.max(...data.map(day => day.high))
-      const tMin = Math.min(...data.map(day => day.low))
-      const graphSlope = TEMPERATURE_BAR_HEIGHT/(tMin-tMax)
-      setGraphSlope(graphSlope)
-      setGraphIntercept(-tMax*graphSlope)
-    })
-  }
-
+  
   useEffect(() => {
-    if (widgetProps.countryCode && widgetProps.zipCode) {
-      weatherRequest()
-      setInterval(() => {
-        weatherRequest()
-      }, 5*60_000)
+    if (!locationPresent) return
+    
+    const weatherRequest = () => {
+      const dayCount = 4
+      const dayStart = new Date()
+      dayStart.setHours(0, 0, 0, 0)
+      axios.get(`${import.meta.env.VITE_SERVER_URI}/api/weather/`, { params: {
+        dayStart: dayStart.toISOString(),
+        countryCode,
+        zipCode,
+      }}).then(res => {
+        let currentDay = dayStart
+        const getWeekDayAndIncrement = () => {
+          const weekday = new Intl.DateTimeFormat("en-US", {weekday: 'short'}).format(currentDay)
+          currentDay.setHours(currentDay.getHours() + 24)
+          return weekday
+        }
+        let data = []
+        for (let i=0; i<dayCount; i++) {
+          data.push({
+            weekday: getWeekDayAndIncrement(),
+            high: Math.round(res.data.highs[i]),
+            // note: tomorrow's low is used as "tonight's low" is displayed for each day
+            low: Math.round(res.data.lows[i+1]),
+            weatherSymbol: res.data.weather_symbol[i],
+          })
+          data[i].key = objectHash({...data[i], currentDay})
+        }
+        setWeatherData(data)
+        const tMax = Math.max(...data.map(day => day.high))
+        const tMin = Math.min(...data.map(day => day.low))
+        const graphSlope = TEMPERATURE_BAR_HEIGHT/(tMin-tMax)
+        setGraphSlope(graphSlope)
+        setGraphIntercept(-tMax*graphSlope)
+      })
     }
-  }, [])
+
+    // inital weather request followed by periodic update calls
+    weatherRequest()
+    const intervalId = setInterval(() => {
+      weatherRequest()
+    }, 5*60_000)
+    return () => clearInterval(intervalId)
+  }, [locationPresent, countryCode, zipCode])
 
   const FormView = () => (
     <form
       className='h-full flex flex-col justify-center px-3 overflow-auto thin-scrollbar'
       onSubmit={(e) => {
         e.preventDefault() // prevents unnecessary form submission
-        weatherRequest()
+        setLocationPresent(true)
+        widgetsDispatch({type: "UPDATE", reactId: widgetProps.reactId, payload: {countryCode, zipCode}})
       }}
     >
 
@@ -238,18 +241,18 @@ const Weather = ({ appState, widgetProps }) => {
     >
       <div className='py-2 pl-2 h-full thin-scrollbar-parent'>
 
-        {/* display location form if no weather data and not loading */}
-        { (!weatherData && (!widgetProps.zipCode || !widgetProps.countryCode)) &&
+        {/* display location form if no location */}
+        { !locationPresent &&
           FormView()
         }
 
-        {/* display skeleton loader if no weather data and loading */}
-        { (!weatherData && widgetProps.zipCode && widgetProps.countryCode) &&
+        {/* display skeleton loader if location present without weather data */}
+        { (locationPresent && weatherData.length===0) &&
           <SkeletonLoader />
         }
 
         {/* display weather if data present */}
-        { weatherData && 
+        { weatherData.length!==0 && 
           WeatherView()
         }
 
