@@ -14,7 +14,7 @@ class MeteomaticsAPI:
   @limits(calls=50, period=60)
   @limits(calls=500, period=24*3600)
   def daily_forcast(self, day_start, days, country_code, zip_code):
-    # note: one day added because 't_max_2m_24h' and 't_min_2m_24h' return values from 24h in past: https://www.meteomatics.com/en/api/available-parameters/
+    # note: one day added to datetime_start because 't_max_2m_24h' and 't_min_2m_24h' return values from 24h in past: https://www.meteomatics.com/en/api/available-parameters/
     datetime_start = datetime.fromisoformat(day_start).replace(tzinfo=timezone.utc) + timedelta(days=1)
     # extra day included because daily low comes from next day's morning
     datetime_end = datetime_start + timedelta(days=days)
